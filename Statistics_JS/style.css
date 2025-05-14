@@ -1,0 +1,109 @@
+h1 { 
+    color: hsl(230, 35%, 38%);
+    text-align: center;
+    letter-spacing: 10px;
+    font-family: 'Cambria', Helvetica, monospace;
+    font-size: 3em;
+    transition: all 2s;
+}
+
+.large {
+   transform: scale(2);
+   color: teal;
+}
+
+.small {
+   transform: scale(0.5);
+   color: peru;
+}
+
+
+.agenda {
+   color: navy;
+   
+   font-size: 20px;
+}
+
+.agenda:hover {
+   background-color: lightskyblue;
+   transition: 200ms;
+}
+
+.completed {
+   color: olive;
+   text-decoration: line-through;
+}
+
+
+.test {
+   color: red;
+   
+}
+
+.class {
+   color: darkred;
+   font-size: 25px;
+}
+
+.class:hover {
+   background-color: yellow;
+   transition: 200ms;
+}
+
+.preview {
+   width: 200px;
+}
+
+h3 {
+   color:crimson;
+   font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+
+ul {
+   list-style-type: square;
+   color: darkblue;
+   font-size: 20px;
+   text-align: justify;
+   offset-distance: 10px;
+   margin: 20px;
+   padding: 20px;
+   border: 2px solid black;
+   border-radius: 10px;
+   background-color: lightgray;
+   box-shadow: 5px 5px 10px gray;
+   transition: all 0.5s;
+   width: 65%;
+}
+
+button {
+   background-color: lightblue;
+   color: black;
+   border: 2px solid black;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: all 0.3s ease-in-out;
+   place-items: end;
+}
+
+.specific {
+   color: red;
+   font-weight: bold;
+}
+
+#console {
+   color: yellowgreen;
+   background-color: black;
+   font-family: 'Courier New', Courier, monospace;
+   margin: 20px;
+   padding: 20px;
+   width: 85%;
+   border: 2px solid black;
+   border-radius: 10px;
+   box-shadow: 5px 5px 10px gray;
+   transition: all 0.5s;
+   
+}
+
+
+

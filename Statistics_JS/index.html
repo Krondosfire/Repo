@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How the Web Works and AJAX</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* body {
+             width: 33%; 
+        } */
+        #res {
+            background-color: lightgray;
+            border: solid;
+            height: 48px;
+            font-size: 20px;
+            margin-bottom: 10px;
+            text-align: right;
+            padding: 5px;
+            overflow-x: auto;
+        }
+        #btns {
+            width: 100%;
+        }
+        #btns button {
+            width: 25%;
+            height: 36px;
+            font-size: 18px;
+            margin: 0px;
+            float: left;
+        }
+        #btn0, #btn1 {
+            background-color: lightgreen;
+            color: brown;
+        }
+        #btnClr, #btnEql {
+            background-color: darkgreen;
+            color: white;
+        }
+        #btnSum, #btnSub, #btnMul, #btnDiv {
+            background-color: black;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Axios</h1>
+    
+    
+        
+    <ul>AJAX requests are asynchronous, meaning that the code will continue to run while waiting for a response from the server:
+            
+            <li>The <b>axios.get()</b> completes before the response is received;</li>
+            <li>This means that if we want to use the data we get back from AJAX requests, we need to wait until the response has been given to us.</li>
+            
+        </ul>
+
+
+        <form action="" id="searchform">
+            <input type="text" id="search">
+            <button>Search</button>
+        </form>
+
+        <img src="' alt="" id="dog">
+        <ul>Create the same function but shortened:
+            <li>
+                <div id='console'><b>function</b> makePerson(first, last, age) { <br>
+                    &nbsp; &nbsp;return {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;first, <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;last, <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;age, <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isAlive: true <br>
+                    &nbsp;&nbsp;}; <br>
+                } <br>
+                
+                </div><br>
+            </li>
+            
+        </ul>
+        <ul>Shorthand Methods:
+            <li><div id='console'>const mathStuff =  { <br>
+                &nbsp;&nbsp;x : 200,<br>
+                &nbsp;&nbsp;add: function(a, b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a + b; <br>
+                &nbsp;&nbsp;}, <br>
+                &nbsp;&nbsp;square: function(a) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a * a; <br>
+                &nbsp;&nbsp;} <br>
+                &nbsp;&nbsp;divide: function(a, b) { <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a / b; <br>
+                &nbsp;&nbsp;} <br>
+            }; <br>
+            
+            </div>
+    </li>
+    <li>The same object but shortened:
+        <div id='console'>const mathFunc =  { <br>
+            &nbsp;&nbsp;x : 200,<br>
+            &nbsp;&nbsp;add(a, b) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a + b; <br>
+            &nbsp;&nbsp;}, <br>
+            &nbsp;&nbsp;square(a) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a * a; <br>
+            &nbsp;&nbsp;} <br>
+            &nbsp;&nbsp;divide(a, b) { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a / b; <br>
+            &nbsp;&nbsp;} <br>
+        }; <br>
+        
+        </div>
+    </li>
+    <li>Do not use arrow functions when shorthanded!</li></ul>
+    
+    <ul>Computed Property Names:
+        <li>ES2015 allows us to create an object with a key that JavaScript can compute at definition</li>
+        <li>ES5:
+            <div id='console'><b>let</b> firstName = "Mary";<br>
+                            <b>let</b> instructor = {};<br>
+                            instructor[firstName] = "That's me!";
+                instructor.Mary = "That's me!"; <br>
+            <br>
+            
+            </div>
+        </li>
+        <li>ES2015:
+            <div id='console'><b>let</b> firstName = "Mary";<br>
+                <b>let</b> instructor = {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[firstName] = "That's me!";<br>
+                }<br>
+                <br>
+                instructor.Mary = "That's me!"; <br>
+<br>
+
+</div>
+        </li>
+    </ul>
+<div id="res"></div>
+    <div id="btns">
+        <button id="btn0">0</button>
+        <button id="btn1">1</button>
+        <button id="btnClr">C</button>
+        <button id="btnEql">=</button>
+        <button id="btnSum">+</button>
+        <button id="btnSub">-</button>
+        <button id="btnMul">*</button>
+        <button id="btnDiv">/</button>
+    </div>
+
+
+
+ <script>
+        const res = document.getElementById('res');
+        document.getElementById('btn0').onclick = () => res.innerHTML += '0';
+        document.getElementById('btn1').onclick = () => res.innerHTML += '1';
+        document.getElementById('btnSum').onclick = () => {
+            if (res.innerHTML !== '' && !/[+\-*/]$/.test(res.innerHTML)) res.innerHTML += '+';
+        };
+        document.getElementById('btnSub').onclick = () => {
+            if (res.innerHTML !== '' && !/[+\-*/]$/.test(res.innerHTML)) res.innerHTML += '-';
+        };
+        document.getElementById('btnMul').onclick = () => {
+            if (res.innerHTML !== '' && !/[+\-*/]$/.test(res.innerHTML)) res.innerHTML += '*';
+        };
+        document.getElementById('btnDiv').onclick = () => {
+            if (res.innerHTML !== '' && !/[+\-*/]$/.test(res.innerHTML)) res.innerHTML += '/';
+        };
+        document.getElementById('btnClr').onclick = () => res.innerHTML = '';
+        document.getElementById('btnEql').onclick = () => {
+            // Find the operator
+            let expr = res.innerHTML;
+            let match = expr.match(/^([01]+)([+\-*/])([01]+)$/);
+            if (!match) return;
+            let op1 = parseInt(match[1], 2);
+            let operator = match[2];
+            let op2 = parseInt(match[3], 2);
+            let result;
+            switch (operator) {
+                case '+': result = op1 + op2; break;
+                case '-': result = op1 - op2; break;
+                case '*': result = op1 * op2; break;
+                case '/': result = Math.floor(op1 / op2); break; // integer division
+            }
+            res.innerHTML = result.toString(2);
+        };
+    </script>               
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="module" src="api.js"></script>   
+</body>
+</html>
