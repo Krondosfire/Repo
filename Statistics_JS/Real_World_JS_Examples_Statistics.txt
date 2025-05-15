@@ -218,29 +218,450 @@ function main() {
 
 
 
+Task:
+Given five positive integers, find the minimum and maximum values that can be calculated by summing exactly four of the five integers. 
+Then print the respective minimum and maximum values as a single line of two space-separated long integers.
+Example:
+arr = [1,3,5,7,9]
+The minimum sum is 1 + 3 + 5 + 7 = 16 and the maximum sum is 3 + 5 + 7 + 9 = 24. The function prints
+16 24
+Function Description:
+Complete the miniMaxSum function in the editor below.
+miniMaxSum has the following parameter(s):
+arr: an array of 5 integers
+Print:
+Print two space-separated integers on one line: the minimum sum and the maximum sum of 4 of 5 elements.
+Input Format:
+A single line of five space-separated integers.
+Constraints:
+1 <= arr[i] <= 10^9
+
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Complete the 'miniMaxSum' function below.
+ *
+ * The function accepts INTEGER_ARRAY arr as parameter.
+ */
+
+function miniMaxSum(arr) {
+    // Write your code here
+
+}
+
+function main() {
+
+    const arr = readLine().replace(/\s+$/g, '').split(' ').map(arrTemp => parseInt(arrTemp, 10));
+
+    miniMaxSum(arr);
+}
+
+
+Task:
+Given a time in 12-hour AM/PM format, convert it to military (24-hour) time.
+Note: - 12:00:00AM on a 12-hour clock is 00:00:00 on a 24-hour clock.
+- 12:00:00PM on a 12-hour clock is 12:00:00 on a 24-hour clock.
+Example:
+s = 12:01:00PM
+Return '12:01:00'.
+s = 12:01:00AM
+Return '00:01:00'.
+Function Description:
+Complete the timeConversion function in the editor below. It should return a new string representing the input time in 24 hour format.
+timeConversion has the following parameter(s):
+string s: a time in 12 hour format
+Returns:
+string: the time in 24 hour format
+Input Format:
+A single string s that represents a time in 12-hour clock format (i.e.: hh:mm:ssAM or hh:mm:ssPM).
+Constraints:
+All input times are valid
+
+
+Task:
+There is a collection of input strings and a collection of query strings. 
+For each query string, determine how many times it occurs in the list of input strings. Return an array of the results.
+Example:
+strings = ['ab',' ab','abc']
+queries = ['ab', 'abc', 'bc']
+There are 2 instances of 'ab', 1 of 'abc' and 0 of 'bc'. For each query, add an element to the return array, results = [2, 1, 0].
+Function Description:
+Complete the function matchingStrings in the editor below. The function must return an array of integers representing the 
+frequency of occurrence of each query string in strings.
+matchingStrings has the following parameters:
+string strings[n] - an array of strings to search
+string queries[q] - an array of query strings
+Returns:
+int[q]: an array of results for each query
+Input Format:
+The first line contains an integer n, the size of strings[].
+Each of the next n lines contains a string strings[i].
+The next line contains q, the size of queries[].
+Each of the next q lines contains a string queries[i].
+Constraints:
+1 <= n <= 1000
+1 <= q <= 1000
+1 <= |strings[i]|, |queries[i]| <= 20
+
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Complete the 'matchingStrings' function below.
+ *
+ * The function is expected to return an INTEGER_ARRAY.
+ * The function accepts following parameters:
+ *  1. STRING_ARRAY strings
+ *  2. STRING_ARRAY queries
+ */
+
+function matchingStrings(strings, queries) {
+    // Write your code here
+
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const stringsCount = parseInt(readLine().trim(), 10);
+
+    let strings = [];
+
+    for (let i = 0; i < stringsCount; i++) {
+        const stringsItem = readLine();
+        strings.push(stringsItem);
+    }
+
+    const queriesCount = parseInt(readLine().trim(), 10);
+
+    let queries = [];
+
+    for (let i = 0; i < queriesCount; i++) {
+        const queriesItem = readLine();
+        queries.push(queriesItem);
+    }
+
+    const res = matchingStrings(strings, queries);
+
+    ws.write(res.join('\n') + '\n');
+
+    ws.end();
+}
 
 
 
+Objective:
+In this challenge, we learn about Arrays. Check out the attached tutorial for more details.
+Function Description:
+Complete the getSecondLargest function in the editor below.
+getSecondLargest has the following parameters:
+int nums[n]: an array of integers
+Returns:
+int: the second largest number in nums
+Input Format:
+The first line contains an integer, n, the size of the nums array.
+The second line contains n space-separated numbers that describe the elements in nums.
+Constraints:
+1 <= n <= 10
+0 <= nums[i] <= 100, where nums[i] is the number at index i.
+The numbers in nums may not be distinct. 
+
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.trim().split('\n').map(string => {
+        return string.trim();
+    });
+    
+    main();    
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/**
+*   Return the second largest number in the array.
+*   @param {Number[]} nums - An array of numbers.
+*   @return {Number} The second largest number in the array.
+**/
+function getSecondLargest(nums) {
+    // Complete the function
+}
 
 
+function main() {
+    const n = +(readLine());
+    const nums = readLine().split(' ').map(Number);
+    
+    console.log(getSecondLargest(nums));
+}
 
 
+Objective:
+In this challenge, we learn about switch statements. Check out the attached tutorial for more details.
+Task:
+Complete the getLetter(s) function in the editor. It has one parameter: a string, s, consisting of lowercase 
+English alphabetic letters (i.e., a through z). It must return A, B, C, or D depending on the following criteria:
+If the first character in string s is in the set {a,e,i,o,u}, then return A.
+If the first character in string s is in the set {b,c,d,f,g}, then return B.
+If the first character in string s is in the set {h,j,k,l,m}, then return C.
+If the first character in string s is in the set {n,p,q,r,s,t,v,w,x,y,z}, then return D.
+Hint: You can get the letter at some index i in s using the syntax s[i] or s.charAt(i).
+Function Description:
+Complete the getLetter function in the editor below.
+getLetter has the following parameters:
+string s: a string
+Returns:
+string: a single letter determined as described above
+Input Format:
+Stub code in the editor reads a single string denoting s from stdin.
+Constraints:
+1 <= |s| <= 100, where |s| is the length of s.
+String s contains lowercase English alphabetic letters (i.e., a through z) only.
+
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.trim().split('\n').map(string => {
+        return string.trim();
+    });
+    
+    main();    
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+function getLetter(s) {
+    let letter;
+    // Write your code here
+    
+    return letter;
+}
 
 
+function main() {
+    const s = readLine();
+    
+    console.log(getLetter(s));
+}
 
 
+Task:
+Complete the function in the editor. It has one parameter: an array, a, of objects. Each object in the array has two integer properties denoted by x and y. 
+The function must return a count of all such objects o in array a that satisfy o.x == o.y.
+Input Format:
+The first line contains an integer denoting n.
+Each of the n subsequent lines contains two space-separated integers describing the values of x and y.
+Constraints:
+5 <= n <= 10
+1 <= x,y <= 100
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.trim().split('\n').map(string => {
+        return string.trim();
+    });
+    
+    main();    
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Return a count of the total number of objects 'o' satisfying o.x == o.y.
+ * 
+ * Parameter(s):
+ * objects: an array of objects with integer properties 'x' and 'y'
+ */
+function getCount(objects) {
+    
+}
 
 
+function main() {
+    const n = +(readLine());
+    let objects = [];
+    
+    for (let i = 0; i < n; i++) {
+        const [a, b] = readLine().split(' ');
+        
+        objects.push({x: +(a), y: +(b)});
+    }
+    
+    console.log(getCount(objects));
+}
 
 
+Objective:
+In this challenge, we practice using JavaScript classes. Check the attached tutorial for more details.
+Task:
+Create a Polygon class that has the following properties:
+A constructor that takes an array of integer values describing the lengths of the polygon's sides.
+A perimeter() method that returns the polygon's perimeter.
+Locked code in the editor tests the Polygon constructor and the perimeter method.
+Note: The perimeter method must be lowercase and spelled correctly.
+Input Format:
+There is no input for this challenge.
+
+/*
+ * Implement a Polygon class with the following properties:
+ * 1. A constructor that takes an array of integer side lengths.
+ * 2. A 'perimeter' method that returns the sum of the Polygon's side lengths.
+ */
 
 
+const rectangle = new Polygon([10, 20, 10, 20]);
+const square = new Polygon([10, 10, 10, 10]);
+const pentagon = new Polygon([10, 20, 30, 40, 43]);
+
+console.log(rectangle.perimeter());
+console.log(square.perimeter());
+console.log(pentagon.perimeter());
 
 
+Objective:
+In this challenge, we practice using JavaScript Template Literals. Check the attached tutorial for more details.
+Task:
+The code in the editor has a tagged template literal that passes the area and perimeter of a rectangle to a tag function named sides. 
+Recall that the first argument of a tag function is an array of string literals from the template, and the subsequent values are the template's 
+respective expression values.
+Complete the function in the editor so that it does the following:
+1) Finds the initial values of s1 and s2 by plugging the area and perimeter values into the formula:
+s = (P+-sqrt(P^2 - 16.A)) / 4
+where A is the rectangle's area and P is its perimeter.
+Creates an array consisting of s1 and s2 and sorts it in ascending order.
+Returns the sorted array.
+Input Format:
+The first line contains an integer denoting s1.
+The second line contains an integer denoting s2.
+Constraints:
+1 <= s1, s2 <= 100
+
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.trim().split('\n').map(string => {
+        return string.trim();
+    });
+    
+    main();    
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Determine the original side lengths and return an array:
+ * - The first element is the length of the shorter side
+ * - The second element is the length of the longer side
+ * 
+ * Parameter(s):
+ * literals: The tagged template literal's array of strings.
+ * expressions: The tagged template literal's array of expression values (i.e., [area, perimeter]).
+ */
+function sides(literals, ...expressions) {
+    
+}
 
 
-
-
+function main() {
+    let s1 = +(readLine());
+    let s2 = +(readLine());
+    
+    [s1, s2] = [s1, s2].sort();
+    
+    const [x, y] = sides`The area is: ${s1 * s2}.\nThe perimeter is: ${2 * (s1 + s2)}.`;
+    
+    console.log((s1 === x) ? s1 : -1);
+    console.log((s2 === y) ? s2 : -1);
+}
 
 
 

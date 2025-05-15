@@ -227,3 +227,273 @@ console.log(miniMaxSum(arr01));
 const arr02 = [2, 15, 7, 12, 99, 482, 3, 519];
 console.log(miniMaxSum(arr02));
 
+// Task:
+// Given a time in 12-hour AM/PM format, convert it to military (24-hour) time.
+// Note: - 12:00:00AM on a 12-hour clock is 00:00:00 on a 24-hour clock.
+// - 12:00:00PM on a 12-hour clock is 12:00:00 on a 24-hour clock.
+// Example:
+// s = 12:01:00PM
+// Return '12:01:00'.
+// s = 12:01:00AM
+// Return '00:01:00'.
+// Function Description:
+// Complete the timeConversion function in the editor below. It should return a new string representing the input time in 24 hour format.
+// timeConversion has the following parameter(s):
+// string s: a time in 12 hour format
+// Returns:
+// string: the time in 24 hour format
+// Input Format:
+// A single string s that represents a time in 12-hour clock format (i.e.: hh:mm:ssAM or hh:mm:ssPM).
+// Constraints:
+// All input times are valid
+
+function timeConversion(s) {
+    let hour = parseInt(s.slice(0, 2));
+    const rest = s.slice(2, 8);
+    const ampm = s.slice(8, 10);
+    if(ampm === "AM") {
+        if(hour === 12) hour = 0;
+    } else {
+        if(hour !== 12) hour += 12;
+    }
+    const hourStr = hour.toString().padStart(2, '0');
+    return hourStr + rest;
+}
+
+// Example usage
+console.log(timeConversion("07:05:45PM")); // Output: 19:05:45
+console.log(timeConversion("12:00:00AM")); // Output: 00:00:00
+console.log(timeConversion("12:45:54PM")); // Output: 12:45:54
+console.log(timeConversion("01:15:30AM")); // Output: 01:15:30
+console.log(timeConversion("11:59:59PM")); // Output: 23:59:59
+
+// Task:
+// There is a collection of input strings and a collection of query strings. 
+// For each query string, determine how many times it occurs in the list of input strings. Return an array of the results.
+// Example:
+// strings = ['ab',' ab','abc']
+// queries = ['ab', 'abc', 'bc']
+// There are 2 instances of 'ab', 1 of 'abc' and 0 of 'bc'. For each query, add an element to the return array, results = [2, 1, 0].
+// Function Description:
+// Complete the function matchingStrings in the editor below. The function must return an array of integers representing the 
+// frequency of occurrence of each query string in strings.
+// matchingStrings has the following parameters:
+// string strings[n] - an array of strings to search
+// string queries[q] - an array of query strings
+// Returns:
+// int[q]: an array of results for each query
+// Input Format:
+// The first line contains an integer n, the size of strings[].
+// Each of the next n lines contains a string strings[i].
+// The next line contains q, the size of queries[].
+// Each of the next q lines contains a string queries[i].
+// Constraints:
+// 1 <= n <= 1000
+// 1 <= q <= 1000
+// 1 <= |strings[i]|, |queries[i]| <= 20
+
+function matchingStrings(strings, queries) {
+    const freqMap = {};
+    for(const s of strings) {
+        freqMap[s] = (freqMap[s] || 0) + 1;
+    }
+    return queries.map(q => freqMap[q] || 0);
+}
+// Example usage
+const strings = ['ab', 'ab', 'abc'];
+const queries = ['ab', 'abc', 'bc'];
+console.log(matchingStrings(strings, queries)); // Output: [2, 1, 0]
+
+// Objective:
+// In this challenge, we learn about Arrays. Check out the attached tutorial for more details.
+// Function Description:
+// Complete the getSecondLargest function in the editor below.
+// getSecondLargest has the following parameters:
+// int nums[n]: an array of integers
+// Returns:
+// int: the second largest number in nums
+// Input Format:
+// The first line contains an integer, n, the size of the nums array.
+// The second line contains n space-separated numbers that describe the elements in nums.
+// Constraints:
+// 1 <= n <= 10
+// 0 <= nums[i] <= 100, where nums[i] is the number at index i.
+// The numbers in nums may not be distinct. 
+
+function getSecondLargest(nums) {
+    // Remove duplicates by converting to a set, then back to an array
+    const uniqueNums = Array.from(new Set(nums));
+    // Sort in descending order
+    uniqueNums.sort((a, b) => b - a);
+    // Return the second element (second largest)
+    return uniqueNums[1];
+}
+console.log(getSecondLargest([2, 3, 6, 6, 5])); // Output: 5
+console.log(getSecondLargest([1, 2, 3, 4, 5])); // Output: 4
+console.log(getSecondLargest([5, 5, 5, 5, 5])); // Output: undefined (since there is no second largest)
+
+
+// Objective:
+// In this challenge, we learn about switch statements. Check out the attached tutorial for more details.
+// Task:
+// Complete the getLetter(s) function in the editor. It has one parameter: a string, s, consisting of lowercase 
+// English alphabetic letters (i.e., a through z). It must return A, B, C, or D depending on the following criteria:
+// If the first character in string s is in the set {a,e,i,o,u}, then return A.
+// If the first character in string s is in the set {b,c,d,f,g}, then return B.
+// If the first character in string s is in the set {h,j,k,l,m}, then return C.
+// If the first character in string s is in the set {n,p,q,r,s,t,v,w,x,y,z}, then return D.
+// Hint: You can get the letter at some index i in s using the syntax s[i] or s.charAt(i).
+// Function Description:
+// Complete the getLetter function in the editor below.
+// getLetter has the following parameters:
+// string s: a string
+// Returns:
+// string: a single letter determined as described above
+// Input Format:
+// Stub code in the editor reads a single string denoting s from stdin.
+// Constraints:
+// 1 <= |s| <= 100, where |s| is the length of s.
+// String s contains lowercase English alphabetic letters (i.e., a through z) only.
+
+function getLetter(s) {
+    let letter;
+    switch(s[0]) {
+        case 'a':
+            case 'e':
+                case 'i':
+                    case 'o':
+                        case 'u':
+                            letter = 'A';
+                            break;
+                            case 'b':
+                                case 'c':
+                                    case 'd':
+                                        case 'f':
+                                            case 'g':
+                                                letter = 'B';
+                                                break;
+                                                case 'h':
+                                                    case 'j':
+                                                        case 'k':
+                                                            case 'l':
+                                                                case 'm':
+                                                                    letter = 'C';
+                                                                    break;
+                                                                    default:
+                                                                        letter = 'D';
+    }
+    return letter;
+}
+// Example usage
+console.log(getLetter('apple'));   // Output: A
+console.log(getLetter('banana'));  // Output: B
+console.log(getLetter('mango'));   // Output: C
+console.log(getLetter('zebra'));   // Output: D
+
+// Task:
+// Complete the function in the editor. It has one parameter: an array, a, of objects. Each object in the array has two integer properties denoted by x and y. 
+// The function must return a count of all such objects o in array a that satisfy o.x == o.y.
+// Input Format:
+// The first line contains an integer denoting n.
+// Each of the n subsequent lines contains two space-separated integers describing the values of x and y.
+// Constraints:
+// 5 <= n <= 10
+// 1 <= x,y <= 100
+
+function getCount(objects) {
+    return objects.filter(o => o.x === o.y).length;
+}
+
+// Example usage
+const objects = [
+    {x: 1, y: 1},
+    {x: 2, y: 3},
+    {x: 4, y: 4},
+    {x: 5, y: 6},
+    {x: 7, y: 7}
+];
+
+console.log(getCount(objects)); // Output: 3
+
+// Objective:
+// In this challenge, we practice using JavaScript classes. Check the attached tutorial for more details.
+// Task:
+// Create a Polygon class that has the following properties:
+// A constructor that takes an array of integer values describing the lengths of the polygon's sides.
+// A perimeter() method that returns the polygon's perimeter.
+// Locked code in the editor tests the Polygon constructor and the perimeter method.
+// Note: The perimeter method must be lowercase and spelled correctly.
+// Input Format:
+// There is no input for this challenge.
+
+class Polygon {
+    constructor(sides) {
+        this.sides = sides;
+    }
+    perimeter() {
+        return this.sides.reduce((sum, side) => sum + side, 0);
+    }
+    area() {
+        const n = this.sides.length;
+        // Check if all sides are equal (regular polygon)
+        if (!this.sides.every(side => side === this.sides[0])) {
+            throw new Error("Area formula only applies to regular polygons (all sides equal).");
+        }
+        const s = this.sides[0];
+        // Area formula for a regular polygon
+        return (n * s * s) / (4 * Math.tan(Math.PI / n));
+    }
+}
+
+// Example usage
+const rectangle = new Polygon([10, 20, 10, 20]);
+const square = new Polygon([10, 10, 10, 10]);
+const pentagon = new Polygon([10, 20, 30, 40, 43]);
+
+console.log("Rectangle perimeter:", rectangle.perimeter());
+console.log("Square perimeter:", square.perimeter());
+console.log("Pentagon perimeter:", pentagon.perimeter());
+const square1 = new Polygon([10, 10, 10, 10]);
+console.log(square1.perimeter()); // 40
+console.log(square1.area());      // 100
+
+const pentagon1 = new Polygon([6, 6, 6, 6, 6]);
+console.log(pentagon1.perimeter()); // 30
+console.log(pentagon1.area());      // ~61.94
+
+const rectangle1 = new Polygon([10, 20, 10, 20]);
+console.log(rectangle1.perimeter()); // 60
+try {
+    console.log(rectangle1.area()); // Throws error
+} catch (e) {
+    console.log(e.message); // Area formula only applies to regular polygons (all sides equal).
+}
+
+// Objective:
+// In this challenge, we practice using JavaScript Template Literals. Check the attached tutorial for more details.
+// Task:
+// The code in the editor has a tagged template literal that passes the area and perimeter of a rectangle to a tag function named sides. 
+// Recall that the first argument of a tag function is an array of string literals from the template, and the subsequent values are the template's 
+// respective expression values.
+// Complete the function in the editor so that it does the following:
+// 1) Finds the initial values of s1 and s2 by plugging the area and perimeter values into the formula:
+// s = (P+-sqrt(P^2 - 16.A)) / 4
+// where A is the rectangle's area and P is its perimeter.
+// Creates an array consisting of s1 and s2 and sorts it in ascending order.
+// Returns the sorted array.
+// Input Format:
+// The first line contains an integer denoting s1.
+// The second line contains an integer denoting s2.
+// Constraints:
+// 1 <= s1, s2 <= 100
+
+function sides(literals, ...expressions) {
+    const [area, perimeter] = expressions;
+    const s1 = (perimeter + Math.sqrt(perimeter * perimeter - 16 * area)) / 4;
+    const s2 = (perimeter - Math.sqrt(perimeter * perimeter - 16 * area)) / 4;
+    return [s1, s2].sort((a, b) => a - b);
+}
+
+// Example usage
+// For area=140, perimeter=48, this returns [7, 20]
+console.log(sides`The area is: ${140}.\nThe perimeter is: ${48}.`); // [7, 20]
