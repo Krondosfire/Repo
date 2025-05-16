@@ -497,3 +497,209 @@ function sides(literals, ...expressions) {
 // Example usage
 // For area=140, perimeter=48, this returns [7, 20]
 console.log(sides`The area is: ${140}.\nThe perimeter is: ${48}.`); // [7, 20]
+
+// You will be given a list of 32 bit unsigned integers. Flip all the bits (1 --> 0 and 0 --> 1) and return the result as an unsigned integer.
+// Example:
+// n = 9[10]
+// 9[10] = 1001[2]. We're working with 32 bits, so:
+// 00000000000000000000000000001001[2] = 9[10]
+// 11111111111111111111111111110110[2] = 4294967286[10]
+// Return 4294967286.
+// Function Description:
+// Complete the flippingBits function in the editor below.
+// flippingBits has the following parameter(s):
+// int n: an integer
+// Returns:
+// int: the unsigned decimal integer result
+// Input Format:
+// The first line of the input contains q, the number of queries.
+// Each of the next q lines contain an integer, n, to process.
+// Constraints:
+// 1 <= q <= 100
+// 0 <= n < 2^32
+
+function flippingBits(n) {
+    // 0xFFFFFFFF is 32 bits of all 1s (4294967295)
+    return (~n) >>> 0;
+}
+
+// Example usage
+console.log("Flipping Bits 9:",flippingBits(9)); // Output: 4294967286
+console.log("Flipping Bits 6:",flippingBits(6)); // 
+console.log("Flipping Bits 4294967295:", flippingBits(4294967295)); // Output: 0
+console.log("Flipping Bits 2147483647:", flippingBits(2147483647)); // 2147483648
+console.log("Flipping Bits 1:",flippingBits(1));          // 4294967294
+console.log("Flipping Bits 0:", flippingBits(0));          // 4294967295
+
+// Given a square matrix, calculate the absolute difference between the sums of its diagonals.
+// For example, the square matrix arr is shown below:
+// 1 2 3
+// 4 5 6
+// 9 8 9  
+// The left-to-right diagonal = 1 + 5 + 9 = 15. The right to left diagonal = 3 + 5 + 9 = 17. Their absolute difference is |15 - 17| = 2.
+// Function description:
+// Complete the diagonalDifference function in the editor below.
+// diagonalDifference takes the following parameter:
+// int arr[n][m]: an array of integers
+// Return:
+// int: the absolute diagonal difference
+// Input Format:
+// The first line contains a single integer, n, the number of rows and columns in the square matrix arr.
+// Each of the next n lines describes a row, arr[i], and consists of n space-separated integers arr[i][j].
+// Constraints:
+// -100 <= arr[i][j] <= 100
+
+function diagonalDifference(arr) {
+    let n = arr.length;
+    let primary = 0;
+    let secondary = 0;
+    for(let i = 0; i < n; i++) {
+        primary += arr[i][i];
+        secondary += arr[i][n - 1 - i];
+    }
+    return Math.abs(primary - secondary);
+}
+
+// Example usage
+const arr = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [9, 8, 9]
+];
+console.log("Matrix:", arr);
+console.log("The diagonal difference of the matrix is:", diagonalDifference(arr)); // Output: 2
+
+// Comparison Sorting:
+// Quicksort usually has a running time of n x log(n), but is there an algorithm that can sort even faster? 
+// In general, this is not possible. Most sorting algorithms are comparison sorts, i.e. they sort a list just by comparing the elements to one another. 
+// A comparison sort algorithm cannot beat n x log(n) (worst-case) running time, since n x log(n) represents the minimum number 
+// of comparisons needed to know where to place each element. For more details, you can see these notes (PDF).
+// Alternative Sorting:
+// Another sorting method, the counting sort, does not require comparison. Instead, you create an integer array whose index range covers 
+// the entire range of values in your array to sort. Each time a value occurs in the original array, you increment the counter at that index. 
+// At the end, run through your counting array, printing the value of each non-zero valued index that number of times.
+// Example:
+// arr = [1,1,3,2,1]
+// All of the values are in the range [0...3], so create an array of zeros, result = [0,0,0,0]. The results of each iteration follow:
+// i	arr[i]	result
+// 0	1	[0, 1, 0, 0]
+// 1	1	[0, 2, 0, 0]
+// 2	3	[0, 2, 0, 1]
+// 3	2	[0, 2, 1, 1]
+// 4	1	[0, 3, 1, 1]
+// The frequency array is [0,3,1,1]. These values can be used to create the sorted array as well: sorted = [1,1,1,2,3].
+// Note:
+// For this exercise, always return a frequency array with 100 elements. The example above shows only the first 4 elements, the remainder being zeros.
+// Challenge:
+// Given a list of integers, count and return the number of times each value appears as an array of integers.
+// Function Description:
+// Complete the countingSort function in the editor below.
+// countingSort has the following parameter(s):
+// arr[n]: an array of integers
+// Returns:
+// int[100]: a frequency array
+// Input Format:
+// The first line contains an integer n, the number of items in arr.
+// Each of the next n lines contains an integer arr[i] where 0 <= i < n.
+// Constraints:
+// 100 <= n <= 10^6
+// 0 <= arr[i] < 100
+
+function countingSort(arr) {
+    // Create a frequency array of 100 elements, all initialized to 0
+    let frequency = new Array(100).fill(0);
+    // Count the occurences of each value in arr
+    for(let num of arr) {
+        frequency[num]++;
+    }
+    return frequency;
+}
+
+// Example usage
+const arr4 = [1, 1, 3, 2, 1];
+console.log(countingSort(arr4)); 
+// Output: [0, 3, 1, 1, 0, 0, ..., 0] (array of length 100)
+
+// A pangram is a string that contains every letter of the alphabet. Given a sentence determine whether it is a pangram in the English alphabet. 
+// Ignore case. Return either pangram or not pangram as appropriate.
+// Example:
+// s = 'The quick brown fox jumps over the lazy dog'
+// The string contains all letters in the English alphabet, so return pangram.
+// Function Description:
+// Complete the function pangrams in the editor below. It should return the string pangram if the input string is a pangram. 
+// Otherwise, it should return not pangram.
+// pangrams has the following parameter(s):
+// string s: a string to test
+// Returns:
+// string: either pangram or not pangram
+// Input Format:
+// A single line with string s.
+// Constraints:
+// 0 < length of s <= 10^3
+// Each character of s, s[i] belongs to {a - z, A - z, space}
+
+function pangram(s) {
+    // Convert to lower case and remove spaces
+    s = s.toLowerCase();
+    // Use a Set to collect unique letters
+    const letters = new Set();
+    for(let char of s) {
+        if(char >= 'a' && char <= 'z') {
+            letters.add(char);
+        }
+    }
+    // If all 26 letters are present, it's a pangram
+    return letters.size === 26 ? "pangram" : "not pangram";
+}
+
+// Example usage
+console.log("Is this sentence is a pangram: The quick brown fox jumps over the lazy dog?", pangram('The quick brown fox jumps over the lazy dog')); // pangram
+console.log("Is this sentence is a pangram: Hello World!", pangram('Hello World')); // not pangram
+
+// There are two n-element arrays of integers, A and B. Permute them into some A' and B' such that the relation A'[i] B'[i] >= k holds for all i where 0 <= i < n.
+// There will be q queries consisting of A, B, and k. For each query, return YES if some permutation A', B' satisfying the relation exists. 
+// Otherwise, return NO.
+// Example:
+// A = [0,1]
+// B = [0,2]
+// k = 1
+// A valid A', B' is A' = [1,0] and B' = [0,2]: 1 + 0  >= 1 and 0 + 2 >= 1. Return YES.
+// Function Description:
+// Complete the twoArrays function in the editor below. It should return a string, either YES or NO.
+// twoArrays has the following parameter(s):
+// int k: an integer
+// int A[n]: an array of integers
+// int B[n]: an array of integers
+// Returns:
+// - string: either YES or NO
+// Input Format:
+// The first line contains an integer q, the number of queries.
+// The next q sets of 3 lines are as follows:
+// The first line contains two space-separated integers n and k, the size of both arrays A and B, and the relation variable.
+// The second line contains n space-separated integers A[i].
+// The third line contains n space-separated integers B[i].
+// Constraints:
+// 1 <= q <= 10
+// 1 <= n <= 1000
+// 1 <= k <= 10^9
+// 0 <= A[i], B[i] <= 10^9
+
+function twoArrays(k, A, B) {
+    // Sort A ascending, B descending
+    A.sort((a, b) => a - b);
+    B.sort((a, b) => b - a);
+
+    // Check if for every i, A[i] + B[i] >= k
+    for(let i = 0; i < A.length; i++) {
+        if(A[i] + B[i] < k) {
+            return "NO";
+        }
+    }
+    return "YES"
+}
+
+// Example usage
+
+console.log(twoArrays(1, [0, 1], [0, 2])); // YES
+console.log(twoArrays(10, [2, 1, 3], [7, 8, 9])); // YES
+console.log(twoArrays(5, [1, 2, 2, 1], [3, 3, 3, 4])); // NO
