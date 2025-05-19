@@ -1264,4 +1264,97 @@ function processData12(input) {
 // Example usage
 processData12("10\n10 9.8 8 7.8 7.2 7 6.8 6.7 6.1 6\n200 44 32 24 17 15 12 8 4 2");
 
-//  
+//  Subarray division
+// Task:
+// Two children, Lily and Ron, want to share a chocolate bar. Each of the squares has an integer on it.
+// Lily decides to share a contiguous segment of the bar selected such that:
+// * The length of the segment matches Ron's birth month, and,
+// * The sum of the integers on the squares is equal to his birth day.
+// Determine how many ways she can divide the chocolate.
+// Example:
+// s = [2,2,1,3,2]
+// d = 4
+// m = 2
+// Lily wants to find segments summing to Ron's birth day, d = 4 with a length equalling his birth month, m = 2. 
+// In this case, there are two segments meeting her criteria: [2,2] and [1,3].
+// Function Description:
+// Complete the birthday function in the editor below.
+// birthday has the following parameter(s):
+// * int s[n]: the numbers on each of the squares of chocolate
+// * int d: Ron's birth day
+// * int m: Ron's birth month
+// Returns:
+// int: the number of ways the bar can be divided
+// Input Format:
+// The first line contains an integer n, the number of squares in the chocolate bar.
+// The second line contains n space-separated integers s[i], the numbers on the chocolate squares where 0 <= i < n.
+// The third line contains two space-separated integers, d and m, Ron's birth day and his birth month.
+// Constraints:
+// 1 <= n <= 100
+// 1 <= s[i] <= 5, where (0 <= i < n)
+// 1 <= d <= 31
+// 1 <= m <= 12
+
+function birthday(s, d, m) {
+    let count = 0;
+    for (let i = 0; i <= s.length - m; i++) {
+        let sum = 0;
+        for (let j = 0; j < m; j++) {
+            sum += s[i + j];
+        }
+        if (sum === d) {
+            count++;
+        }
+    }
+    return count;
+}
+
+// Example usage
+// Example 1
+const s1 = [2, 2, 1, 3, 2];
+const d1 = 4;
+const m1 = 2;
+console.log(birthday(s1, d1, m1)); // Output: 2
+
+// Example 2
+const s2 = [1, 1, 1, 1, 1, 1];
+const d2 = 3;
+const m2 = 2;
+console.log(birthday(s2, d2, m2)); // Output: 0
+
+// Example 3
+const s3 = [4];
+const d3 = 4;
+const m3 = 1;
+console.log(birthday(s3, d3, m3)); // Output: 1
+
+
+// XOR Strings 2
+// Task:
+// Given two strings consisting of digits 0 and 1 only, find the XOR of the two strings.
+// Debug the given function strings_xor to find the XOR of the two given strings appropriately.
+// Note: You can modify at most three lines in the given code and you cannot add or remove lines to the code.
+// To restore the original code, click on the icon to the right of the language selector.
+// Input Format:
+// The input consists of two lines. The first line of the input contains the first string, s, and the second line contains the second string, t.
+// Constraints:
+// 1 <= |s| <= 10^4
+// |s| = |t|
+
+function strings_xor(s, t) {
+    let res = "";
+    for(let i = 0; i < s.length; i++) {
+        if(s[i] === t[i]) {
+            res += "0";
+        }
+        else {
+            res += "1";
+        }
+    }
+    return res;
+}
+
+// Example usage
+const s4 = "10101";
+const t4 = "00101";
+console.log(strings_xor(s4, t4));
