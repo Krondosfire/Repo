@@ -703,3 +703,565 @@ function twoArrays(k, A, B) {
 console.log(twoArrays(1, [0, 1], [0, 2])); // YES
 console.log(twoArrays(10, [2, 1, 3], [7, 8, 9])); // YES
 console.log(twoArrays(5, [1, 2, 2, 1], [3, 3, 3, 4])); // NO
+
+// Objective:
+// In this challenge, we learn about binomial distributions. 
+// Task:
+// The ratio of boys to girls for babies born in Russia is 1.09 : 1. If there is 1 child born per birth, what proportion of 
+// Russian families with exactly 6 children will have at least 3 boys?
+// Write a program to compute the answer using the above parameters. Then print your result, rounded to a scale of 3 decimal places (i.e., 1.234 format).
+// Input Format:
+// A single line containing the following values:
+// 1.09 1
+
+function processData(input) {
+    //Parse input
+    const [boyRatio, girlRatio] = input.trim().split(' ').map(Number);
+    // Probability of boy
+    const p = boyRatio / (boyRatio + girlRatio);
+    // Number of children
+    const n = 6;
+
+    // Binomial coeficient function
+    function binom(n, k) {
+        let res = 1;
+        for(let i = 1; i <= k; i++) {
+            res *= (n - i + 1) / i;
+        }
+        return res;
+    }
+    // Calculate probability of at least 3 boys
+    let prob = 0;
+    for(let k = 3; k <= n; k++) {
+        prob += binom(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+    }
+    // Print the result rounded to 3 decimal places
+    console.log(prob.toFixed(3));
+}
+
+// Example input: "1.09 1"
+processData("1.09 1");
+// Output: 0.696
+
+
+// Task:
+// The probability that a machine produces a defective product is 1/3. What is the probability that the 1st defect occurs the 5th item produced?
+// Input Format:
+// The first line contains the respective space-separated numerator and denominator for the probability of a defect, 
+// and the second line contains the inspection we want the probability of being the first defect for:
+// 1 3
+// 5
+
+function processData01(input) {
+    const lines = input.trim().split('\n');
+    const [num, den] = lines[0].split(' ').map(Number);
+    const k = Number(lines[1]);
+    const p = num / den;  // probability of defect
+    const q = 1 - p; // probability of no defect
+    // Probability that first defect is on the k-th item
+    const result = Math.pow(q, k - 1) * p;
+    // Print result rounded to 3 decimal places
+    console.log(result.toFixed(3));
+}
+
+// Example usage:
+processData01("1 3\n5");
+// Output: 0.131
+
+// Task:
+// A manufacturer of metal pistons finds that, on average, 12% of the pistons they manufacture are rejected because they are incorrectly sized. 
+// What is the probability that a batch of 10 pistons will contain:
+// No more than 2 rejects?
+// At least 2 rejects?
+// Input Format:
+// A single line containing the following values (denoting the respective percentage of defective pistons and the size of the current batch of pistons):
+// 12 10
+
+function processData02(input) {
+    const [percent, n] = input.trim().split(' ').map(Number);
+    const p = percent / 100;
+    // Binomial coeficient
+    function binom01(n, k) {
+        let res = 1;
+        for(let i = 1; i <= k; i++) {
+            res *= (n - i + 1) / i;
+        }
+        return res;
+    }
+    // Binomial probability
+    function binomialProb(k) {
+        return binom01(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+    }
+    // No more than 2 rejects: sum P(0), P(1), P(2)
+    let noMoreThan2 = 0;
+    for(let k = 0; k <= 2; k++) {
+        noMoreThan2 += binomialProb(k);
+    }
+    // At least 2 rejects: 1 - P(0) - P(1)
+    let atLeast2 = 1 -(binomialProb(0) + binomialProb(1));
+    // Print each probability rounded to 3 decimal places
+    console.log(noMoreThan2.toFixed(3));
+    console.log(atLeast2.toFixed(3));
+}
+
+// Example input: "12 10"
+processData02("12 10");
+
+
+// Task:
+// The probability that a machine produces a defective product is 1/3. What is the probability that the  defect is found during the first 5 inspections?
+// Input Format:
+// The first line contains the respective space-separated numerator and denominator for the probability of a defect, 
+// and the second line contains the inspection we want the probability of the first defect being discovered by:
+// 1 3
+// 5
+
+function processData03(input) {
+    const lines = input.trim().split('\n');
+    const [num, den] = lines[0].split(' ').map(Number);
+    const n = Number(lines[1]);
+    const p = num / den;
+
+    // Probability that first defect is found during first n inspections
+    // P(X <= n) = 1 - (1-p)^n
+    const result = 1 - Math.pow(1 - p, n);
+
+    // Print result rounded to 3 decimal places
+    console.log(result.toFixed(3));
+}
+
+// Example usage:
+processData03("1 3\n5");
+
+// Task:
+// A random variable, X, follows Poisson distribution with mean of 2.5. Find the probability with which the random variable X is equal to 5.
+// Input Format:
+// The first line contains X's mean. The second line contains the value we want the probability for:
+// 2.5
+// 5
+
+function processData04(input) {
+    const lines = input.trim().split('\n');
+    const lambda = parseFloat(lines[0]);
+    const k = parseInt(lines[1], 10);
+    // Calculate k!
+    function factorial(n) {
+        let res = 1;
+        for(let i = 2; i <= n; i++) res *= i;
+        return res;
+    }
+    const prob = (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
+    // Print result rounded to 3 decimal places
+    console.log(prob.toFixed(3));
+}
+
+// Example usage
+processData04("2.5\n5");
+
+// Task:
+// The manager of a industrial plant is planning to buy a machine of either type A or type B. For each day’s operation:
+
+// The number of repairs, X, that machine A needs is a Poisson random variable with mean 0.88. The daily cost of operating A is C(A) = 160 + 40X^2.
+// The number of repairs, Y, that machine B needs is a Poisson random variable with mean 1.55. The daily cost of operating B is C(B) = 128 + 40Y^2.
+// Assume that the repairs take a negligible amount of time and the machines are maintained nightly to ensure that they operate like new at the 
+// start of each day. Find and print the expected daily cost for each machine.
+// Input Format:
+// A single line comprised of 2 space-separated values denoting the respective means for A and B:
+// 0.88 1.55
+
+function processData05(input) {
+    const [lambdaA, lambdaB] = input.trim().split(' ').map(Number);
+    function expectedCost(base, lambda) {
+        return base + 40 * (lambda + lambda * lambda);
+    }
+    const costA = expectedCost(160, lambdaA);
+    const costB = expectedCost(128, lambdaB);
+    console.log(costA.toFixed(3));
+    console.log(costB.toFixed(3));
+}
+
+// Example input: "12 10"
+processData05("0.88 1.55");
+
+// Task:
+// In a certain plant, the time taken to assemble a car is a random variable, X, having a normal distribution with a mean of 20 hours 
+// and a standard deviation of 2 hours. What is the probability that a car can be assembled at this plant in:
+// 1. Less than 19.5 hours?
+// 2. Between 20 and 22 hours?
+// Input Format:
+// There are 3 lines of input (shown below):
+// 20 2
+// 19.5
+// 20 22
+// The first line contains 2 space-separated values denoting the respective mean and standard deviation for X. 
+// The second line contains the number associated with question 1. 
+// The third line contains 2 space-separated values describing the respective lower and upper range boundaries for question 2.
+
+function processData06(input) {
+    const lines = input.trim().split('\n');
+    const [mean, std] = lines[0].split(' ').map(Number);
+    const lessThan = parseFloat(lines[1]);
+    const [low, high] = lines[2].split(' ').map(Number);
+
+    // Error function approximation
+    function erf(x) {
+        // Abramowitz and Stegun formula 7.1.26
+        const sign = x < 0 ? -1 : 1;
+        x = Math.abs(x);
+
+        const a1 =  0.254829592;
+        const a2 = -0.284496736;
+        const a3 =  1.421413741;
+        const a4 = -1.453152027;
+        const a5 =  1.061405429;
+        const p  =  0.3275911;
+
+        const t = 1.0/(1.0 + p*x);
+        const y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-x*x);
+
+        return sign*y;
+    }
+
+    // CDF for normal distribution
+    function normalCDF(x, mean, std) {
+        return 0.5 * (1 + erf((x - mean) / (std * Math.sqrt(2))));
+    }
+
+    // 1. P(X < lessThan)
+    const prob1 = normalCDF(lessThan, mean, std);
+
+    // 2. P(low < X < high) = CDF(high) - CDF(low)
+    const prob2 = normalCDF(high, mean, std) - normalCDF(low, mean, std);
+
+    // Print results rounded to 3 decimal places
+    console.log(prob1.toFixed(3));
+    console.log(prob2.toFixed(3));
+}
+
+// Example usage
+processData06("20 2\n19.5\n20 22");
+// Output:
+// 0.266
+// 0.341
+
+// Task:
+// The final grades for a Physics exam taken by a large group of students have a mean of mu = 70 and a standard deviation of sigma = 10. 
+// If we can approximate the distribution of these grades by a normal distribution, what percentage of the students:
+// 1. Scored higher than 80 (i.e., have a grade > 80)?
+// 2. Passed the test (i.e., have a grade >= 60)?
+// 3. Failed the test (i.e., have a grade < 60)?
+// Find and print the answer to each question on a new line, rounded to a scale of 2 decimal places.
+// Input Format:
+// There are 3 lines of input (shown below):
+
+// 70 10
+// 80
+// 60
+// The first line contains 2 space-separated values denoting the respective mean and standard deviation for the exam. 
+// The second line contains the number associated with question 1. 
+// The third line contains the pass/fail threshold number associated with questions 2 and 3.
+
+function processData07(input) {
+    const lines = input.trim().split('\n');
+    const [mean, std] = lines[0].split(' ').map(Number);
+    const higherThan = parseFloat(lines[1]);
+    const passMark = parseFloat(lines[2]);
+
+    // Error function approximation
+    function erf(x) {
+        const sign = x < 0 ? -1 : 1;
+        x = Math.abs(x);
+
+        const a1 =  0.254829592;
+        const a2 = -0.284496736;
+        const a3 =  1.421413741;
+        const a4 = -1.453152027;
+        const a5 =  1.061405429;
+        const p  =  0.3275911;
+
+        const t = 1.0/(1.0 + p*x);
+        const y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-x*x);
+
+        return sign*y;
+    }
+
+    function normalCDF(x, mean, std) {
+        return 0.5 * (1 + erf((x - mean) / (std * Math.sqrt(2))));
+    }
+
+    // 1. Percentage scored higher than higherThan
+    const percentHigher = (1 - normalCDF(higherThan, mean, std)) * 100;
+
+    // 2. Percentage passed (>= passMark)
+    const percentPassed = (1 - normalCDF(passMark, mean, std)) * 100;
+
+    // 3. Percentage failed (< passMark)
+    const percentFailed = normalCDF(passMark, mean, std) * 100;
+
+    // Print results rounded to 2 decimal places
+    console.log(percentHigher.toFixed(2));
+    console.log(percentPassed.toFixed(2));
+    console.log(percentFailed.toFixed(2));
+}
+
+// Example UsaGE
+processData07("70 10\n80\n60");
+
+// Task:
+// A large elevator can transport a maximum of 9800 pounds. Suppose a load of cargo containing 49 boxes must be transported via the elevator. 
+// The box weight of this type of cargo follows a distribution with a mean of mu = 205 pounds and a standard deviation of sigma = 15 pounds. 
+// Based on this information, what is the probability that all 49 boxes can be safely loaded into the freight elevator and transported?
+// Input Format:
+// There are 4 lines of input (shown below):
+// 9800
+// 49
+// 205
+// 15
+// The first line contains the maximum weight the elevator can transport. 
+// The second line contains the number of boxes in the cargo. 
+// The third line contains the mean weight of a cargo box, and the fourth line contains its standard deviation.
+
+function processData08(input) {
+    const lines = input.trim().split('\n');
+    const maxWeight = parseFloat(lines[0]);
+    const n = parseInt(lines[1], 10);
+    const mu = parseFloat(lines[2]);
+    const sigma = parseFloat(lines[3]);
+
+    // Central Limit Theorem
+    const mu_sum = n * mu;
+    const sigma_sum = Math.sqrt(n) * sigma;
+
+    const z = (maxWeight - mu_sum) / sigma_sum;
+
+    // Error function approximation
+    function erf(x) {
+        const sign = x < 0 ? -1 : 1;
+        x = Math.abs(x);
+
+        const a1 =  0.254829592;
+        const a2 = -0.284496736;
+        const a3 =  1.421413741;
+        const a4 = -1.453152027;
+        const a5 =  1.061405429;
+        const p  =  0.3275911;
+
+        const t = 1.0/(1.0 + p*x);
+        const y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-x*x);
+
+        return sign*y;
+    }
+
+    function normalCDF(z) {
+        return 0.5 * (1 + erf(z / Math.sqrt(2)));
+    }
+
+    const prob = normalCDF(z);
+
+    // Print result rounded to 4 decimal places
+    console.log(prob.toFixed(4));
+}
+
+// Example usage
+processData08("9800\n49\n205\n15");
+
+//  Task:
+// The number of tickets purchased by each student for the University X vs. University Y football game follows a distribution that has a mean of mu = 24 
+// and a standard deviation of sigma = 2.0.
+// A few hours before the game starts, 100 eager students line up to purchase last-minute tickets. 
+// If there are only 250 tickets left, what is the probability that all 100 students will be able to purchase tickets?
+// Input Format:
+// There are 4 lines of input (shown below):
+// 250
+// 100
+// 2.4
+// 2.0
+// The first line contains the number of last-minute tickets available at the box office. 
+// The second line contains the number of students waiting to buy tickets. 
+// The third line contains the mean number of purchased tickets, and the fourth line contains the standard deviation.
+
+function processData09(input) {
+    const lines = input.trim().split('\n');
+    const ticketsAvailable = parseFloat(lines[0]);
+    const n = parseInt(lines[1], 10);
+    const mu = parseFloat(lines[2]);
+    const sigma = parseFloat(lines[3]);
+
+    // Central Limit Theorem
+    const mu_sum = n * mu;
+    const sigma_sum = Math.sqrt(n) * sigma;
+
+    const z = (ticketsAvailable - mu_sum) / sigma_sum;
+
+    // Error function approximation
+    function erf(x) {
+        const sign = x < 0 ? -1 : 1;
+        x = Math.abs(x);
+
+        const a1 =  0.254829592;
+        const a2 = -0.284496736;
+        const a3 =  1.421413741;
+        const a4 = -1.453152027;
+        const a5 =  1.061405429;
+        const p  =  0.3275911;
+
+        const t = 1.0/(1.0 + p*x);
+        const y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-x*x);
+
+        return sign*y;
+    }
+
+    function normalCDF(z) {
+        return 0.5 * (1 + erf(z / Math.sqrt(2)));
+    }
+
+    const prob = normalCDF(z);
+
+    // Print result rounded to 4 decimal places
+    console.log(prob.toFixed(4));
+}
+
+// Example usage
+processData09("250\n100\n2.4\n2.0");
+
+// Objective:
+// In this challenge, we practice solving problems based on the Central Limit Theorem. 
+// Task:
+// You have a sample of 100 values from a population with mean mu = 500 and with standard deviation sigma = 80. 
+// Compute the interval that covers the middle 95% of the distribution of the sample mean; in other words, compute A and B such that P(A < x < B) = 0.95. 
+// Use the value of z = 1.96. Note that z is the z-score.
+// Input Format:
+// There are five lines of input (shown below):
+// 100
+// 500
+// 80
+// .95
+// 1.96
+// The first line contains the sample size. The second and third lines contain the respective mean (mu) and standard deviation (sigma). 
+// The fourth line contains the distribution percentage we want to cover (as a decimal), and the fifth line contains the value of z.
+
+function processData10(input) {
+    const lines = input.trim().split('\n');
+    const n = parseInt(lines[0], 10);
+    const mu = parseFloat(lines[1]);
+    const sigma = parseFloat(lines[2]);
+    // const conf = parseFloat(lines[3]); // not used, since z is given
+    const z = parseFloat(lines[4]);
+
+    const SE = sigma / Math.sqrt(n);
+
+    const A = mu - z * SE;
+    const B = mu + z * SE;
+
+    // Print A and B rounded to 2 decimal places
+    console.log(A.toFixed(2));
+    console.log(B.toFixed(2));
+}
+
+// Example usage
+processData10("100\n500\n80\n.95\n1.96");
+
+// Objective:
+// In this challenge, we practice calculating the Pearson correlation coefficient. 
+// Task:
+// Given two n-element data sets, X and Y, calculate the value of the Pearson correlation coefficient.
+// Input Format:
+// The first line contains an integer, n, denoting the size of data sets X and Y.
+// The second line contains n space-separated real numbers (scaled to at most one decimal place), defining data set X.
+// The third line contains n space-separated real numbers (scaled to at most one decimal place), defining data set Y.
+// Constraints:
+// 10 <= n <= 100
+// 1 <= x[i] <= 500, where x[i] is the i-th value of data set X.
+// 1 <= y[i] <= 500, where y[i] is the i-th value of data set Y.
+// Data set X contains unique values.
+// Data set Y contains unique values.
+
+function processData11(input) {
+    const lines = input.trim().split('\n');
+    const n = parseInt(lines[0], 10);
+    const X = lines[1].split(' ').map(Number);
+    const Y = lines[2].split(' ').map(Number);
+
+    // Calculate means
+    const meanX = X.reduce((a, b) => a + b, 0) / n;
+    const meanY = Y.reduce((a, b) => a + b, 0) / n;
+
+    // Calculate numerator and denominators
+    let numerator = 0;
+    let sumSqX = 0;
+    let sumSqY = 0;
+    for (let i = 0; i < n; i++) {
+        const dx = X[i] - meanX;
+        const dy = Y[i] - meanY;
+        numerator += dx * dy;
+        sumSqX += dx * dx;
+        sumSqY += dy * dy;
+    }
+
+    const denominator = Math.sqrt(sumSqX * sumSqY);
+
+    const r = numerator / denominator;
+
+    // Print result rounded to 3 decimal places
+    console.log(r.toFixed(3));
+}
+
+// Example usage
+processData11("10\n10 9.8 8 7.8 7.2 7 6.8 6.7 6.1 6\n200 44 32 24 17 15 12 8 4 2");
+
+//  Objective:
+// In this challenge, we practice calculating Spearman's rank correlation coefficient. 
+// Task:
+// Given two n-element data sets, X and Y, calculate the value of Spearman's rank correlation coefficient.
+// Input Format:
+// The first line contains an integer, n, denoting the number of values in data sets X and Y.
+// The second line contains n space-separated real numbers (scaled to at most one decimal place) denoting data set X.
+// The third line contains n space-separated real numbers (scaled to at most one decimal place) denoting data set Y.
+// Constraints:
+// 10 <= n <= 100
+// 1 <= x[i] <= 500, where x[i] is the i-th value of data set X.
+// 1 <= y[i] <= 500, where y[i] is the i-th value of data set Y.
+// Data set X contains unique values.
+// Data set Y contains unique values.
+
+function processData12(input) {
+    const lines = input.trim().split('\n');
+    const n = parseInt(lines[0], 10);
+    const X = lines[1].split(' ').map(Number);
+    const Y = lines[2].split(' ').map(Number);
+
+    // Helper to get ranks of an array (unique values, so no ties)
+    function getRanks(arr) {
+        // Pair each value with its index
+        const indexed = arr.map((v, i) => [v, i]);
+        // Sort by value descending (largest gets rank 1)
+        indexed.sort((a, b) => b[0] - a[0]);
+        // Assign ranks (rank 1 for largest value)
+        const ranks = Array(n);
+        for (let i = 0; i < n; i++) {
+            ranks[indexed[i][1]] = i + 1;
+        }
+        return ranks;
+    }
+
+    const rankX = getRanks(X);
+    const rankY = getRanks(Y);
+
+    // Compute sum of squared rank differences
+    let d2sum = 0;
+    for (let i = 0; i < n; i++) {
+        const d = rankX[i] - rankY[i];
+        d2sum += d * d;
+    }
+
+    // Spearman's rank correlation formula
+    const rho = 1 - (6 * d2sum) / (n * (n * n - 1));
+
+    // Print result rounded to 3 decimal places
+    console.log(rho.toFixed(3));
+}
+
+// Example usage
+processData12("10\n10 9.8 8 7.8 7.2 7 6.8 6.7 6.1 6\n200 44 32 24 17 15 12 8 4 2");
+
+//  
