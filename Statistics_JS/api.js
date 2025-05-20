@@ -1358,3 +1358,308 @@ function strings_xor(s, t) {
 const s4 = "10101";
 const t4 = "00101";
 console.log(strings_xor(s4, t4));
+
+// The median of a list of numbers is essentially its middle element after sorting. The same number of elements
+// occur after it as before. Given a list of numbers with an odd number of elements, find the median.
+// Example:
+// arr = [5,3,1,2,4]
+// The sorted array arr' = [1,2,3,4,5]. The middle elements and the median is 3.
+// Function description:
+// Complete the findMedian function in the editor below.
+// findMedian has the following parameters:
+// int arr[n]: an unsorted array of integers
+// Returns:
+// int:the median of the array
+// Input format:
+// The first line contains the integer n, the size of arr.
+// The second line contains n space-separated integers arr[i].
+// Constraints:
+// 1 <= n <= 1000001
+// n is odd
+// -10000 <= arr[i] <= 10000
+
+function findMedian(arr) {
+    arr.sort((a, b) => a - b); // Sort the array in ascending order
+    const mid = Math.floor(arr.length / 2);
+    return arr[mid];
+}
+
+// Example 1
+const arr10 = [5, 3, 1, 2, 4];
+console.log(findMedian(arr10)); // Output: 3
+
+// Example 2
+const arr11 = [7, 9, 2, 6, 5];
+console.log(findMedian(arr11)); // Output: 6
+
+// Example 3
+const arr12 = [-5, -1, -3];
+console.log(findMedian(arr12)); // Output: -3
+
+
+// Sean invented a game involving a 2n x 2n matrix where each cell of the matrix contains an integer. 
+// He can reverse any of its rows or columns any number of times. The goal of the game is to maximize the sum of the elements in the n x n submatrix located in the
+// upper-left quadrant of the matrix.
+// Given the initial configurations for q matrices, help Sean reverse the
+// rows and columns of each matrix in the best possible way so that the sum of the elements in the matrix's upper-left quadrant is maximal.
+// Example:
+// matrix = [[1,2], [3,4]]
+// 1 2
+// 3 4
+// It is 2 x 2 and we want to maximize the top left quadrant, a 1 x 1 matrix. Reverse row 1:
+// 1 2
+// 4 3
+// And now reverse column 0:
+// 4 2
+// 1 3
+// The maximal sum is 4.
+// Function description:
+// Complete the flippingMatrix function.
+// flippingMatrix has the followinf parameters:
+// * int matrix[2n][2n]: a 2-dimensional array of integers
+// Returns:
+// * int: the maximum sum possible
+// Input format:
+// The first line contains an integer q, the number of queries.
+// The next q sets of lines are in the following format:
+// * The first line of each query contains an integer, n.
+// * Each of the next 2n lines contains 2n space-separated integers matrix[i][j] in row i of the matrix.
+// Constraints:
+// 1 <= q <= 16
+// 1 <= n <=128
+// 0 <= matrix[i][j] <= 4096, where 0 <= i, j < 2n.
+
+function flippingMatrix(matrix) {
+    const n = matrix.length / 2;
+    let sum = 0;
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            const a = matrix[i][j];
+            const b = matrix[i][2 * n - 1 - j];
+            const c = matrix[2 * n - 1 - i][j];
+            const d = matrix[2 * n - 1 - i][2 * n - 1 - j];
+            sum += Math.max(a, b, c, d);
+        }
+    }
+    return sum;
+}
+
+const matrix3 = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 16]
+];
+console.log(flippingMatrix(matrix3)); // Output: 54
+
+// Exceptions
+// Objective:
+// Yesterday's challenge taught you to manage exceptional situations by using try and catch blocks. 
+// In today's challenge, you will practice throwing and propagating an exception. 
+// Task:
+// Write a Calculator class with a single method: int power(int,int). The power method takes two integers, n and p, as parameters and 
+// returns the integer result of n^p. If either n or p is negative, then the method must throw an exception with the message: n and p should be non-negative.
+// Note: Do not use an access modifier (e.g.: public) in the declaration for your Calculator class.
+// Input Format:
+// Input from stdin is handled for you by the locked stub code in your editor. The first line contains an integer, T, 
+// the number of test cases. Each of the T subsequent lines describes a test case in 2 space-separated integers that denote n and p, respectively.
+// Constraints:
+// No Test Case will result in overflow for correctly written code.
+
+//Write your code here
+class Calculator {
+    power(n, p) {
+        if (n < 0 || p < 0) {
+            throw "n and p should be non-negative";
+        }
+        return Math.pow(n, p);
+    }
+}
+// Example usage
+const myCalculator = new Calculator();
+
+try {
+    console.log(myCalculator.power(3, 5)); // Output: 243
+    console.log(myCalculator.power(2, 4)); // Output: 16
+    console.log(myCalculator.power(0, 0)); // Output: 1
+    console.log(myCalculator.power(-1, 2)); // Throws exception
+} catch (e) {
+    console.log(e); // Output: n and p should be non-negative
+}
+
+try {
+    console.log(myCalculator.power(2, -3)); // Throws exception
+} catch (e) {
+    console.log(e); // Output: n and p should be non-negative
+}
+
+// Exception
+// Objective:
+// Today, we're getting started with Exceptions by learning how to parse an integer from a string and print a custom error message. 
+// Task:
+// Read a string, S, and print its integer value; if S cannot be converted to an integer, print Bad String.
+// Note: You must use the String-to-Integer and exception handling constructs built into your submission language. 
+// If you attempt to use loops/conditional statements, you will get a 0 score.
+// Input Format:
+// A single string, S.
+// Constraints:
+// 1 <= |S| <= 6, where |S| is the length of string S.
+// S is composed of either lowercase letters (a-z) or decimal digits (0-9).
+
+function parseAndPrint(S) {
+    try {
+        if (isNaN(Number(S))) throw new Error();
+        console.log(Number(S));
+    } catch (e) {
+        console.log("Bad String");
+    }
+}
+
+
+// Example usage
+parseAndPrint("1234");   // Output: 1234
+parseAndPrint("007");    // Output: 7
+parseAndPrint("abcd");   // Output: Bad String
+parseAndPrint("12a34");  // Output: Bad String
+parseAndPrint("42");     // Output: 42
+
+// 2D Arrays
+// Objective:
+// Today, we are building on our knowledge of arrays by adding another dimension. 
+// Context:
+// Given a 6 x 6 2D Array, A:
+// 1 1 1 0 0 0
+// 0 1 0 0 0 0
+// 1 1 1 0 0 0
+// 0 0 0 0 0 0
+// 0 0 0 0 0 0
+// 0 0 0 0 0 0
+// We define an hourglass in A to be a subset of values with indices falling in this pattern in A's graphical representation:
+// a b c
+//   d
+// e f g
+// There are 16 hourglasses in A, and an hourglass sum is the sum of an hourglass' values.
+// Task:
+// Calculate the hourglass sum for every hourglass in A, then print the maximum hourglass sum.
+// Example:
+// In the array shown above, the maximum hourglass sum is 7 for the hourglass in the top left corner.
+// Input Format:
+// There are 6 lines of input, where each line contains 6 space-separated integers that describe the 2D Array A.
+// Constraints:
+// -9 <= A[i][j] <= 9
+// 0 <= i,j <=5
+
+function main() {
+    let arr = Array(6);
+
+    for (let i = 0; i < 6; i++) {
+        arr[i] = readLine().replace(/\s+$/g, '').split(' ').map(arrTemp => parseInt(arrTemp, 10));
+    }
+
+    let maxSum = -63; // Minimum possible hourglass sum: 7 * -9 = -63
+
+    for (let i = 0; i <= 3; i++) {
+        for (let j = 0; j <= 3; j++) {
+            let sum = 
+                arr[i][j]   + arr[i][j+1]   + arr[i][j+2] +
+                              arr[i+1][j+1] +
+                arr[i+2][j] + arr[i+2][j+1] + arr[i+2][j+2];
+            if (sum > maxSum) {
+                maxSum = sum;
+            }
+        }
+    }
+
+    console.log(maxSum);
+}
+// Example usage:
+function maxHourglassSum(arr) {
+    let maxSum = -63; // 7 cells, each min -9
+
+    for (let i = 0; i <= 3; i++) {
+        for (let j = 0; j <= 3; j++) {
+            let sum = 
+                arr[i][j]   + arr[i][j+1]   + arr[i][j+2] +
+                              arr[i+1][j+1] +
+                arr[i+2][j] + arr[i+2][j+1] + arr[i+2][j+2];
+            if (sum > maxSum) {
+                maxSum = sum;
+            }
+        }
+    }
+    return maxSum;
+}
+
+
+const arr14 = [
+    [1, 1, 1, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0],
+    [1, 1, 1, 0, 0, 0],
+    [0, 0, 2, 4, 4, 0],
+    [0, 0, 0, 2, 0, 0],
+    [0, 0, 1, 2, 4, 0]
+];
+
+console.log(maxHourglassSum(arr14)); // Output: 19
+
+
+// Inheritance
+// Task:
+// You are given two classes, Person and Student, where Person is the base class and Student is the derived class. 
+// Completed code for Person and a declaration for Student are provided for you in the editor. 
+// Observe that Student inherits all the properties of Person.
+// Complete the Student class by writing the following:
+// A Student class constructor, which has 4 parameters:
+// * A string, firstName.
+// * A string, lastName.
+// * An integer, idNumber.
+// * An integer array (or vector) of test scores, scores.
+// A char calculate() method that calculates a Student object's average and returns the grade character representative of their calculated average:
+// Input Format:
+// The locked stub code in the editor reads the input and calls the Student class constructor with the necessary arguments. 
+// It also calls the calculate method which takes no arguments.
+// The first line contains firstName, lastName, and idNumber, separated by a space. The second line contains the number of test scores. 
+// The third line of space-separated integers describes scores.
+// Constraints:
+// 1 <= length of firstName, length of lastName <= 10
+// length of idNumber === 7
+// 0 <= score <= 100
+
+class Person {
+    constructor(firstName, lastName, identification) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.idNumber = identification;
+    }
+    
+    printPerson() {
+        console.log(
+            "Name: " + this.lastName + ", " + this.firstName 
+            + "\nID: " + this.idNumber
+        )
+    }
+}
+
+class Student extends Person {
+    constructor(firstName, lastName, id, scores) {
+        super(firstName, lastName, id);
+        this.scores = scores;
+    }
+    calculate() {
+        let sum = this.scores.reduce((a, b) => a + b, 0);
+        let avg = sum / this.scores.length;
+        if (avg >= 90) return 'O';
+        if (avg >= 80) return 'E';
+        if (avg >= 70) return 'A';
+        if (avg >= 55) return 'P';
+        if (avg >= 40) return 'D';
+        return 'T';
+    }
+}
+
+// Example usage:
+const student = new Student("Jane", "Doe", 1234567, [100, 80, 90, 75, 88]);
+student.printPerson();
+console.log('Grade: ' + student.calculate());
+
+//
