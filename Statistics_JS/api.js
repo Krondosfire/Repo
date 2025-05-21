@@ -1662,4 +1662,216 @@ const student = new Student("Jane", "Doe", 1234567, [100, 80, 90, 75, 88]);
 student.printPerson();
 console.log('Grade: ' + student.calculate());
 
-//
+//  Stacks and Queues:
+// Task:
+// A palindrome is a word, phrase, number, or other sequence of characters which reads the same backwards and forwards. 
+// Can you determine if a given string, s, is a palindrome?
+// To solve this challenge, we must first take each character in s, enqueue it in a queue, and also push that same character onto a stack. 
+// Once that's done, we must dequeue the first character from the queue and pop the top character off the stack, then compare the two characters 
+// to see if they are the same; as long as the characters match, we continue dequeueing, popping, and comparing each character until our 
+// containers are empty (a non-match means s isn't a palindrome).
+// Write the following declarations and implementations:
+// 1. Two instance variables: one for your stack, and one for your queue.
+// 2. A void pushCharacter(char ch) method that pushes a character onto a stack.
+// 3. A void enqueueCharacter(char ch) method that enqueues a character in the queue instance variable.
+// 4. A char popCharacter() method that pops and returns the character at the top of the stack instance variable.
+// 5. A char dequeueCharacter() method that dequeues and returns the first character in the queue instance variable.
+// Input Format:
+// You do not need to read anything from stdin. The locked stub code in your editor reads a single line containing string s. 
+// It then calls the methods specified above to pass each character to your instance variables.
+// Constraints:
+// s is composed of lowercase English letters.
+
+// Define the Solution class
+function Solution() {
+    this.stack = [];
+    this.queue = [];
+
+    this.pushCharacter = function(ch) {
+        this.stack.push(ch);
+    };
+
+    this.enqueueCharacter = function(ch) {
+        this.queue.push(ch);
+    };
+
+    this.popCharacter = function() {
+        return this.stack.pop();
+    };
+
+    this.dequeueCharacter = function() {
+        return this.queue.shift();
+    };
+}
+
+// Example usage function
+function isPalindrome(s) {
+    var obj = new Solution();
+    for (var i = 0; i < s.length; i++) {
+        obj.pushCharacter(s.charAt(i));
+        obj.enqueueCharacter(s.charAt(i));
+    }
+    for (var i = 0; i < s.length / 2; i++) {
+        if (obj.popCharacter() !== obj.dequeueCharacter()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Try with a palindrome
+let word1 = "racecar";
+console.log(`The word, ${word1}, is${isPalindrome(word1) ? "" : " not"} a palindrome.`);
+
+// Try with a non-palindrome
+let word2 = "hello";
+console.log(`The word, ${word2}, is${isPalindrome(word2) ? "" : " not"} a palindrome.`);
+
+
+// Abstract Classes:
+// Task:
+// Given a Book class and a Solution class, write a MyBook class that does the following:
+
+// Inherits from Book
+// Has a parameterized constructor taking these 3 parameters:
+// 1. string title
+// 2. string author
+// 3. int price
+// Implements the Book class' abstract display() method so it prints these 3 lines:
+// 1. Title:, a space, and then the current instance's title.
+// 2. Author:, a space, and then the current instance's author.
+// 3. Price:, a space, and then the current instance's price.
+// Note: Because these classes are being written in the same file, you must not use an access modifier (e.g.: public) when declaring 
+// MyBook or your code will not execute.
+// Input Format:
+// You are not responsible for reading any input from stdin. The Solution class creates a Book object and calls the MyBook class constructor 
+// (passing it the necessary arguments). It then calls the display method on the Book object.
+
+// Abstract Book class
+class Book {
+    constructor(title, author) {
+        if (this.constructor === Book) {
+            throw new TypeError('Do not attempt to directly instantiate an abstract class.');
+        } else {
+            this.title = title;
+            this.author = author;
+        }
+    }
+    display() {
+        console.log('Implement the \'display\' method!');
+    }
+}
+
+// MyBook class implementing Book
+class MyBook extends Book {
+    constructor(title, author, price) {
+        super(title, author);
+        this.price = price;
+    }
+    display() {
+        console.log(`Title: ${this.title}`);
+        console.log(`Author: ${this.author}`);
+        console.log(`Price: ${this.price}`);
+    }
+}
+
+// Example usage:
+const book = new MyBook("The Alchemist", "Paulo Coelho", 248);
+book.display();
+const book01 = new MyBook("Idiot", "Dostoevski", 562);
+book01.display();
+
+
+// Scope (Python 3 version)
+// The absolute difference between two integers, a and b, is written as |a - b|. The maximum absolute difference between two integers in a 
+// set of positive integers, elements, is the largest absolute difference between any two integers in __elements.
+// The Difference class is started for you in the editor. It has a private integer array (elements) for storing N non-negative integers, 
+// and a public integer (maximumDifference) for storing the maximum absolute difference.
+// Task:
+// Complete the Difference class by writing the following:
+// * A class constructor that takes an array of integers as a parameter and saves it to the __elements instance variable.
+// * A computeDifference method that finds the maximum absolute difference between any 2 numbers in __elements and stores it in the maximumDifference instance variable.
+// Input Format:
+// You are not responsible for reading any input from stdin. The locked Solution class in the editor reads in 2 lines of input. 
+// The first line contains N, the size of the elements array. The second line has N space-separated integers that describe the __elements array.
+// Constraints:
+// 1 <= N <= 10
+// 1 <= __elements[i] <= 100, where 0 <= i <= N -1
+
+// class Difference:
+//     def __init__(self, a):
+//         self.__elements = a
+
+// 	# Add your code here
+//     def computeDifference(self):
+//         self.maximumDifference = max(self.__elements) - min(self.__elements)
+// # End of Difference class
+
+// _ = input()
+// a = [int(e) for e in input().split(' ')]
+
+// d = Difference(a)
+// d.computeDifference()
+
+// print(d.maximumDifferen
+
+// Linked List
+// A Node class is provided for you in the editor. A Node object has an integer data field, data, and a Node instance pointer, next, 
+// pointing to another node (i.e.: the next node in the list).
+// A Node insert function is also declared in your editor. It has two parameters: a pointer, head, pointing to the first node of a linked list, 
+// and an integer, data, that must be added to the end of the list as a new Node object.
+// Task:
+// Complete the insert function in your editor so that it creates a new Node (pass data as the Node constructor argument) 
+// and inserts it at the tail of the linked list referenced by the head parameter. Once the new node is added, return the reference to the head node.
+// Note: The head argument is null for an empty list.
+// Input Format:
+// The first line contains T, the number of elements to insert.
+// Each of the next T lines contains an integer to insert at the end of the list.
+
+// Node class definition
+function Node(data) {
+    this.data = data;
+    this.next = null;
+}
+
+// Solution class with insert and display methods
+function Solution01() {
+    this.insert = function(head, data) {
+        let newNode = new Node(data);
+        if (head === null) {
+            return newNode;
+        } else {
+            let current = head;
+            while (current.next !== null) {
+                current = current.next;
+            }
+            current.next = newNode;
+            return head;
+        }
+    };
+
+    this.display = function(head) {
+        let current = head;
+        let output = [];
+        while (current) {
+            output.push(current.data);
+            current = current.next;
+        }
+        console.log(output.join(" "));
+    };
+}
+
+// Example usage:
+let myList = new Solution01();
+let head = null;
+
+// Insert values into the linked list
+head = myList.insert(head, 5);
+head = myList.insert(head, 10);
+head = myList.insert(head, 15);
+head = myList.insert(head, 76);
+// Display the linked list
+myList.display(head); // Output: 5 10 15
+
+
+
