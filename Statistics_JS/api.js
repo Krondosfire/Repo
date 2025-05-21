@@ -1871,7 +1871,105 @@ head = myList.insert(head, 10);
 head = myList.insert(head, 15);
 head = myList.insert(head, 76);
 // Display the linked list
-myList.display(head); // Output: 5 10 15
+myList.display(head); // Output: 5 10 15 76
+
+
+// Least Square Regression Line
+// Task:
+// A group of five students enrolls in Statistics immediately after taking a Math aptitude test. Each student's Math aptitude test score, x, 
+// and Statistics course grade, y, can be expressed as the following list of (x, y) points:
+// 1. (95, 85)
+// 2. (85, 95)
+// 3. (80, 70)
+// 4. (70, 65)
+// 5. (60, 70)
+// If a student scored an 80 on the Math aptitude test, what grade would we expect them to achieve in Statistics? 
+// Determine the equation of the best-fit line using the least squares method, then compute and print the value of y when x = 80.
+// Input Format:
+// There are five lines of input; each line contains two space-separated integers describing a student's respective x and y grades:
+// 95 85
+// 85 95
+// 80 70
+// 70 65
+// 60 70
+
+function processData13(input) {
+    // Parse input
+    let lines = input.trim().split('\n');
+    let n = lines.length;
+    let x = [], y = [];
+    for (let i = 0; i < n; i++) {
+        let [xi, yi] = lines[i].trim().split(' ').map(Number);
+        x.push(xi);
+        y.push(yi);
+    }
+
+    // Calculate means
+    let meanX = x.reduce((a, b) => a + b, 0) / n;
+    let meanY = y.reduce((a, b) => a + b, 0) / n;
+
+    // Calculate slope (b) and intercept (a)
+    let numerator = 0, denominator = 0;
+    for (let i = 0; i < n; i++) {
+        numerator += (x[i] - meanX) * (y[i] - meanY);
+        denominator += (x[i] - meanX) ** 2;
+    }
+    let b = numerator / denominator;
+    let a = meanY - b * meanX;
+
+    // Predict y for x = 80
+    let x_pred = 80;
+    let y_pred = a + b * x_pred;
+
+    // Print result rounded to 3 decimal places
+    console.log(y_pred.toFixed(3));
+}
+
+// Example usage:
+// Data: [x, y] pairs
+const data = [
+    [95, 85],
+    [85, 95],
+    [80, 70],
+    [70, 65],
+    [60, 70]
+];
+
+// Separate x and y arrays
+const x = data.map(pair => pair[0]);
+const y = data.map(pair => pair[1]);
+const n = data.length;
+
+// Calculate means
+const meanX = x.reduce((a, b) => a + b, 0) / n;
+const meanY = y.reduce((a, b) => a + b, 0) / n;
+
+// Calculate slope (b) and intercept (a)
+let numerator = 0, denominator = 0;
+for (let i = 0; i < n; i++) {
+    numerator += (x[i] - meanX) * (y[i] - meanY);
+    denominator += (x[i] - meanX) ** 2;
+}
+const b = numerator / denominator;
+const a = meanY - b * meanX;
+
+// Predict y for x = 80
+const x_pred = 80;
+const y_pred = a + b * x_pred;
+
+console.log(`Regression equation: y = ${a.toFixed(3)} + ${b.toFixed(3)}x`);
+console.log(`Predicted y for x = 80: ${y_pred.toFixed(3)}`);
+
+
+// Pearson Correlation Coeficient II
+// The regression line of y on x is 3x + 4y + 8 = 0, and the regression line of x on y is 4x + 3y + 7 = 0. 
+// What is the value of the Pearson correlation coefficient?
+// a) 1
+// b) -1
+// c) 3 / 4
+// d) -4 / 3
+// e) 4 / 3
+// f) -3 / 4 <--- correct answer
 
 
 

@@ -1143,15 +1143,54 @@ function main(){
 }		
 
 
+Least Square Regression Line
+Task:
+A group of five students enrolls in Statistics immediately after taking a Math aptitude test. Each student's Math aptitude test score, x, 
+and Statistics course grade, y, can be expressed as the following list of (x, y) points:
+1. (95, 85)
+2. (85, 95)
+3. (80, 70)
+4. (70, 65)
+5. (60, 70)
+If a student scored an 80 on the Math aptitude test, what grade would we expect them to achieve in Statistics? 
+Determine the equation of the best-fit line using the least squares method, then compute and print the value of y when x = 80.
+Input Format:
+There are five lines of input; each line contains two space-separated integers describing a student's respective x and y grades:
+95 85
+85 95
+80 70
+70 65
+60 70
+
+function processData(input) {
+    //Enter your code here
+} 
+
+process.stdin.resume();
+process.stdin.setEncoding("ascii");
+_input = "";
+process.stdin.on("data", function (input) {
+    _input += input;
+});
+
+process.stdin.on("end", function () {
+   processData(_input);
+});
 
 
 
 
 
 
-
-
-
+Pearson Correlation Coeficient II
+The regression line of y on x is 3x + 4y + 8 = 0, and the regression line of x on y is 4x + 3y + 7 = 0. 
+What is the value of the Pearson correlation coefficient?
+a) 1
+b) -1
+c) 3 / 4
+d) -4 / 3
+e) 4 / 3
+f) -3 / 4
 
 
 
