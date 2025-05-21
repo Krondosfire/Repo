@@ -1972,4 +1972,128 @@ console.log(`Predicted y for x = 80: ${y_pred.toFixed(3)}`);
 // f) -3 / 4 <--- correct answer
 
 
+// Multiple Linear Regression
+// Task:
+// Andrea has a simple equation:
+// Y = a + b1 . f1 + b1 . f2 + ... + bm . fm
+// for (m + 1) real constants (a, f1, f2,..., fm). We can say that the value of Y depends on m features. 
+// Andrea studies this equation for n different feature sets (f1, f2, f3, ... ,fm) 
+// and records each respective value of Y. If she has q new feature sets, can you help Andrea find the value of Y for each of the sets?
+// Note: You are not expected to account for bias and variance trade-offs.
+// Input Format:
+// The first line contains 2 space-separated integers, m (the number of observed features) and n (the number of feature sets Andrea studied), respectively.
+// Each of the n subsequent lines contain m + 1 space-separated decimals; the first m elements are features (f1, f2, f3, ..., fm), 
+// and the last element is the value of Y for the line's feature set.
+// The next line contains a single integer, q, denoting the number of feature sets Andrea wants to query for.
+// Each of the q subsequent lines contains m space-separated decimals describing the feature sets.
+// Constraints:
+// 1 <= m <= 10
+// 5 <= n <= 100
+// 0 <= x[i] <= 1
+// 0 <= Y <= 10^6
+// 1 <= q <= 100
 
+// --- Paste the matrix helper functions and regression code here ---
+function transpose(A) {
+    return A[0].map((_, i) => A.map(row => row[i]));
+}
+function multiply(A, B) {
+    let result = Array(A.length).fill(0).map(() => Array(B[0].length).fill(0));
+    for (let i = 0; i < A.length; i++) {
+        for (let j = 0; j < B[0].length; j++) {
+            for (let k = 0; k < B.length; k++) {
+                result[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+    return result;
+}
+function inverse(A) {
+    let n = A.length;
+    let I = [];
+    for (let i = 0; i < n; i++) {
+        I[i] = [];
+        for (let j = 0; j < n; j++) {
+            I[i][j] = (i === j) ? 1 : 0;
+        }
+    }
+    for (let i = 0; i < n; i++) {
+        let maxEl = Math.abs(A[i][i]);
+        let maxRow = i;
+        for (let k = i + 1; k < n; k++) {
+            if (Math.abs(A[k][i]) > maxEl) {
+                maxEl = Math.abs(A[k][i]);
+                maxRow = k;
+            }
+        }
+        [A[i], A[maxRow]] = [A[maxRow], A[i]];
+        [I[i], I[maxRow]] = [I[maxRow], I[i]];
+        let pivot = A[i][i];
+        for (let j = 0; j < n; j++) {
+            A[i][j] /= pivot;
+            I[i][j] /= pivot;
+        }
+        for (let k = 0; k < n; k++) {
+            if (k !== i) {
+                let c = A[k][i];
+                for (let j = 0; j < n; j++) {
+                    A[k][j] -= c * A[i][j];
+                    I[k][j] -= c * I[i][j];
+                }
+            }
+        }
+    }
+    return I;
+}
+
+// --- Example data ---
+const m = 2, n1 = 3;
+const X = [
+    [1, 0.18, 0.89],
+    [1, 1.0, 0.26],
+    [1, 0.92, 0.11]
+];
+const Y = [
+    [109.85],
+    [155.72],
+    [137.66]
+];
+const queries1 = [
+    [1, 0.49, 0.18],
+    [1, 0.57, 0.83]
+];
+
+// --- Regression Calculation ---
+const XT = transpose(X);
+const XTX = multiply(XT, X);
+const XTX_inv = inverse(XTX);
+const XTY = multiply(XT, Y);
+const B = multiply(XTX_inv, XTY); // Coefficients
+
+// --- Prediction ---
+for (let i = 0; i < queries1.length; i++) {
+    let features = queries1[i];
+    let y_pred = 0;
+    for (let j = 0; j < B.length; j++) {
+        y_pred += B[j][0] * features[j];
+    }
+    console.log(y_pred.toFixed(2));
+}
+
+
+// Interfaces(Python 3)
+// Task:
+// The AdvancedArithmetic interface and the method declaration for the abstract divisorSum(n) method are provided for you in the editor below.
+// Complete the implementation of Calculator class, which implements the AdvancedArithmetic interface. 
+// The implementation for the divisorSum(n) method must return the sum of all divisors of n.
+// Example:
+// n = 25
+// The divisors of 25 are 1, 5, 25. Their sum is 31.
+// n = 20
+// The divisors of 20 are 1, 2, 4, 5, 10, 20 and their sum is 42.
+// Input Format:
+// A single line with an integer, n.
+// Constraints:
+// 1 <= n <= 1000
+
+//
