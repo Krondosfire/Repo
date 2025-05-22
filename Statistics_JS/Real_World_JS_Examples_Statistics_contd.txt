@@ -1194,10 +1194,72 @@ f) -3 / 4
 
 
 
+Multiple Linear Regression
+Task:
+Andrea has a simple equation:
+Y = a + b1 . f1 + b1 . f2 + ... + bm . fm
+for (m + 1) real constants (a, f1, f2,..., fm). We can say that the value of Y depends on m features. 
+Andrea studies this equation for n different feature sets (f1, f2, f3, ... ,fm) 
+and records each respective value of Y. If she has q new feature sets, can you help Andrea find the value of Y for each of the sets?
+Note: You are not expected to account for bias and variance trade-offs.
+Input Format:
+The first line contains 2 space-separated integers, m (the number of observed features) and n (the number of feature sets Andrea studied), respectively.
+Each of the n subsequent lines contain m + 1 space-separated decimals; the first m elements are features (f1, f2, f3, ..., fm), 
+and the last element is the value of Y for the line's feature set.
+The next line contains a single integer, q, denoting the number of feature sets Andrea wants to query for.
+Each of the q subsequent lines contains m space-separated decimals describing the feature sets.
+Constraints:
+1 <= m <= 10
+5 <= n <= 100
+0 <= x[i] <= 1
+0 <= Y <= 10^6
+1 <= q <= 100
+
+function processData(input) {
+    //Enter your code here
+} 
+
+process.stdin.resume();
+process.stdin.setEncoding("ascii");
+_input = "";
+process.stdin.on("data", function (input) {
+    _input += input;
+});
+
+process.stdin.on("end", function () {
+   processData(_input);
+});
 
 
+Interfaces(Python 3)
+Task:
+The AdvancedArithmetic interface and the method declaration for the abstract divisorSum(n) method are provided for you in the editor below.
+Complete the implementation of Calculator class, which implements the AdvancedArithmetic interface. 
+The implementation for the divisorSum(n) method must return the sum of all divisors of n.
+Example:
+n = 25
+The divisors of 25 are 1, 5, 25. Their sum is 31.
+n = 20
+The divisors of 20 are 1, 2, 4, 5, 10, 20 and their sum is 42.
+Input Format:
+A single line with an integer, n.
+Constraints:
+1 <= n <= 1000
+
+class AdvancedArithmetic(object):
+    def divisorSum(n):
+        raise NotImplementedError
+
+class Calculator(AdvancedArithmetic):
+    def divisorSum(self, n):
+        pass
 
 
+n = int(input())
+my_calculator = Calculator()
+s = my_calculator.divisorSum(n)
+print("I implemented: " + type(my_calculator).__bases__[0].__name__)
+print(s)
 
 
 
