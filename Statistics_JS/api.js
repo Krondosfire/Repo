@@ -2096,4 +2096,287 @@ for (let i = 0; i < queries1.length; i++) {
 // Constraints:
 // 1 <= n <= 1000
 
-//
+// Bubble Sort
+// Consider the following version of Bubble Sort:
+
+// for (int i = 0; i < n; i++) {
+//     // Track number of elements swapped during a single array traversal
+//     int numberOfSwaps = 0;
+    
+//     for (int j = 0; j < n - 1; j++) {
+//         // Swap adjacent elements if they are in decreasing order
+//         if (a[j] > a[j + 1]) {
+//             swap(a[j], a[j + 1]);
+//             numberOfSwaps++;
+//         }
+//     }
+    
+//     // If no elements were swapped during a traversal, array is sorted
+//     if (numberOfSwaps == 0) {
+//         break;
+//     }
+// }
+// Task:
+// Given an array, a, of size n distinct elements, sort the array in ascending order using the Bubble Sort algorithm above. Once sorted, print the following 3 lines:
+// 1. Array is sorted in numSwaps swaps.
+// where numSwaps is the number of swaps that took place.
+// 2. First Element: firstElement
+// where firstElement is the first element in the sorted array.
+// 3. Last Element: lastElement
+// where lastElement is the last element in the sorted array.
+// Hint: To complete this challenge, you will need to add a variable that keeps a running tally of all swaps that occur during execution.
+// Example:
+// a = [4, 3, 1, 2]
+// original a: 4 3 1 2
+// round 1  a: 3 1 2 4 swaps this round: 3
+// round 2  a: 1 2 3 4 swaps this round: 2
+// round 3  a: 1 2 3 4 swaps this round: 0
+// In the first round, the 4 is swapped at each of the 3 comparisons, ending in the last position. In the second round, the 3 is swapped at 2 of the 3 comparisons. 
+// Finally, in the third round, no swaps are made so the iterations stop. The output is the following:
+// Array is sorted in 5 swaps.
+// First Element: 1
+// Last Element: 4
+// Input Format:
+// The first line contains an integer, n, the number of elements in array a.
+// The second line contains n space-separated integers that describe a[0],a[1], ...,a[n - 1].
+// Constraints:
+// 2 <= n <= 600
+// 1 <= a[i] <= 2x10^6, where 0 <= i < n.
+
+
+// Simulate input
+const input = `4
+4 3 1 2
+`.split('\n');
+let currentLine = 0;
+function readLine() {
+    return input[currentLine++];
+}
+
+function bubbleSort() {
+    const n = parseInt(readLine().trim(), 10);
+    let a = readLine().replace(/\s+$/g, '').split(' ').map(Number);
+
+    let totalSwaps = 0;
+    for (let i = 0; i < n; i++) {
+        let numberOfSwaps = 0;
+        for (let j = 0; j < n - 1; j++) {
+            if (a[j] > a[j + 1]) {
+                [a[j], a[j + 1]] = [a[j + 1], a[j]];
+                numberOfSwaps++;
+            }
+        }
+        totalSwaps += numberOfSwaps;
+        if (numberOfSwaps === 0) break;
+    }
+
+    console.log(`Array is sorted in ${totalSwaps} swaps.`);
+    console.log(`First Element: ${a[0]}`);
+    console.log(`Last Element: ${a[a.length - 1]}`);
+}
+
+bubbleSort();
+
+// Multiple Linear Regression
+// Task:
+// Andrea has a simple equation:
+// Y = a + b1 . f1 + b1 . f2 + ... + bm . fm
+// for (m + 1) real constants (a, f1, f2, ...,fm ). We can say that the value of Y depends on m features. 
+// Andrea studies this equation for n different feature sets (f1, f2, f3, ..., fm) and records each respective value of Y. 
+// If she has q new feature sets, can you help Andrea find the value of Y for each of the sets?
+// Note: You are not expected to account for bias and variance trade-offs.
+// Input Format:
+// The first line contains 2 space-separated integers, m (the number of observed features) and n (the number of feature sets Andrea studied), respectively.
+// Each of the n subsequent lines contain m + 1 space-separated decimals; the first m elements are features (f1, f2, f3, ...,fm), 
+// and the last element is the value of Y for the line's feature set.
+// The next line contains a single integer, q, denoting the number of feature sets Andrea wants to query for.
+// Each of the q subsequent lines contains m space-separated decimals describing the feature sets.
+// Constraints:
+// 1 <= m <= 10
+// 5 <= n <= 100
+// 0 <= x[i] <= 1
+// 0 <= Y <= 10^6
+// 1 <= q <= 100
+
+// Example input as a multi-line string
+const input01 = `
+2 7
+0.18 0.89 109.85
+1.0 0.26 155.72
+0.92 0.11 137.66
+0.07 0.37 76.17
+0.85 0.16 139.75
+0.99 0.41 162.6
+0.87 0.47 151.77
+4
+0.49 0.18
+0.57 0.83
+0.56 0.64
+0.76 0.18
+`;
+
+function multipleLinearRegression(input01) {
+    let lines = input01.trim().split('\n');
+    let [m, n] = lines[0].trim().split(' ').map(Number);
+    let X = [];
+    let Y = [];
+    for (let i = 1; i <= n; i++) {
+        let arr = lines[i].trim().split(' ').map(Number);
+        X.push([1, ...arr.slice(0, m)]); // Add bias term
+        Y.push([arr[m]]);
+    }
+    let q = parseInt(lines[n + 1]);
+    let queries = [];
+    for (let i = n + 2; i < n + 2 + q; i++) {
+        let arr = lines[i].trim().split(' ').map(Number);
+        queries.push([1, ...arr]); // Add bias term
+    }
+    function transpose(A) {
+        return A[0].map((_, i) => A.map(row => row[i]));
+    }
+    function multiply(A, B) {
+        let result = Array(A.length).fill(0).map(() => Array(B[0].length).fill(0));
+        for (let i = 0; i < A.length; i++) {
+            for (let j = 0; j < B[0].length; j++) {
+                for (let k = 0; k < B.length; k++) {
+                    result[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        return result;
+    }
+    function inverse(A) {
+        let n = A.length;
+        let I = [];
+        for (let i = 0; i < n; i++) {
+            I[i] = [];
+            for (let j = 0; j < n; j++) {
+                I[i][j] = (i === j) ? 1 : 0;
+            }
+        }
+        for (let i = 0; i < n; i++) {
+            let maxEl = Math.abs(A[i][i]);
+            let maxRow = i;
+            for (let k = i + 1; k < n; k++) {
+                if (Math.abs(A[k][i]) > maxEl) {
+                    maxEl = Math.abs(A[k][i]);
+                    maxRow = k;
+                }
+            }
+            [A[i], A[maxRow]] = [A[maxRow], A[i]];
+            [I[i], I[maxRow]] = [I[maxRow], I[i]];
+            let pivot = A[i][i];
+            for (let j = 0; j < n; j++) {
+                A[i][j] /= pivot;
+                I[i][j] /= pivot;
+            }
+            for (let k = 0; k < n; k++) {
+                if (k !== i) {
+                    let c = A[k][i];
+                    for (let j = 0; j < n; j++) {
+                        A[k][j] -= c * A[i][j];
+                        I[k][j] -= c * I[i][j];
+                    }
+                }
+            }
+        }
+        return I;
+    }
+    let XT = transpose(X);
+    let XTX = multiply(XT, X);
+    let XTX_inv = inverse(XTX);
+    let XTY = multiply(XT, Y);
+    let B = multiply(XTX_inv, XTY);
+    for (let i = 0; i < queries.length; i++) {
+        let features = queries[i];
+        let y_pred = 0;
+        for (let j = 0; j < B.length; j++) {
+            y_pred += B[j][0] * features[j];
+        }
+        console.log(y_pred.toFixed(2));
+    }
+}
+
+multipleLinearRegression(input01);
+
+
+
+console.log(`What is Node.js primarily used for?
+a) Running JavaScript in the browser
+b) Running JS on the server side   <-------------
+c) Managing client-side DOM manipulation
+d) Writing HTML and CSS`);
+
+
+console.log(`What is one advantage of utilizing Node.js?
+a) Access to a diverse set of programming language
+b) Ability to develop complex browser-based applications
+c) Extensive ecosystem of packages <-----
+d) Integration with hardware devices`);
+
+
+console.log(`What is the main purpose of a package.json file in a Node.js project?
+a) Storing JS code sniplets
+b) Defining project dependencies and metadata  <------------
+c) Configuring server-side routing
+d) Managing database connections`);
+
+
+console.log(`What is the role of GitHub in the context of sharing code?
+a) Hosting Node.js packages
+b) Backing up and version controlling code   <-----------------
+c) Installing dependencies for Node.js projects
+d) Managing client-side resources`);
+
+console.log(`What is the primary function of NPM (Node Package Manager) in the Node.js ecosystem?
+a) Hosting code repositories
+b) Providing a platform for code execution
+c) Managing and distributing Node.js packages   <--------
+d) Generating HTML templates`);
+
+
+console.log(`What is the purpose of the package.json file in a Node.js project?
+a) To specify project dependencies <-----
+b) To define project metadata
+c) To store project documentation
+d) To list project contributors`);
+
+
+console.log(`Which command is used to initialize a Node.js project and create a package.json file with default settings without going through prompts?
+a) npm init -y <--------
+b) npm start
+c) npm install
+d) npm create`);
+
+
+console.log(`What is the purpose of the node_modules directory in a Node.js project?
+a) To store installed dependencies  <-------
+b) To execute Node.js code
+c) To cache JS files
+d) To store project configuration`);
+
+
+console.log(`How do you install a package named "faker" in a Node.js project using npm?
+a) npm install faker  <--------
+b) npm add faker
+c) npm get faker
+d) npm save faker
+`);
+
+console.log(`What is the purpose of the package-lock.json file in a Node.js project?
+a) To lock dependency versions  <--------
+b) To specify project metadata
+c) To store project documentation
+d) To list project contributors`);
+
+
+
+
+
+
+
+
+
+
+
+
