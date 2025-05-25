@@ -2410,8 +2410,226 @@ let ar = [1, 2, 1, 2, 1, 3, 2];
 // Call the function and log the output
 console.log(sockMerchant(n01, ar)); // Output: 2
 
+// Binary Search Trees
+// Task:
+// A level-order traversal, also known as a breadth-first search, visits each level of a tree's nodes from left to right, top to bottom. You are given a pointer, root, 
+// pointing to the root of a binary search tree. Complete the levelOrder function provided in your editor so that it prints the level-order traversal of the binary search tree.
+// Hint: You'll find a queue helpful in completing this challenge.
+// Function Description:
+// Complete the levelOrder function in the editor below.
+// levelOrder has the following parameter:
+// - Node pointer root: a reference to the root of the tree
+// Prints:
+// - Print node.data items as space-separated line of integers. No return value is expected.
+// Input Format:
+// The locked stub code in your editor reads the following inputs and assembles them into a BST:
+// The first line contains an integer, T (the number of test cases).
+// The T subsequent lines each contain an integer, data, denoting the value of an element that must be added to the BST.
+// Constraints:
+// 1 <= N <= 20
+// 1 <= node, data[i] <= 100
+
+// Start of function Node
+function Node_1(data) {
+    this.data = data;
+    this.left = null;
+    this.right = null;
+}
+
+function BinarySearchTree() {
+    this.insert = function(root, data) {
+        if (root === null) {
+            return new Node_1(data);
+        }
+        if (data <= root.data) {
+            root.left = this.insert(root.left, data);
+        } else {
+            root.right = this.insert(root.right, data);
+        }
+        return root;
+    };
+
+    this.levelOrder = function(root) {
+        const queue = [];
+        const result = [];
+        if (root !== null) {
+            queue.push(root);
+        }
+        while (queue.length > 0) {
+            const node = queue.shift();
+            result.push(node.data);
+            if (node.left !== null) queue.push(node.left);
+            if (node.right !== null) queue.push(node.right);
+        }
+        console.log(result.join(' '));
+    };
+}
+
+// Example usage:
+// Create tree and insert nodes
+const tree = new BinarySearchTree();
+let root = null;
+const values01 = [3, 5, 4, 7, 2, 1];
+for (let v of values) {
+    root = tree.insert(root, v);
+}
+
+// Perform level-order traversal
+tree.levelOrder(root); // Output: 3 2 5 1 4 7
+
+// Generics:
+// Task:( C++11)
+// Write a single generic function named printArray; this function must take an array of generic elements as a parameter (the exception to this is C++, which takes a vector). 
+// The locked Solution class in your editor tests your function.
+// Note: You must use generics to solve this challenge. Do not write overloaded functions.
+// Input Format:
+// The locked Solution class in your editor will pass different types of arrays to your printArray function.
+// Constraints:
+// You must have exactly 1 function named printArray.
+// Output Format:
+// Your printArray function should print each element of its generic array parameter on a new line.
+// #include <iostream>
+// #include <vector>
+// #include <string>
+
+// using namespace std;
+
+// /**
+// *    Name: printArray
+// *    Print each element of the generic vector on a new line. Do not return anything.
+// *    @param A generic vector
+// **/
+
+// // Write your code here
+// template <typename T>
+// void printArray(const std::vector<T>& arr) {
+//     for(const T& elem : arr) {
+//         std::cout << elem << std::endl;
+//     }
+// }
+// int main() {
+// 	int n;
+	
+// 	cin >> n;
+// 	vector<int> int_vector(n);
+// 	for (int i = 0; i < n; i++) {
+// 		int value;
+// 		cin >> value;
+// 		int_vector[i] = value;
+// 	}
+	
+// 	cin >> n;
+// 	vector<string> string_vector(n);
+// 	for (int i = 0; i < n; i++) {
+// 		string value;
+// 		cin >> value;
+// 		string_vector[i] = value;
+// 	}
+
+// 	printArray<int>(int_vector);
+// 	printArray<string>(string_vector);
+
+// 	return 0;
+// }
 
 
+// Binary Search Trees
+// Task:
+// The height of a binary search tree is the number of edges between the tree's root and its furthest leaf. 
+// You are given a pointer, root, pointing to the root of a binary search tree. Complete the getHeight function provided in your editor 
+// so that it returns the height of the binary search tree.
+// Input Format:
+// The locked stub code in your editor reads the following inputs and assembles them into a binary search tree:
+// The first line contains an integer, n, denoting the number of nodes in the tree.
+// Each of the n subsequent lines contains an integer, data, denoting the value of an element that must be added to the BST.
+
+function Node_2(data) {
+    this.data = data;
+    this.left = null;
+    this.right = null;
+}
+
+function BinarySearchTree_1() {
+    this.insert = function(root, data) {
+        if (root === null) {
+            return new Node_2(data);
+        }
+        if (data <= root.data) {
+            root.left = this.insert(root.left, data);
+        } else {
+            root.right = this.insert(root.right, data);
+        }
+        return root;
+    };
+
+    this.getHeight = function(root) {
+        if (root === null) {
+            return -1;
+        }
+        let leftHeight = this.getHeight(root.left);
+        let rightHeight = this.getHeight(root.right);
+        return 1 + Math.max(leftHeight, rightHeight);
+    };
+}
+
+const tree_1 = new BinarySearchTree_1();
+let root_1 = null;
+const values_1 = [3, 5, 2, 1, 4, 6, 7];
+for (let v of values_1) {
+    root_1 = tree_1.insert(root_1, v);
+}
+
+console.log(tree_1.getHeight(root_1)); // Output should be 3
+
+// Given an array of n distinct integers, transform the array into a zig zag sequence by permuting the array elements. 
+// A sequence will be called a zig zag sequence if the first k elements in the sequence are in increasing order and the last k elements are in decreasing order, 
+// where k = (n + 1) / 2. You need to find the lexicographically smallest zig zag sequence of the given array.
+// Example:
+// a = [2,3,5,1,4]
+// Now if we permute the array as [1,4,5,3,2], the result is a zig zag sequence.
+// Debug the given function findZigZagSequence to return the appropriate zig zag sequence for the given input array.
+// Note: You can modify at most three lines in the given code. You cannot add or remove lines of code.
+// To restore the original code, click on the icon to the right of the language selector.
+// Input Format:
+// The first line contains t the number of test cases. The first line of each test case contains an integer n, 
+// denoting the number of array elements. The next line of the test case contains n elements of array a.
+// Constraints:
+// 1 <= t <= 20
+// 1 <= n <= 10000 (n is always odd)
+// 1 <= a[i] <= 10^9
+
+function findZigZagSequence(a, n) {
+    a.sort((x, y) => x - y);
+    let mid = Math.floor((n - 1) / 2);
+    // Swap middle and last element
+    let temp = a[mid];
+    a[mid] = a[n - 1];
+    a[n - 1] = temp;
+    // Reverse the second half after the middle element
+    let st = mid + 1;
+    let ed = n - 2;
+    while (st <= ed) {
+        let tmp = a[st];
+        a[st] = a[ed];
+        a[ed] = tmp;
+        st++;
+        ed--;
+    }
+    return a;
+}
+// Example input
+let arry = [2, 3, 5, 1, 4];
+let n12 = arr.length;
+let zigzag = findZigZagSequence(arr, n);
+console.log(zigzag.join(' ')); // Output: 1 2 5 4 3
+let arry2 = [1, 2, 3, 4, 5, 6, 7];
+let n2 = arry2.length;
+let zigzag2 = findZigZagSequence(arr2, n2);
+console.log(zigzag2.join(' ')); // Output: 1 2 3 7 6 5 4
+
+let arry3 = [10, 20, 30, 40, 50];
+console.log(findZigZagSequence(arry3, arry3.length).join(' '));
+// Output: 10 20 50 40 30
 
 
 
