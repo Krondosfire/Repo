@@ -2631,6 +2631,282 @@ let arry3 = [10, 20, 30, 40, 50];
 console.log(findZigZagSequence(arry3, arry3.length).join(' '));
 // Output: 10 20 50 40 30
 
+// Linked Lists
+// Task:
+// A Node class is provided for you in the editor. A Node object has an integer data field, data, and a Node instance pointer, next, 
+// pointing to another node (i.e.: the next node in a list).
+// A removeDuplicates function is declared in your editor, which takes a pointer to the head node of a linked list as a parameter. 
+// Complete removeDuplicates so that it deletes any duplicate nodes from the list and returns the head of the updated list.
+// Note: The head pointer may be null, indicating that the list is empty. Be sure to reset your next pointer when performing deletions to avoid breaking the list.
+// Input Format:
+// You do not need to read any input from stdin. The following input is handled by the locked stub code and passed to the removeDuplicates function:
+// The first line contains an integer, N, the number of nodes to be inserted.
+// The N subsequent lines each contain an integer describing the data value of a node being inserted at the list's tail.
+// Constraints:
+// The data elements of the linked list argument will always be in non-decreasing order.
+
+function Node_3(data) {
+    this.data = data;
+    this.next = null;
+}
+function Solution02() {
+    this.insert = function(head, data) {
+        var p = new Node_3(data);
+        if(head == null) {
+            head = p;
+        } else if (head.next == null) {
+            head.next = p;
+        } else {
+            var start = head;
+            while(start.next != null) {
+                start = start.next;
+            }
+            start.next = p;
+        }
+        return head;
+    };
+    this.removeDuplicates = function(head) {
+        let current = head;
+        while(current !== null && current.next !== null) {
+            if(current.data === current.next.data) {
+                current.next = current.next.next; // Skip the duplicate node
+            } else {
+                current = current.next;
+            }
+        }
+        return head;
+    };
+    this.display = function(head) {
+        let result = [];
+        let start = head;
+        while(start) {
+            result.push(start.data);
+            start = start.next;
+        }
+        console.log(result.join(' '));
+    };
+}
+
+// Example usage:
+let myList01 = new Solution02();
+let head01 = null;
+let values02 = [1, 2, 2, 3, 3, 4, 5, 5];
+for(let v of values02) {
+    head01 = myList01.insert(head01, v);
+}
+console.log("Original list:");
+myList01.display(head01); // Output: 1 2 2 3 3 4 5 5
+head01 = myList01.removeDuplicates(head01);
+console.log("After removing duplicates:");
+myList01.display(head01); // Output: 1 2 3 4 5
+
+// Change values to test other cases
+let values03 = [1, 1, 1, 1, 1];
+let head02 = null;
+for(let v of values03) {
+    head02 = myList01.insert(head02, v);
+}
+myList01.display(myList01.removeDuplicates(head02)); // Output: 1
+
+// Drawing Book:
+// A teacher asks the class to open their books to a page number. A student can either start turning pages from the front of the book or from the back of the book. 
+// They always turn pages one at a time. When they open the book, page 1 is always on the right side.
+// When they flip page 1, they see pages 2 and 3. Each page except the last page will always be printed on both sides. 
+// The last page may only be printed on the front, given the length of the book. If the book is n pages long, and a student wants to turn to page p, 
+// what is the minimum number of pages to turn? They can start at the beginning or the end of the book.
+// Given n and p, find and print the minimum number of pages that must be turned in order to arrive at page p.
+// Example:
+// n = 5
+// p = 3
+// Using the diagram above, if the student wants to get to page 3, they open the book to page 1, 
+// flip 1 page and they are on the correct page. If they open the book to the last page, page 5, 
+// they turn 1 page and are at the correct page. Return 1.
+// Function Description:
+// Complete the pageCount function in the editor below.
+// pageCount has the following parameter(s):
+// * int n: the number of pages in the book
+// * int p: the page number to turn to
+// Returns:
+// * int: the minimum number of pages to turn
+// Input Format:
+// The first line contains an integer n, the number of pages in the book.
+// The second line contains an integer, p, the page to turn to.
+// Constraints:
+// 1 <= n <= 10^5
+// 1 <= p <= n
+
+function pageCount(n, p) {
+    const fromFront = Math.floor(p / 2);
+    const fromBack = Math.floor(n / 2) - Math.floor(p / 2);
+    return Math.min(fromFront, fromBack);
+}
+
+// Example usage
+console.log(pageCount(5, 3)); // Output: 1
+console.log(pageCount(6, 2)); // Output: 1
+console.log(pageCount(7, 6)); // Output: 1
+console.log(pageCount(100, 99)); // Output: 1
+
+console.log(pageCount(15, 4)); // Output: 2
+console.log(pageCount(15, 14)); // Output: 0
+
+
+// Tower Breakers
+// Two players are playing a game of Tower Breakers! Player 1 always moves first, and both players always play 
+// optimally.The rules of the game are as follows:
+// * Initially there are n towers.
+// * Each tower is of height m.
+// * The players move in alternating turns.
+// * In each turn, a player can choose a tower of height x and reduce its height to y, where 1 <= y < x 
+// and y evenly divides x.
+// * If the current player is unable to make a move, they lose the game.
+// Given the values of n and m, determine which player will win. If the first player wins, return 1. Otherwise, return 2.
+// Example: 
+// n = 2
+// m = 6
+// There are 2 towers, each 6 units tall. Player 1 has a choice of two moves:
+// - remove 3 pieces from a tower to leave 3 as 6 modulo 3 = 0.
+// - remove 5 pieces to leave 1.
+// Let Player 1 remove 3. Now the towers are 3 and 6 units tall.
+// Player 2 matches the move. Now the towers are both 3 units tall.
+// Now Player 1 has only one move.
+// Player 1 removes 2 pieces leaving 1. Towers are 1 and 2 units tall.
+// Player 2 matches again. Towers are both 1 unit tall.
+// Player 1 has no move and loses. Return 2.
+// Function Description:
+// Complete the towerBreakers function in the editor below.
+// towerBreakers has the following paramter(s):
+// * int n: the number of towers
+// * int m: the height of each tower
+// Returns:
+// * int: the winner of the game
+// Input Format:
+// The first line contains a single integer t, the number of test cases.
+// Each of the next t lines describes a test case in the form of 2 space-separated integers, n and m.
+// Constraints:
+// 1 <= t <= 100
+// 1 <= n,m <= 10^6
+
+function towerBreakers(n, m) {
+    if(m === 1) {
+        return 2; // If m is 1, Player 1 cannot make a move, Player 2 wins
+    } else if(n % 2 === 0) {
+        return 2; // If n is even, Player 2 can always mirror Player 1's moves
+    } else {
+        return 1; // If n is odd and m > 1, Player 1 can always win
+    }
+}
+// Example usage
+console.log(towerBreakers(2, 6)); // Output: 2
+console.log(towerBreakers(3, 5)); // Output: 1
+console.log(towerBreakers(4, 1)); // Output: 2
+console.log(towerBreakers(5, 10)); // Output: 1
+
+
+// Max Min
+// You will be given a list of integers, arr, and a single integer k. You must create an array of length k 
+// from elements of arr such that its unfairness is minimized. Call that array arr'. Unfairness of an array is calculated as
+// max(arr') - min(arr')
+// Where:
+// - max denotes the largest integer in arr'.
+// - min denotes the smallest integer in arr'.
+// Example:
+// arr = [1,4,7,2]
+// k = 2
+// Pick any two elements, say arr' = [4,7].
+// unfairness = max(4,7) - min(4,7) = 7 - 4 = 3
+// Testing for all pairs, the solution [1,2] provides the minimum unfairness.
+// Note: Integers in arr may not be unique.
+// Function Description:
+// Complete the maxMin function in the editor below.
+// maxMin has the following parameter(s):
+// * int k: the number of elements to select
+// * int arr[n]:: an array of integers
+// Returns:
+// * int: the minimum possible unfairness
+// Input Format:
+// The first line contains an integer n, the number of elements in array arr.
+// The second line contains an integer k.
+// Each of the next n lines contains an integer arr[i] where 0 <= i < n.
+// Constraints:
+// 2 <= n <= 10^5
+// 2 <= k <= n
+// 0 <= arr[i] <= 10^9
+
+function maxMin(k, arr) {
+    arr.sort((a, b) => a - b); // Sort the array in ascending order
+    let minUnfairness = Infinity; // Initialize minUnfairness to a large value
+
+    for (let i = 0; i <= arr.length - k; i++) {
+        let currentUnfairness = arr[i + k - 1] - arr[i]; // Calculate unfairness for the current window
+        if (currentUnfairness < minUnfairness) {
+            minUnfairness = currentUnfairness; // Update minUnfairness if current is smaller
+        }
+    }
+    return minUnfairness; // Return the minimum unfairness found
+}
+// Example usage
+console.log(maxMin(2, [1, 4, 7, 2])); // Output: 1
+console.log(maxMin(3, [10, 100, 300, 200, 1000])); // Output: 200
+console.log(maxMin(3, [10, 100, 300, 200, 1000, 20, 30])); // Output: 20
+
+
+// Dynamic Array
+// Declare a 2-dimensional array, arr, of n empty arrays. All arrays are zero indexed.
+// Declare an integer, lastAnswer, and initialize it to 0.
+// There are 2 types of queries, given as an array of strings for you to parse:
+// 1. Query: 1 x y
+// 1.1. Let idx = (( x ^ lastAnswer) % n).
+// 1.2. Append the integer y to arr[idx].
+// 2. Query: 2 x y
+// 2.1. Let idx = (( x ^ lastAnswer) % n).
+// 2.2. Assign the value arr[idx][y % size(arr[idx])] to lastAnswer.
+// 2.3. Store the new value of lastAnswer to an answers array.
+// Note: ^ is the bitwise XOR operation, which corresponds to the ^ operator in most languages. Learn more about it on Wikipedia. % is the modulo operator.
+// Finally, size(arr[idx]) is the number of elements in arr[idx]
+// Function Description:
+// Complete the dynamicArray function below.
+// dynamicArray has the following parameters:
+// - int n: the number of empty arrays to initialize in arr.
+// - string queries[q]: query strings that contain 3 space-separated integers.
+// Returns:
+// * int[]: the results of each type 2 query in the order they are presented
+// Input Format:
+// The first line contains two space-separated integers, n, the size of arr to create, and q, the number of queries, respectively.
+// Each of the q subsequent lines contains a query string, queries[i].
+// Constraints:
+// 1 <= n,q <= 10^5
+// 0 <= x,y <= 10^9
+// It is guaranteed that query type 2 will never query an empty array or index.
+
+function dynamicArray(n, queries) {
+    const arr = Array.from({length: n}, () => []);
+    let lastAnswer = 0;
+    const answers = [];
+    
+    for (let i = 0; i < queries.length; i++) {
+        const [type, x, y] = queries[i];
+        const idx = (x ^ lastAnswer) % n;
+        if (type === 1) {
+            arr[idx].push(y);
+        } else if (type === 2) {
+            lastAnswer = arr[idx][y % arr[idx].length];
+            answers.push(lastAnswer);
+        }
+    }
+    return answers;
+}
+// Example usage
+let n3 = 2;
+let queries3 = [
+    [1, 0, 5],
+    [1, 1, 7],
+    [1, 0, 3],
+    [2, 1, 0],
+    [2, 1, 1]
+];
+console.log(dynamicArray(n3, queries3)); // Output: [7, 3]
+
 
 
 
