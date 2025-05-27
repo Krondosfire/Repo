@@ -3061,6 +3061,153 @@ console.log(countLuckyDates('02-08-2024', '04-08-2024'));
 console.log(countLuckyDates('02-08-2025', '04-09-2025'));
 // Output: 5
 
+// Watson gives Sherlock an array of integers. His challenge is to find an element of the array such 
+// that the sum of all elements to the left is equal to the sum of all elements to the right.
+// Example:
+// arr = [5,6,8,11]
+// 8 is between two subarrays that sum to 11.
+// arr =[1]
+// The answer is [1] since left and right sum to 0.
+// You will be given arrays of integers and must determine whether there is an element that meets the criterion. 
+// If there is, return YES. Otherwise, return NO.
+// Function Description:
+// Complete the balancedSums function in the editor below.
+// balancedSums has the following parameter(s):
+// * int arr[n]: an array of integers
+// Returns:
+// * string: either YES or NO
+// Input Format:
+// The first line contains T, the number of test cases.
+// The next T pairs of lines each represent a test case.
+// - The first line contains n, the number of elements in the array arr.
+// - The second line contains n space-separated integers arr[i] where 0 <= i < n.
+// Constraints:
+// 1 <= T <= 10
+// 1 <= n <= 10^5
+// 1 <= arr[i] <= 2x10^4
+// 0 <= i < n
+
+function balancedSums(arr) {
+    let totalSum = arr.reduce((a, b) => a + b, 0);
+    let leftSum = 0;
+    for (let i = 0; i < arr.length; i++) {
+        if (leftSum === totalSum - leftSum - arr[i]) {
+            return "YES";
+        }
+        leftSum += arr[i];
+    }
+    return "NO";
+}
+
+// Example usage
+console.log(balancedSums([5, 6, 8, 11])); // YES (8 is the pivot)
+console.log(balancedSums([1]));           // YES (only one element)
+console.log(balancedSums([1, 2, 3]));     // NO
+console.log(balancedSums([2, 0, 0, 0]));  // YES (2 is the pivot)
+
+// Recursive Digit Sum
+// We define super digit of an integer  using the following rules:
+// Given an integer, we need to find the super digit of the integer.
+// * If x has only 1 digit, then its super digit is x.
+// * Otherwise, the super digit of x is equal to the super digit of the sum of the digits of x.
+// For example, the super digit of 9875 will be calculated as:
+
+// 	super_digit(9875)   	9+8+7+5 = 29 
+// 	super_digit(29) 	2 + 9 = 11
+// 	super_digit(11)		1 + 1 = 2
+// 	super_digit(2)		= 2  
+// Example:
+// n =' 9875'
+// k = 4
+// The number p is created by concatenating the string  n k times so the initial p = 9875987598759875.
+
+//     superDigit(p) = superDigit(9875987598759875)
+//                   9+8+7+5+9+8+7+5+9+8+7+5+9+8+7+5 = 116
+//     superDigit(p) = superDigit(116)
+//                   1+1+6 = 8
+//     superDigit(p) = superDigit(8)
+// All of the digits of p sum to 116. The digits of 116 sum to 8. 8 is only one digit, so it is the super digit.
+// Function Description:
+// Complete the function superDigit in the editor below. It must return the calculated super digit as an integer.
+// superDigit has the following parameter(s):
+// * string n: a string representation of an integer.
+// * int k: the times to concatenate n to make p.
+// Returns:
+// * int: the super digit of n repeated k times.
+// Input Format:
+// The first line contains two space separated integers, n and k.
+// Constraints:
+// 1 <= n < 10^100000
+// 1 <= k <= 10^5
+
+function superDigit(n, k) {
+    // Helper function to recursively compute super digit
+    function helper(str) {
+        if (str.length === 1) return parseInt(str, 10);
+        let sum = 0;
+        for (let c of str) sum += parseInt(c, 10);
+        return helper(sum.toString());
+    }
+    // Initial sum of digits of n, then multiply by k
+    let initialSum = 0;
+    for (let c of n) initialSum += parseInt(c, 10);
+    let p = (initialSum * k).toString();
+    return helper(p);
+}
+// Example usage
+console.log(superDigit("148", 3)); // Output: 3
+console.log(superDigit("9875", 4)); // Output: 8
+console.log(superDigit("123", 3)); // Output: 9
+
+// Counter Game
+// Louise and Richard have developed a numbers game. They pick a number and check to see if it is a power of 2. 
+// If it is, they divide it by 2. If not, they reduce it by the next lower number which is a power of 2. 
+// Whoever reduces the number to 1 wins the game. Louise always starts.
+// Given an initial value, determine who wins the game.
+// Example:
+// n = 132
+// It's Louise's turn first. She determines that 132 is not a power of 2. The next lower power of 2 is 128, 
+// so she subtracts that from 132 and passes 4 to Richard. 4 is a power of 2, so Richard divides it by 2 and passes 2 to Louise. 
+// Likewise, 2 is a power so she divides it by 2 and reaches 1. She wins the game.
+// Update If they initially set counter to 1, Richard wins. Louise cannot make a move so she loses.
+// Function Description:
+// Complete the counterGame function in the editor below.
+// counterGame has the following parameter(s):
+// * int n: the initial game counter value
+// Returns:
+// * string: either Richard or Louise
+// Input Format:
+// The first line contains an integer t, the number of testcases.
+// Each of the next t lines contains an integer n, the initial value for each game.
+// Constraints:
+// 1 <= t <= 10
+// 1 <= n <= 2^64 - 1
+
+function counterGame(n) {
+    n = BigInt(n);
+    let moves = 0;
+    while (n > 1n) {
+        // If n is a power of 2
+        if ((n & (n - 1n)) === 0n) {
+            n = n / 2n;
+        } else {
+            // Reduce by the largest power of 2 less than n
+            let p = 1n;
+            while (p * 2n < n) {
+                p *= 2n;
+            }
+            n -= p;
+        }
+        moves++;
+    }
+    return (moves % 2 === 0) ? "Javor" : "Pepa";
+}
+// Example usage
+console.log(counterGame(132)); // "Louise"
+console.log(counterGame(1));   // "Richard"
+console.log(counterGame(6));   // "Richard"
+console.log(counterGame(1560834904)); // "Richard"
+console.log(counterGame(1000000000000000000)); // "Louise"
 
 
 
