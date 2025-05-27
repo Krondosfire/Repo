@@ -1066,7 +1066,7 @@ function readLine() {
 
 function dynamicArray(n, queries) {
     // Write your code here
-	const arr = Array.from({length: n}, () => [];
+	const arr = Array.from({length: n}, () => []);
 	let lastAnswer = 0;
 	const answers = [];
 	for(let i = 0; i < queries.length; i++) {
