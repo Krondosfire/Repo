@@ -1211,7 +1211,18 @@ function readLine() {
 
 function gridChallenge(grid) {
     // Write your code here
-
+	for(let i = 0; i < grid.length; i++) {
+		grid[i] = grid[i].split('').sort().join('');
+	}
+	let n = grid.length;
+	for(let col = 0; col < n; col++) {
+		for(let row = 1; row < n; row++) {
+			if(grid[row][col] < grid[row - 1][col]) {
+				return "NO";
+			}
+		}
+	}
+	return "YES";
 }
 
 function main() {
@@ -1238,6 +1249,123 @@ function main() {
 }
 
 ------------------------------------------------------------------------
+
+Prime Dates
+Given two dates each in the format dd-mm-yyyy, you have to find the number of lucky dates between them (inclusive). 
+To see if a date is lucky,
+* Firstly, sequentially concatinate the date, month and year, into a new integer x erasing the leading zeroes.
+* Now if x is divisible by either 4 or 7, then we call the date a lucky date.
+For example, let's take the date "02-08-2024". After concatinating the day, month and year, we get x = 2082024. 
+As x is divisible by 4 so the date "02-08-2024" is called a lucky date.
+Debug the given function findPrimeDates and/or other lines of code, to find the correct lucky dates from the given input.
+Note: You can modify at most five lines in the given code and you cannot add or remove lines to the code.
+To restore the original code, click on the icon to the right of the language selector.
+Input Format:
+The only line of the input contains two strings u and v denoting the two dates following the format dd-mm-yyyy. 
+Consider, d is the day number, m is the month number and y is the year number.
+Note: Here m = 01 means January, m = 02 means February, m = 03 means March and so on and all the dates 
+follow the standard structure of English calender including the leap year.
+Constraints:
+1 <= d1,d2 <= 31
+1 <= m1,m2 <= 12
+1000 <= y1 <= y2 <= 9999
+
+function processData(input) {
+    //Enter your code here
+function isLuckyDate(d, m, y) {
+        // Remove leading zeroes by converting to Number, then concatenate
+        let x = Number(d) + '' + Number(m) + '' + Number(y);
+        x = parseInt(x, 10);
+        return (x % 4 === 0 || x % 7 === 0);
+    }
+
+    function nextDate(d, m, y) {
+        const daysInMonth = [31, (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        d++;
+        if (d > daysInMonth[m - 1]) {
+            d = 1;
+            m++;
+            if (m > 12) {
+                m = 1;
+                y++;
+            }
+        }
+        return [d, m, y];
+    }
+
+    let [u, v] = input.trim().split(' ');
+    let [d1, m1, y1] = u.split('-').map(Number);
+    let [d2, m2, y2] = v.split('-').map(Number);
+
+    let count = 0;
+    while (true) {
+        if (isLuckyDate(d1, m1, y1)) count++;
+        if (d1 === d2 && m1 === m2 && y1 === y2) break;
+        [d1, m1, y1] = nextDate(d1, m1, y1);
+    }
+    console.log(count);
+	
+} 
+
+process.stdin.resume();
+process.stdin.setEncoding("ascii");
+_input = "";
+process.stdin.on("data", function (input) {
+    _input += input;
+});
+
+process.stdin.on("end", function () {
+   processData(_input);
+});
+
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
