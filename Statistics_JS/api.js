@@ -2907,6 +2907,92 @@ let queries3 = [
 ];
 console.log(dynamicArray(n3, queries3)); // Output: [7, 3]
 
+// Running Time and Complexity
+// Task:
+// A prime is a natural number greater than 1 that has no positive divisors other than  and itself. 
+// Given a number, n, determine and print whether it is Prime or Not prime.
+// Note: If possible, try to come up with a O(sqrt of n) primality algorithm, 
+// or see what sort of optimizations you come up with for an O(n) algorithm. 
+// Input Format:
+// The first line contains an integer, T, the number of test cases.
+// Each of the T subsequent lines contains an integer, n, to be tested for primality.
+// Constraints:
+// 1 <= T <= 30
+// 1 <= n <= 2x10^9
+
+function isPrime(n4) {
+    if(n4 <= 1) return false;
+    if(n4 === 2) return true;
+    if(n4 % 2 === 0) return false;
+    const sqrtN = Math.sqrt(n4);
+    for(let i = 3; i <= sqrtN; i +=2) {
+        if(n4 % i === 0) return false;
+    }
+    return true;
+}
+// Example usage
+console.log(isPrime(12) ? 'Prime' : 'Not prime'); // Not prime
+console.log(isPrime(5) ? 'Prime' : 'Not prime');  // Prime
+console.log(isPrime(7) ? 'Prime' : 'Not prime');  // Prime
+console.log(isPrime(1) ? 'Prime' : 'Not prime');  // Not prime
+console.log(isPrime(2) ? 'Prime' : 'Not prime');  // Prime
+console.log(isPrime(97) ? 'Prime' : 'Not prime'); // Prime
+// Test an Array of values
+let numbers = [12, 5, 7, 1, 2, 97, 1000000007];
+numbers.forEach(n5 => {
+    console.log(n5 + ': ' + (isPrime(n5) ? 'Prime' : 'Not prime'));
+});
+// Grid Challenge
+// Given a square grid of characters in the range ascii[a-z], rearrange elements of each row alphabetically, ascending. 
+// Determine if the columns are also in ascending alphabetical order, top to bottom. Return YES if they are or NO if they are not.
+// Example:
+// grid = ['abc','ade','efg']
+// The grid is illustrated below.
+// a b c
+// a d e
+// e f g
+// The rows are already in alphabetical order. The columns a a e, b d f and c e g are also in alphabetical order, so the answer would be YES. 
+// Only elements within the same row can be rearranged. They cannot be moved to a different row.
+// Function Description:
+// Complete the gridChallenge function in the editor below.
+// gridChallenge has the following parameter(s):
+// * string grid[n]: an array of strings
+// Returns:
+// * string: either YES or NO
+// Input Format:
+// The first line contains t, the number of testcases.
+// Each of the next t sets of lines are described as follows:
+// - The first line contains n, the number of rows and columns in the grid.
+// - The next n lines contains a string of length n.
+// Constraints:
+// 1 <= t <= 100
+// 1 <= n <= 100
+// Each string consists of lowercase letters in the range ascii[a-z]
+
+function gridChallenge(grid) {
+    // Step 1: Sort each row
+    for (let i = 0; i < grid.length; i++) {
+        grid[i] = grid[i].split('').sort().join('');
+    }
+
+    // Step 2: Check columns
+    let n = grid.length;
+    for (let col = 0; col < n; col++) {
+        for (let row = 1; row < n; row++) {
+            if (grid[row][col] < grid[row - 1][col]) {
+                return "NO";
+            }
+        }
+    }
+    return "YES";
+}
+// Example usage
+console.log(gridChallenge(['abc','ade','efg'])); // YES
+console.log(gridChallenge(['ebacd','fghij','olmkn','trpqs','xywuv'])); // YES
+console.log(gridChallenge(['mpxz','abcd','wlmf'])); // NO
+console.log(gridChallenge(['abc','xyz','def'])); // YES
+console.log(gridChallenge(['zyx','wvu','tsr'])); // NO
+
 
 
 

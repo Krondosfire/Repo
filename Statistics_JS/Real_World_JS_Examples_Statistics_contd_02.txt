@@ -1104,8 +1104,140 @@ function main() {
     ws.end();
 }
 
+---------------------------------------------------------------------------------------
+Running Time and Complexity
+Task:
+A prime is a natural number greater than 1 that has no positive divisors other than  and itself. 
+Given a number, n, determine and print whether it is Prime or Not prime.
+Note: If possible, try to come up with a O(sqrt of n) primality algorithm, 
+or see what sort of optimizations you come up with for an O(n) algorithm. 
+Input Format:
+The first line contains an integer, T, the number of test cases.
+Each of the T subsequent lines contains an integer, n, to be tested for primality.
+Constraints:
+1 <= T <= 30
+1 <= n <= 2x10^9
 
+function isPrime(n) {
+    if (n <= 1) return false;
+    if (n === 2) return true;
+    if (n % 2 === 0) return false;
+    const sqrtN = Math.sqrt(n);
+    for (let i = 3; i <= sqrtN; i += 2) {
+        if (n % i === 0) return false;
+    }
+    return true;
+}
+function processData(input) {
+    //Enter your code here
+	const lines = input.trim().split('\n');
+	const T = parseInt(lines[0], 10);
+	for(let i = 1; i <= T; i++) {
+		const n = parseInt(lines[i], 10);
+		console.log(isPrime(n) ? 'Prime' : 'Not prime');
+	}
+} 
 
+process.stdin.resume();
+process.stdin.setEncoding("ascii");
+_input = "";
+process.stdin.on("data", function (input) {
+    _input += input;
+});
+
+process.stdin.on("end", function () {
+   processData(_input);
+});
+
+-------------------------------------------------------------------------------------------
+
+Grid Challenge
+Given a square grid of characters in the range ascii[a-z], rearrange elements of each row alphabetically, ascending. 
+Determine if the columns are also in ascending alphabetical order, top to bottom. Return YES if they are or NO if they are not.
+Example:
+grid = ['abc','ade','efg']
+The grid is illustrated below.
+a b c
+a d e
+e f g
+The rows are already in alphabetical order. The columns a a e, b d f and c e g are also in alphabetical order, so the answer would be YES. 
+Only elements within the same row can be rearranged. They cannot be moved to a different row.
+Function Description:
+Complete the gridChallenge function in the editor below.
+gridChallenge has the following parameter(s):
+* string grid[n]: an array of strings
+Returns:
+* string: either YES or NO
+Input Format:
+The first line contains t, the number of testcases.
+Each of the next t sets of lines are described as follows:
+- The first line contains n, the number of rows and columns in the grid.
+- The next n lines contains a string of length n.
+Constraints:
+1 <= t <= 100
+1 <= n <= 100
+Each string consists of lowercase letters in the range ascii[a-z]
+
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Complete the 'gridChallenge' function below.
+ *
+ * The function is expected to return a STRING.
+ * The function accepts STRING_ARRAY grid as parameter.
+ */
+
+function gridChallenge(grid) {
+    // Write your code here
+
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const t = parseInt(readLine().trim(), 10);
+
+    for (let tItr = 0; tItr < t; tItr++) {
+        const n = parseInt(readLine().trim(), 10);
+
+        let grid = [];
+
+        for (let i = 0; i < n; i++) {
+            const gridItem = readLine();
+            grid.push(gridItem);
+        }
+
+        const result = gridChallenge(grid);
+
+        ws.write(result + '\n');
+    }
+
+    ws.end();
+}
+
+------------------------------------------------------------------------
 
 
 
