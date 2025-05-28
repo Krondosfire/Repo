@@ -3209,6 +3209,56 @@ console.log(counterGame(6));   // "Richard"
 console.log(counterGame(1560834904)); // "Richard"
 console.log(counterGame(1000000000000000000)); // "Louise"
 
+// Nested Logic
+// Task:
+// Your local library needs your help! Given the expected and actual return dates for a library book, 
+// create a program that calculates the fine (if any). The fee structure is as follows:
+// 1. If the book is returned on or before the expected return date, no fine will be charged (i.e.: fine = 0).
+// 2. If the book is returned after the expected return day but still within the same calendar month and year as the expected return date, 
+//   fine = 15 Hackos X (the number of days late).
+// 3. If the book is returned after the expected return month but still within the same calendar year as the expected return date, the 
+//   fine = 500 Hackos X (the number of months late).
+// 4. If the book is returned after the calendar year in which it was expected, there is a fixed fine of 10000 Hackos.
+// Example:
+// d1, m1, y1 = 12312014 returned date
+// d2, m2, y2 = 112015 due date
+// The book is returned on time, so no fine is applied.
+// d1, m1, y1 = 112015 returned date
+// d2, m2, y2 = 12312014 due date
+// The book is returned in the following year, so the fine is a fixed 10000.
+// Input Format:
+// The first line contains 3 space-separated integers denoting the respective day, month, and year on which the book was actually returned.
+// The second line contains 3 space-separated integers denoting the respective day, month, and year on which the book was expected to be returned (due date).
+// Constraints:
+// 1 <= D <= 31
+// 1 <= M <= 12
+// 1 <= Y <= 3000
+// It is guaranteed that the dates will be valid Gregorian calendar dates.
+
+function libraryFine(actual, due) {
+    // actual and due are arrays: [day, month, year]
+    const [d1, m1, y1] = actual;
+    const [d2, m2, y2] = due;
+    let fine = 0;
+
+    if (y1 > y2) {
+        fine = 10000;
+    } else if (y1 === y2 && m1 > m2) {
+        fine = 500 * (m1 - m2);
+    } else if (y1 === y2 && m1 === m2 && d1 > d2) {
+        fine = 15 * (d1 - d2);
+    }
+    return fine;
+}
+// Example usage
+console.log(libraryFine([31, 12, 2014], [1, 1, 2015])); // 0 (returned early)
+console.log(libraryFine([1, 2, 2015], [1, 1, 2015]));   // 500 (1 month late)
+console.log(libraryFine([2, 1, 2016], [1, 1, 2015]));   // 10000 (1 year late)
+console.log(libraryFine([1, 1, 2015], [1, 1, 2015]));   // 0 (on time)
+console.log(libraryFine([9, 6, 2015], [6, 6, 2015]));   // 45 (3 days late)
+console.log(libraryFine([9, 6, 2015], [6, 6, 2015])); // Output: 45
+console.log(libraryFine([1, 1, 2015], [1, 1, 2015])); // Output: 0
+
 
 
 
