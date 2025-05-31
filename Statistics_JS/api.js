@@ -3259,6 +3259,48 @@ console.log(libraryFine([9, 6, 2015], [6, 6, 2015]));   // 45 (3 days late)
 console.log(libraryFine([9, 6, 2015], [6, 6, 2015])); // Output: 45
 console.log(libraryFine([1, 1, 2015], [1, 1, 2015])); // Output: 0
 
+// RegEx, Patterns, and Intro to Databases
+// Task
+// Consider a database table, Emails, which has the attributes First Name and Email ID. 
+// Given N rows of data simulating the Emails table, print an alphabetically-ordered list of people 
+// whose email address ends in @gmail.com.
+// Input Format:
+// The first line contains an integer, N, total number of rows in the table.
+// Each of the N subsequent lines contains 2 space-separated strings denoting a person's first name and email ID, respectively.
+// Constraints:
+// 2 <= N <= 30
+// Each of the first names consists of lower case letters [a-z] only.
+// Each of the email IDs consists of lower case letters [a-z], @ and . only.
+// The length of the first name is no longer than 20.
+// The length of the email ID is no longer than 50.
+
+function filterAndSortByGmail(namesEmails) {
+    // namesEmails: array of [firstName, email] arrays
+    const validNames = [];
+    for (const [name, email] of namesEmails) {
+        if (email.endsWith('@gmail.com')) {
+            validNames.push(name);
+        }
+    }
+    validNames.sort();
+    return validNames;
+}
+
+// Example usage
+const data02 = [
+    ['riya', 'riya@gmail.com'],
+    ['julia', 'julia@yahoo.com'],
+    ['jane', 'jane@gmail.com'],
+    ['javor', 'j.mladenoff@gmail.com'],
+    ['alice', 'alice@outlook.com'],
+    ['bob', 'bob@gmail.com']
+];
+
+const result = filterAndSortByGmail(data02);
+console.log(result); // Output: ['bob', 'jane', 'riya']
+
+/
+
 
 
 
