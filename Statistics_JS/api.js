@@ -3299,7 +3299,252 @@ const data02 = [
 const result = filterAndSortByGmail(data02);
 console.log(result); // Output: ['bob', 'jane', 'riya']
 
-/
+// Bitwise AND
+// Task:
+// Given set S = {1,2,3,...,N}. Find two integers, A and B (where A < B), from set S such that the value of A & B is 
+// the maximum possible and also less than a given integer, K. In this case, & represents the bitwise AND operator.
+// Function Description:
+// Complete the bitwiseAnd function in the editor below.
+// bitwiseAnd has the following paramter(s):
+// - int N: the maximum integer to consider
+// - int K: the limit of the result, inclusive
+// Returns:
+// - int: the maximum value of A & B within the limit.
+// Input Format:
+// The first line contains an integer, T, the number of test cases.
+// Each of the T subsequent lines defines a test case as 2 space-separated integers, N and K, respectively.
+// Constraints:
+// 1 <= T <= 10^3
+// 2 <= N <= 10^3
+// 2 <= K <= N
+
+function bitwiseAnd(N, K) {
+    // If (K-1 | K) <= N, then K-1 is achievable as A & B
+    // Otherwise, the best we can do is K-2 or lower
+    let candidate = (K - 1) | K;
+    if (candidate <= N) {
+        return K - 1;
+    } else {
+        return K - 2;
+    }
+}
+
+// Example usage
+console.log(bitwiseAnd(5, 2)); // Output: 1
+console.log(bitwiseAnd(8, 5)); // Output: 4
+console.log(bitwiseAnd(2, 2)); // Output: 0
+
+
+// Sum vs XOR
+// Given an integer n, find each x such that:
+// * 0 <= x <= n
+// n + x = n (+) x
+// where (+) denotes the bitwise XOR operator. Return the number of x's satisfying the criteria.
+// Example:
+// n = 4
+// There are four values that meet the criteria:
+// 4 + 0 = 4 (+) 0 = 4
+// 4 + 1 = 4 (+) 1 = 5
+// 4 + 2 = 4 (+) 2 = 6
+// 4 + 3 = 4 (+) 3 = 7
+// Return 4.
+// Function Description:
+// Complete the sumXor function in the editor below.
+// sumXor has the following parameter(s):
+// - int n: an integer
+// Returns:
+// - int: the number of values found
+// Input Format
+// A single integer, n.
+// Constraints:
+// 0 <= n <= 10^15
+// Subtasks:
+// 0 <= n <= 100 for 60% of the maximum score
+
+function sumXor(n) {
+    if (n === 0) return 1;
+    let count = 0;
+    while (n > 0) {
+        if ((n & 1) === 0) count++;
+        n = n >> 1;
+    }
+    return 1 << count;
+}
+
+// Example usage
+console.log(sumXor(4)); // Output: 4
+console.log(sumXor(5)); // Output: 2
+console.log(sumXor(0)); // Output: 1
+
+// Palindrome Index
+// Given a string of lowercase letters in the range ascii[a-z], determine
+// the index of a character that can be removed to make the string a palindrome.
+// There may be more than one solution, but any will do.
+// If the word is already a palindrome or there is no solution, return -1.
+// Otherwise, return the index of a character to remove.
+// Example:
+// s = 'bcbc'
+// Either remove 'b' at index 0 or 'c' at index 3.
+// Function Description:
+// Complete the palindromeindex function in the editor below.
+// It has the following parameters:
+// * string s: a string to analyze.
+// Returns:
+// * int: the index of the character to remove or -1
+// Input format:
+// The first line contains an integer q, the number of queries.
+// Each of the next q lines contains a query string s.
+// Constraints:
+// 1 <= q <= 20
+// 1 <= length of s <= 10^5 + 5
+// All characters are in the range ascii[a-z]
+function isPalindrome01(s, left, right) {
+    while (left < right) {
+        if (s[left] !== s[right]) return false;
+        left++;
+        right--;
+    }
+    return true;
+}
+function palindromeIndex(s) {
+    let left = 0, right = s.length - 1;
+    while (left < right) {
+        if (s[left] !== s[right]) {
+            if (isPalindrome01(s, left + 1, right)) return left;
+            if (isPalindrome01(s, left, right - 1)) return right;
+            return -1;
+        }
+        left++;
+        right--;
+    }
+    return -1;
+}
+
+// Example usage
+console.log(palindromeIndex('bcbc')); // Output: 0 or 3
+console.log(palindromeIndex('aaab')); // Output: 3
+console.log(palindromeIndex('baa'));  // Output: 0
+console.log(palindromeIndex('aaa'));  // Output: -1
+
+// Between Two Sets
+// There will be two arrays of integers. Determine all integers
+// that satisfy the following two conditions:
+// 1. The elements of the first array all factors of the integer being considered.
+// 2. The integer being considered is a factor of all elements of the second array
+// These numbers are referred to as being between the two arrays.
+// Determine how many such numbers exist.
+// Example:
+// a = [2,6]
+// b = [24,36]
+// There are two numbers between the arrays: 6 and 12
+// 6%2 = 0,6%6 = 0,24%6 = 0 and 36%6 = 0 for the first value.
+// 12%2 = 0,12%6 = 0 and 24%12 = 0, 36%12 = 0 for the second value. Return 2
+// Function Description:
+// Complete the getTotalX function below. It should return
+// the number of integers that are between the sets,
+// getTotalX has the following parameters:
+// * int a[n]: an array of integers
+// * int b[m]: an array of integers
+// Returns:
+// * int: the number of integers that are between the sets
+// Input format:
+// The first line contains two space-separated integers, n and m, the number of elements
+// in arrays a and b.
+// The second line contains n distinct space-separated integers a[i] where ) <= i < n.
+// The third line contains m distinct space-separated integers b[j] where ) <=j < m.
+// Constraints:
+// 1 <= n,m <= 10
+// 1 <= a[i] <= 100
+// 1 <= b[j] <= 100
+
+function gcd(a, b) {
+    while (b !== 0) {
+        let t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+function lcm(a, b) {
+    return (a * b) / gcd(a, b);
+}
+
+function getTotalX(a, b) {
+    // Step 1: LCM of all elements in a
+    let l = a.reduce((acc, val) => lcm(acc, val));
+    // Step 2: GCD of all elements in b
+    let g = b.reduce((acc, val) => gcd(acc, val));
+    // Step 3: Count multiples of l that exactly divide g
+    let count = 0;
+    for (let x = l; x <= g; x += l) {
+        if (g % x === 0) count++;
+    }
+    return count;
+}
+
+// Example usage
+console.log(getTotalX([2, 6], [24, 36])); // Output: 2
+
+
+// Anagram
+// Two words are anagrams of one another if their letters can be rearranged to form the other word.
+// Given a string, split it into two contiguous substrings of equal length.
+// Determine the minimum number of characters to change to make
+// the two substrings into anagrams of one another.
+// Example:
+// s = abccde
+// Break s into two parts: 'abc' and 'cde'. Note that all letters have been
+// used, the substrings are contiguous and their lengths are equal.
+// Now you can change 'a' and 'b' in the first substring to 'd' and 'e'
+// to have 'dec' and 'cde' which are anagrams. Two changes were necessary.
+// Function description:
+// Complete the anagram function in the editor below.
+// anagram has the following parameters:
+// * string s: a string
+// Returns:
+// * int: the minimum number of characters to change or -1.
+// Input format:
+// The first line will contain an integer, q, the number of test cases.
+// Each test case will contain a string s.
+// Constraints:
+// 1 <= q <= 100
+// 1 <= |s| <= 10^4
+// s consists only of characters in the range ascii[a-z]
+
+function anagram(s) {
+    if (s.length % 2 !== 0) return -1;
+    const mid = s.length / 2;
+    const a = s.slice(0, mid);
+    const b = s.slice(mid);
+
+    // Frequency count for a and b
+    const countA = Array(26).fill(0);
+    const countB = Array(26).fill(0);
+
+    for (let i = 0; i < mid; i++) {
+        countA[a.charCodeAt(i) - 97]++;
+        countB[b.charCodeAt(i) - 97]++;
+    }
+
+    // Count how many letters in a are not matched in b
+    let changes = 0;
+    for (let i = 0; i < 26; i++) {
+        if (countA[i] > countB[i]) {
+            changes += countA[i] - countB[i];
+        }
+    }
+    return changes;
+}
+// Example usage
+console.log(anagram("abccde")); // Output: 2
+console.log(anagram("aaabbb")); // Output: 3
+console.log(anagram("mnop"));   // Output: 2
+console.log(anagram("xyyx"));   // Output: 0
+console.log(anagram("xaxbbbxx")); // Output: 1
+console.log(anagram("abc"));    // Output: -1
+
+
 
 
 
