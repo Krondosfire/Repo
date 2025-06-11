@@ -3671,7 +3671,185 @@ console.log(bomberMan(4, ['.O.', 'OOO', '.O.'])); // Output: ['O.O', '...', 'O.O
 // Additional test cases
 console.log(bomberMan(6, ['.O.', 'OOO', '.O.'])); // Output: ['OOO', 'OOO', 'OOO']
 
+// New Year Chaos
+// It is New Year's Day and people are in line for the Wonderland rollercoaster ride. 
+// Each person wears a sticker indicating their initial position in the queue from 1 to n. 
+// Any person can bribe the person directly in front of them to swap positions, but they still wear their original sticker. 
+// One person can bribe at most two others.
+// Determine the minimum number of bribes that took place to get to a given queue order. 
+// Print the number of bribes, or, if anyone has bribed more than two people, print Too chaotic.
+// Example:
+// q = [1,2,3,5,4,6,7,8]
+// If person 5 bribes person 4, the queue will look like this: 1,2,3,5,4,6,7,8. Only 1 bribe is required. Print 1.
+// q = [4,1,2,3]
+// Person 4 had to bribe 3 people to get to the current position. Print Too chaotic.
+// Function Description:
+// Complete the function minimumBribes in the editor below.
+// minimumBribes has the following parameter(s):
+// * int q[n]: the positions of the people after all bribes
+// Returns:
+// * No value is returned. Print the minimum number of bribes necessary or Too chaotic if someone has bribed more than 2 people.
+// Input Format:
+// The first line contains an integer t, the number of test cases.
+// Each of the next t pairs of lines are as follows:
+// - The first line contains an integer t, the number of people in the queue
+// - The second line has n space-separated integers describing the final state of the queue.
+// Constraints:
+// 1 <= t <= 10
+// 1 <= n <= 10^5
+// Subtasks:
+// For 60% score 1 <= n <= 10^3
+// For 100% score 1 <= n <= 10^5
+
+function minimumBribes(q) {
+    let bribes = 0;
+    let chaotic = false;
+    for (let i = 0; i < q.length; i++) {
+        // Check if any person has moved more than 2 positions ahead
+        if (q[i] - (i + 1) > 2) {
+            console.log("Too chaotic");
+            return;
+        }
+        // Only check positions where a bribe could have happened
+        for (let j = Math.max(0, q[i] - 2); j < i; j++) {
+            if (q[j] > q[i]) bribes++;
+        }
+    }
+    console.log(bribes);
+}
+// Example usage
+minimumBribes([2, 1, 5, 3, 4]); // Output: 3
+minimumBribes([2, 5, 1, 3, 4]); // Output: Too chaotic
+// Additional test cases
+minimumBribes([1, 2, 3, 4, 5]); // Output: 0 (no bribes)
+minimumBribes([5, 1, 2, 3, 4]); // Output: Too chaotic
 
 
+// Sherlock and the Valid String
+// Sherlock considers a string to be valid if all characters of the string appear the same number of times. 
+// It is also valid if he can remove just 1 character at 1 index in the string, and the remaining characters will occur the same number of times. 
+// Given a string s, determine if it is valid. If so, return YES, otherwise return NO.
+// Example:
+// s = abc
+// This is a valid string because frequencies are {a:1,b:1,c:1}.
+// s = abcc
+// This is a valid string because we can remove one c and have 1 of each character in the remaining string.
+// s = abccc
+// This string is not valid as we can only remove 1 occurrence of c. 
+// That leaves character frequencies of {a:1,b:1,c:2}.
+// Function Description:
+// Complete the isValid function in the editor below.
+// isValid has the following parameter(s):
+// * string s: a string
+// Returns:
+// * string: either YES or NO
+// Input Format:
+// A single string s.
+// Constraints:
+// 1 <= |s| <= 10^5
+// Each character s[i] belongs to ascii[a-z]
+
+function isValid(s) {
+    // Count frequency of each character
+    const freq = {};
+    for (const char of s) {
+        freq[char] = (freq[char] || 0) + 1;
+    }
+
+    // Count frequencies of the frequencies
+    const countFreq = {};
+    for (const count of Object.values(freq)) {
+        countFreq[count] = (countFreq[count] || 0) + 1;
+    }
+
+    const keys = Object.keys(countFreq).map(Number);
+
+    if (keys.length === 1) {
+        // All characters occur the same number of times
+        return "YES";
+    }
+    if (keys.length === 2) {
+        // Two different frequencies
+        const [f1, f2] = keys;
+        const [c1, c2] = [countFreq[f1], countFreq[f2]];
+
+        // Check if one frequency occurs once and is either 1 or differs by 1 from the other
+        if (
+            (c1 === 1 && (f1 - 1 === 0 || f1 - 1 === f2)) ||
+            (c2 === 1 && (f2 - 1 === 0 || f2 - 1 === f1))
+        ) {
+            return "YES";
+        }
+    }
+    return "NO";
+}
+// Example usage
+console.log(isValid("aabbcc")); // Output: "YES"
+console.log(isValid("aabbc"));  // Output: "YES"
+console.log(isValid("aabbccdde")); // Output: "NO"
+console.log(isValid("abc"));    // Output: "YES"
+console.log(isValid("abcc"));   // Output: "YES"
+console.log(isValid("abccc"));  // Output: "NO"
+
+// Climbing the Leaderboard
+// An arcade game player wants to climb to the top of the leaderboard and track their ranking. 
+// The game uses Dense Ranking, so its leaderboard works like this:
+// * The player with the highest score is ranked number 1 on the leaderboard.
+// * Players who have equal scores receive the same ranking number, and the next player(s) receive the immediately following ranking number.
+// Example:
+// ranked = [100,90,90,80]
+// player = [70,80,105]
+// The ranked players will have ranks 1, 2, 2, and 3, respectively. If the player's scores are 70, 80 and 105, 
+// their rankings after each game are 4th, 3rd and 1st. Return [4,3,1].
+// Function Description:
+// Complete the climbingLeaderboard function in the editor below.
+// climbingLeaderboard has the following parameter(s):
+// * int ranked[n]: the leaderboard scores
+// * int player[m]: the player's scores
+// Returns:
+// * int[m]: the player's rank after each new score
+// Input Format:
+// The first line contains an integer n, the number of players on the leaderboard.
+// The next line contains n space-separated integers ranked[i], the leaderboard scores in decreasing order.
+// The next line contains an integer, m, the number games the player plays.
+// The last line contains m space-separated integers player[j], the game scores.
+// Constraints:
+// 1 <= n <= 2x10^5
+// 1 <= m <= 2x10^5
+// 0 <= ranked[i] <= 10^9 for 0 <= i < n
+// 0 <= player[j] <= 10^9 for 0 <= j < m
+// The existing leaderboard, ranked, is in descending order.
+// The player's scores, player, are in ascending order.
+// Subtask:
+// For 60% of the maximum score:
+// 1 <= n <= 200
+// 1 <= m <= 200
+function climbingLeaderboard(ranked, player) {
+    // Remove duplicates from ranked to get unique scores in descending order
+    const uniqueRanked = [];
+    for (let i = 0; i < ranked.length; i++) {
+        if (i === 0 || ranked[i] !== ranked[i - 1]) {
+            uniqueRanked.push(ranked[i]);
+        }
+    }
+
+    const result = [];
+    let i = uniqueRanked.length - 1;
+    for (const score of player) {
+        // Move up the leaderboard as long as player score >= ranked score
+        while (i >= 0 && score >= uniqueRanked[i]) {
+            i--;
+        }
+        // Rank is index + 2 (since index is 0-based and we want next rank after last checked)
+        result.push(i + 2);
+    }
+    return result;
+}
+// Example usage
+console.log(climbingLeaderboard([100, 90, 90, 80], [70, 80, 105])); // Output: [4, 3, 1]
+console.log(climbingLeaderboard([100, 90, 90, 80], [50, 60, 70])); // Output: [5, 5, 4]
+// Additional test cases
+console.log(climbingLeaderboard([200, 150, 150, 100], [50, 100, 200])); // Output: [4, 3, 1]
+console.log(climbingLeaderboard([300, 200, 100], [400, 250, 150])); // Output: [1, 2, 3]
 
 

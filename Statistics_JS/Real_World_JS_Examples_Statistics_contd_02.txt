@@ -2479,10 +2479,190 @@ function main() {
     ws.end();
 }
 
+--------------------------------------------------------
+
+New Year Chaos
+It is New Year's Day and people are in line for the Wonderland rollercoaster ride. 
+Each person wears a sticker indicating their initial position in the queue from 1 to n. 
+Any person can bribe the person directly in front of them to swap positions, but they still wear their original sticker. 
+One person can bribe at most two others.
+Determine the minimum number of bribes that took place to get to a given queue order. 
+Print the number of bribes, or, if anyone has bribed more than two people, print Too chaotic.
+Example:
+q = [1,2,3,5,4,6,7,8]
+If person 5 bribes person 4, the queue will look like this: 1,2,3,5,4,6,7,8. Only 1 bribe is required. Print 1.
+q = [4,1,2,3]
+Person 4 had to bribe 3 people to get to the current position. Print Too chaotic.
+Function Description:
+Complete the function minimumBribes in the editor below.
+minimumBribes has the following parameter(s):
+* int q[n]: the positions of the people after all bribes
+Returns:
+* No value is returned. Print the minimum number of bribes necessary or Too chaotic if someone has bribed more than 2 people.
+Input Format:
+The first line contains an integer t, the number of test cases.
+Each of the next t pairs of lines are as follows:
+- The first line contains an integer t, the number of people in the queue
+- The second line has n space-separated integers describing the final state of the queue.
+Constraints:
+1 <= t <= 10
+1 <= n <= 10^5
+Subtasks:
+For 60% score 1 <= n <= 10^3
+For 100% score 1 <= n <= 10^5
+
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Complete the 'minimumBribes' function below.
+ *
+ * The function accepts INTEGER_ARRAY q as parameter.
+ */
+
+function minimumBribes(q) {
+    // Write your code here
+	let bribes = 0;
+	let chaotic = false;
+	for(let i = 0; i < q.length; i++) {
+		if(q[i] - (i + 1) > 2) {
+			console.log("Too chaotic");
+			return;
+		}
+		for(let j = Math.max(0, q[i] - 2); j < i; j++) {
+			if(q[j] > q[i]) bribes++;
+		}
+	}
+	console.log(bribes);
+}
+
+function main() {
+    const t = parseInt(readLine().trim(), 10);
+
+    for (let tItr = 0; tItr < t; tItr++) {
+        const n = parseInt(readLine().trim(), 10);
+
+        const q = readLine().replace(/\s+$/g, '').split(' ').map(qTemp => parseInt(qTemp, 10));
+
+        minimumBribes(q);
+    }
+}
+
+-----------------------------------------------------------
 
 
+Sherlock and the Valid String
+Sherlock considers a string to be valid if all characters of the string appear the same number of times. 
+It is also valid if he can remove just 1 character at 1 index in the string, and the remaining characters will occur the same number of times. 
+Given a string s, determine if it is valid. If so, return YES, otherwise return NO.
+Example:
+s = abc
+This is a valid string because frequencies are {a:1,b:1,c:1}.
+s = abcc
+This is a valid string because we can remove one c and have 1 of each character in the remaining string.
+s = abccc
+This string is not valid as we can only remove 1 occurrence of c. 
+That leaves character frequencies of {a:1,b:1,c:2}.
+Function Description:
+Complete the isValid function in the editor below.
+isValid has the following parameter(s):
+* string s: a string
+Returns:
+* string: either YES or NO
+Input Format:
+A single string s.
+Constraints:
+1 <= |s| <= 10^5
+Each character s[i] belongs to ascii[a-z]
 
+'use strict';
 
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Complete the 'isValid' function below.
+ *
+ * The function is expected to return a STRING.
+ * The function accepts STRING s as parameter.
+ */
+
+function isValid(s) {
+    // Write your code here
+	const freq = {};
+	for(const char of s) {
+		freq[char] = (freq[char] || 0) + 1;
+	}
+	// Count frequencies of the frequencies
+	const countFreq = {};
+	for(const count of Object.values(freq)) {
+		countFreq[count] = (countFreq[count] || 0) + 1;
+	}
+	const keys = Object.keys(countFreq).map(Number);
+	if(keys.length === 1) {
+		return "YES";
+	}
+	if(keys.length === 2) {
+		const [f1, f2] = keys;
+		const [c1, c2] = [countFreq[f1], countFreq[f2]];
+		// Check if one frequency occurs once and is either 1 or differs by 1 from the other
+		if((c1 === 1 && (f1 - 1 === 0 || f1 - 1 === f2)) || (c2 === 1 && (f2 - 1 === 0 || f2 - 1 === f1))) {
+			return "YES";
+		}
+	}
+	return "NO";
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const s = readLine();
+
+    const result = isValid(s);
+
+    ws.write(result + '\n');
+
+    ws.end();
+}
+-------------------------------------------------------------------------
 
 
 
