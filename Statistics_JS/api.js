@@ -3852,4 +3852,105 @@ console.log(climbingLeaderboard([100, 90, 90, 80], [50, 60, 70])); // Output: [5
 console.log(climbingLeaderboard([200, 150, 150, 100], [50, 100, 200])); // Output: [4, 3, 1]
 console.log(climbingLeaderboard([300, 200, 100], [400, 250, 150])); // Output: [1, 2, 3]
 
+// Reverse a linked list
+// Given the pointer to the head node of a linked list, change the next pointers of the nodes so that their order is reversed. 
+// The head pointer given may be null meaning that the initial list is empty.
+// Example:
+// head references the list 1 --> 2 --> 3 --> NULL
+// Manipulate the next pointers of each node in place and return head, now referencing the head of the list 3 --> 2 --> 1 --> NULL.
+// Function Description:
+// Complete the reverse function in the editor below.
+// reverse has the following parameter:
+// * SinglyLinkedListNode pointer head: a reference to the head of a list
+// Returns:
+// * SinglyLinkedListNode pointer: a reference to the head of the reversed list
+// Input Format:
+// The first line contains an integer t, the number of test cases.
+// Each test case has the following format:
+// The first line contains an integer n, the number of elements in the linked list.
+// Each of the next n lines contains an integer, the data values of the elements in the linked list.
+// Constraints:
+// 1 <= t <= 10
+// 1 <= n <= 1000
+// 1 <= list[i] <= 1000, where list[i] is the i-th element in the list.
+
+function reverse(llist) {
+    let prev = null;
+    let current = llist;
+    while (current !== null) {
+        let nextNode = current.next; // Store next node
+        current.next = prev;         // Reverse current node's pointer
+        prev = current;              // Move prev to current node
+        current = nextNode;          // Move to next node
+    }
+    return prev; // New head of reversed list
+}
+// Example usage
+// Node constructor
+function SinglyLinkedListNode(data) {
+    this.data = data;
+    this.next = null;
+}
+
+// Build a linked list from an array
+function buildLinkedList(arr) {
+    let head = null, tail = null;
+    for (let val of arr) {
+        let node = new SinglyLinkedListNode(val);
+        if (!head) {
+            head = node;
+            tail = node;
+        } else {
+            tail.next = node;
+            tail = node;
+        }
+    }
+    return head;
+}
+
+// Print linked list to console
+function printLinkedList(head) {
+    let res = [];
+    while (head) {
+        res.push(head.data);
+        head = head.next;
+    }
+    console.log(res.join(' -> '));
+}
+// Example usage
+// Create a linked list: 1 -> 2 -> 3
+(function() {
+    let head = buildLinkedList([1, 2, 3]);
+    console.log("Original list:");
+    printLinkedList(head);
+
+    // Reverse the list
+    let reversedHead = reverse(head);
+    console.log("Reversed list:");
+    printLinkedList(reversedHead);
+})();
+// Additional test cases
+(function() {
+    // Create a linked list: 4 -> 5 -> 6
+    let head = buildLinkedList([4, 5, 6]);
+    console.log("Original list:");
+    printLinkedList(head);
+
+    // Reverse the list
+    let reversedHead = reverse(head);
+    console.log("Reversed list:");
+    printLinkedList(reversedHead);
+})();
+// Create a linked list: 7 -> 8 -> 9
+(function() {
+    let head = buildLinkedList([7, 8, 9]);
+    console.log("Original list:");
+    printLinkedList(head);
+
+    // Reverse the list
+    let reversedHead = reverse(head);
+    console.log("Reversed list:");
+    printLinkedList(reversedHead);
+})();
+
 
