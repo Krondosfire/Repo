@@ -249,6 +249,310 @@ function main() {
 }
 -----------------------------------------------------------------
 
+Reverse a doubly linked list
+Given the pointer to the head node of a doubly linked list, reverse the order of the nodes in place. 
+That is, change the next and prev pointers of the nodes so that the direction of the list is reversed. 
+Return a reference to the head node of the reversed list.
+Note: The head node might be NULL to indicate that the list is empty.
+Function Description:
+Complete the reverse function in the editor below.
+reverse has the following parameter(s):
+* DoublyLinkedListNode head: a reference to the head of a DoublyLinkedList
+Returns:
+* DoublyLinkedListNode: a reference to the head of the reversed list
+Input Format:
+The first line contains an integer t, the number of test cases.
+Each test case is of the following format:
+The first line contains an integer n, the number of elements in the linked list.
+The next n lines contain an integer each denoting an element of the linked list.
+Constraints:
+1 <= t <= 10
+0 <= n <= 1000
+0 <= DoublyLinkedListNode.data <= 1000
+
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.replace(/\s*$/, '')
+        .split('\n')
+        .map(str => str.replace(/\s*$/, ''));
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+const DoublyLinkedListNode = class {
+    constructor(nodeData) {
+        this.data = nodeData;
+        this.next = null;
+        this.prev = null;
+    }
+};
+
+const DoublyLinkedList = class {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+    }
+
+    insertNode(nodeData) {
+        let node = new DoublyLinkedListNode(nodeData);
+
+        if (this.head == null) {
+            this.head = node;
+        } else {
+            this.tail.next = node;
+            node.prev = this.tail;
+        }
+
+        this.tail = node;
+    }
+};
+
+function printDoublyLinkedList(node, sep, ws) {
+    while (node != null) {
+        ws.write(String(node.data));
+
+        node = node.next;
+
+        if (node != null) {
+            ws.write(sep);
+        }
+    }
+}
+
+/*
+ * Complete the 'reverse' function below.
+ *
+ * The function is expected to return an INTEGER_DOUBLY_LINKED_LIST.
+ * The function accepts INTEGER_DOUBLY_LINKED_LIST llist as parameter.
+ */
+
+/*
+ * For your reference:
+ *
+ * DoublyLinkedListNode {
+ *     int data;
+ *     DoublyLinkedListNode next;
+ *     DoublyLinkedListNode prev;
+ * }
+ *
+ */
+
+function reverse(llist) {
+    // Write your code here
+	let current = llist;
+	let temp = null;
+	let newHead = null;
+	while(current !== null) {
+		// Swap next and prev for current node
+		temp = current.prev;
+		current.prev = current.next;
+		current.next = temp;
+		// Move to the next node in the original list(which is prev now)
+		newHead = current;
+		current = current.prev;
+	}
+	return newHead;
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const t = parseInt(readLine(), 10);
+
+    for (let tItr = 0; tItr < t; tItr++) {
+        const llistCount = parseInt(readLine(), 10);
+
+        let llist = new DoublyLinkedList();
+
+        for (let i = 0; i < llistCount; i++) {
+            const llistItem = parseInt(readLine(), 10);
+            llist.insertNode(llistItem);
+        }
+
+        let llist1 = reverse(llist.head);
+
+        printDoublyLinkedList(llist1, " ", ws)
+        ws.write("\n");
+    }
+
+    ws.end();
+}
+--------------------------------------------------------------------------
+
+Insert a node at a specific position in a linked list
+Given the pointer to the head node of a linked list and an integer to insert at a certain position, create a new node 
+with the given integer as its data attribute, insert this node at the desired position and return the head node.
+A position of 0 indicates head, a position of 1 indicates one node away from the head and so on. 
+The head pointer given may be null meaning that the initial list is empty.
+Example:
+head refers to the first node in the list 1 --> 2 --> 3
+data = 4
+position = 2
+Insert a node at position 2 with data = 4. The new list is 1 --> 2 --> 4 --> 3
+Function Description: 
+Complete the function insertNodeAtPosition in the editor below. It must return a reference to the head node of your finished list.
+insertNodeAtPosition has the following parameters:
+* head: a SinglyLinkedListNode pointer to the head of the list
+* data: an integer value to insert as data in your new node
+* position: an integer position to insert the new node, zero based indexing
+Returns:
+* SinglyLinkedListNode pointer: a reference to the head of the revised list
+Input Format:
+The first line contains an integer n, the number of elements in the linked list.
+Each of the next n lines contains an integer SinglyLinkedListNode[i].data.
+The next line contains an integer data, the data of the node that is to be inserted.
+The last line contains an integer position.
+Constraints:
+1 <= n <= 1000
+1 <= SinglyLinkedListNode[i].data <= 1000, where SinglyLinkedListNode[i] is the i-th element of the linked list
+0 <= position <= n
+
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.replace(/\s*$/, '')
+        .split('\n')
+        .map(str => str.replace(/\s*$/, ''));
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+const SinglyLinkedListNode = class {
+    constructor(nodeData) {
+        this.data = nodeData;
+        this.next = null;
+    }
+};
+
+const SinglyLinkedList = class {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+    }
+
+    insertNode(nodeData) {
+        const node = new SinglyLinkedListNode(nodeData);
+
+        if (this.head == null) {
+            this.head = node;
+        } else {
+            this.tail.next = node;
+        }
+
+        this.tail = node;
+    }
+};
+
+function printSinglyLinkedList(node, sep, ws) {
+    while (node != null) {
+        ws.write(String(node.data));
+
+        node = node.next;
+
+        if (node != null) {
+            ws.write(sep);
+        }
+    }
+}
+
+/*
+ * Complete the 'insertNodeAtPosition' function below.
+ *
+ * The function is expected to return an INTEGER_SINGLY_LINKED_LIST.
+ * The function accepts following parameters:
+ *  1. INTEGER_SINGLY_LINKED_LIST llist
+ *  2. INTEGER data
+ *  3. INTEGER position
+ */
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode next;
+ * }
+ *
+ */
+
+function insertNodeAtPosition(llist, data, position) {
+    // Write your code here
+	const newNode = new SinglyLinkedListNode(data);
+	// Inserting at the head (position 0)
+	if(position === 0) {
+		newNode.next = llist;
+		return newNode;
+	}
+	let current = llist;
+	let currentPosition = 0;
+	// Traverse to the node just before the insertion point
+	while(current !== null && currentPosition < position - 1) {
+		current = current.next;
+		currentPosition++;
+	}
+	// Insert the new node
+	newNode.next = current.next;
+	current.next = newNode;
+	return llist;
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const llistCount = parseInt(readLine(), 10);
+
+    let llist = new SinglyLinkedList();
+
+    for (let i = 0; i < llistCount; i++) {
+        const llistItem = parseInt(readLine(), 10);
+        llist.insertNode(llistItem);
+    }
+
+    const data = parseInt(readLine(), 10);
+
+    const position = parseInt(readLine(), 10);
+
+    let llist_head = insertNodeAtPosition(llist.head, data, position);
+
+    printSinglyLinkedList(llist_head, " ", ws)
+    ws.write("\n");
+
+    ws.end();
+}
+-----------------------------------------------------------------------------------------
 
 
 

@@ -3953,4 +3953,227 @@ function printLinkedList(head) {
     printLinkedList(reversedHead);
 })();
 
+// Reverse a doubly linked list
+// Given the pointer to the head node of a doubly linked list, reverse the order of the nodes in place. 
+// That is, change the next and prev pointers of the nodes so that the direction of the list is reversed. 
+// Return a reference to the head node of the reversed list.
+// Note: The head node might be NULL to indicate that the list is empty.
+// Function Description:
+// Complete the reverse function in the editor below.
+// reverse has the following parameter(s):
+// * DoublyLinkedListNode head: a reference to the head of a DoublyLinkedList
+// Returns:
+// * DoublyLinkedListNode: a reference to the head of the reversed list
+// Input Format:
+// The first line contains an integer t, the number of test cases.
+// Each test case is of the following format:
+// The first line contains an integer n, the number of elements in the linked list.
+// The next n lines contain an integer each denoting an element of the linked list.
+// Constraints:
+// 1 <= t <= 10
+// 0 <= n <= 1000
+// 0 <= DoublyLinkedListNode.data <= 1000
+
+function reverse01(llist) {
+    // Write your code here
+	let current = llist;
+	let temp = null;
+	let newHead = null;
+	while(current !== null) {
+		// Swap next and prev for current node
+		temp = current.prev;
+		current.prev = current.next;
+		current.next = temp;
+		// Move to the next node in the original list(which is prev now)
+		newHead = current;
+		current = current.prev;
+	}
+	return newHead;
+}
+// Example usage
+// Node constructor 
+function DoublyLinkedListNode(data) {
+    this.data = data;
+    this.next = null;
+    this.prev = null;
+}
+// Build a doubly linked list from an array
+function buildDoublyLinkedList(arr) {
+    let head = null, tail = null;
+    for (let val of arr) {
+        let node = new DoublyLinkedListNode(val);
+        if (!head) {
+            head = node;
+            tail = node;
+        } else {
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
+        }
+    }
+    return head;
+}
+// Print doubly linked list to console
+function printDoublyLinkedList(head) {
+    let res = [];
+    while (head) {
+        res.push(head.data);
+        head = head.next;
+    }
+    console.log(res.join(' <-> '));
+}
+// Example usage
+(function() {
+    // Create a doubly linked list: 1 <-> 2 <-> 3
+    let head = buildDoublyLinkedList([1, 2, 3]);
+    console.log("Original list:");
+    printDoublyLinkedList(head);
+
+    // Reverse the list
+    let reversedHead = reverse01(head);
+    console.log("Reversed list:");
+    printDoublyLinkedList(reversedHead);
+})();
+// Additional test cases
+(function() {
+    // Create a doubly linked list: 4 <-> 5 <-> 6
+    let head = buildDoublyLinkedList([4, 5, 6]);
+    console.log("Original list:");
+    printDoublyLinkedList(head);
+
+    // Reverse the list
+    let reversedHead = reverse01(head);
+    console.log("Reversed list:");
+    printDoublyLinkedList(reversedHead);
+})();
+(function() {
+    // Create a doubly linked list: 7 <-> 8 <-> 9
+    let head = buildDoublyLinkedList([7, 8, 9]);
+    console.log("Original list:");
+    printDoublyLinkedList(head);
+
+    // Reverse the list
+    let reversedHead = reverse01(head);
+    console.log("Reversed list:");
+    printDoublyLinkedList(reversedHead);
+})();
+
+// Insert a node at a specific position in a linked list
+// Given the pointer to the head node of a linked list and an integer to insert at a certain position, create a new node 
+// with the given integer as its data attribute, insert this node at the desired position and return the head node.
+// A position of 0 indicates head, a position of 1 indicates one node away from the head and so on. 
+// The head pointer given may be null meaning that the initial list is empty.
+// Example:
+// head refers to the first node in the list 1 --> 2 --> 3
+// data = 4
+// position = 2
+// Insert a node at position 2 with data = 4. The new list is 1 --> 2 --> 4 --> 3
+// Function Description: 
+// Complete the function insertNodeAtPosition in the editor below. It must return a reference to the head node of your finished list.
+// insertNodeAtPosition has the following parameters:
+// * head: a SinglyLinkedListNode pointer to the head of the list
+// * data: an integer value to insert as data in your new node
+// * position: an integer position to insert the new node, zero based indexing
+// Returns:
+// * SinglyLinkedListNode pointer: a reference to the head of the revised list
+// Input Format:
+// The first line contains an integer n, the number of elements in the linked list.
+// Each of the next n lines contains an integer SinglyLinkedListNode[i].data.
+// The next line contains an integer data, the data of the node that is to be inserted.
+// The last line contains an integer position.
+// Constraints:
+// 1 <= n <= 1000
+// 1 <= SinglyLinkedListNode[i].data <= 1000, where SinglyLinkedListNode[i] is the i-th element of the linked list
+// 0 <= position <= n
+
+function insertNodeAtPosition(llist, data, position) {
+    const newNode = new SinglyLinkedListNode(data);
+
+    // Inserting at the head (position 0)
+    if (position === 0) {
+        newNode.next = llist;
+        return newNode;
+    }
+
+    let current = llist;
+    let currentPosition = 0;
+
+    // Traverse to the node just before the insertion point
+    while (current !== null && currentPosition < position - 1) {
+        current = current.next;
+        currentPosition++;
+    }
+
+    // Insert the new node
+    newNode.next = current.next;
+    current.next = newNode;
+
+    return llist;
+}
+// Example usage
+// Node constructor
+function SinglyLinkedListNode01(data) {
+    this.data = data;
+    this.next = null;
+}
+// Build a linked list from an array
+function buildLinkedList01(arr) {
+    let head = null, tail = null;
+    for (let val of arr) {
+        let node = new SinglyLinkedListNode01(val);
+        if (!head) {
+            head = node;
+            tail = node;
+        } else {
+            tail.next = node;
+            tail = node;
+        }
+    }
+    return head;
+}
+// Print linked list to console
+function printLinkedList01(head) {
+    let res = [];
+    while (head) {
+        res.push(head.data);
+        head = head.next;
+    }
+    console.log(res.join(' -> '));
+}
+// Example usage
+(function() {
+    // Create a linked list: 1 -> 2 -> 3
+    let head = buildLinkedList01([1, 2, 3]);
+    console.log("Original list:");
+    printLinkedList01(head);
+
+    // Insert a new node with data = 4 at position 2
+    head = insertNodeAtPosition(head, 4, 2);
+    console.log("List after insertion:");
+    printLinkedList01(head);
+})();
+// Additional test cases
+(function() {
+    // Create a linked list: 5 -> 6 -> 7
+    let head = buildLinkedList01([5, 6, 7]);
+    console.log("Original list:");
+    printLinkedList01(head);
+
+    // Insert a new node with data = 8 at position 1
+    head = insertNodeAtPosition(head, 8, 1);
+    console.log("List after insertion:");
+    printLinkedList01(head);
+})();
+(function() {
+    // Create a linked list: 9 -> 10 -> 11
+    let head = buildLinkedList01([9, 10, 11]);
+    console.log("Original list:");
+    printLinkedList01(head);
+
+    // Insert a new node with data = 12 at position 0 (head)
+    head = insertNodeAtPosition(head, 12, 0);
+    console.log("List after insertion:");
+    printLinkedList01(head);
+})();
+
 
