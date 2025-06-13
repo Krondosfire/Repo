@@ -4177,3 +4177,167 @@ function printLinkedList01(head) {
 })();
 
 
+// Merge two sorted linked lists
+// Given pointers to the heads of two sorted linked lists, merge them into a single, sorted linked list. 
+// Either head pointer may be null meaning that the corresponding list is empty.
+// Example:
+// headA refers to 1 --> 3 --> 7 --> NULL
+// headB refers to 1 --> 2 --> NULL
+// The new list is 1 --> 1 --> 2 --> 3 --> 7 --> NULL
+// Function Description:
+// Complete the mergeLists function in the editor below.
+// mergeLists has the following parameters:
+// * SinglyLinkedListNode pointer headA: a reference to the head of a list
+// * SinglyLinkedListNode pointer headB: a reference to the head of a list
+// Returns:
+// * SinglyLinkedListNode pointer: a reference to the head of the merged list
+// Input Format:
+// The first line contains an integer t, the number of test cases.
+// The format for each test case is as follows:
+// The first line contains an integer n, the length of the first linked list.
+// The next n lines contain an integer each, the elements of the linked list.
+// The next line contains an integer m, the length of the second linked list.
+// The next m lines contain an integer each, the elements of the second linked list.
+// Constraints:
+// 1 <= t <= 10
+// 1 <= n,m <= 1000
+// 1 <= list[i] <= 1000, where list[i] is the i-th element of the list
+
+function mergeLists(head1, head2) {
+    // Create a dummy node to simplify edge cases
+    let dummy = new SinglyLinkedListNode02(0);
+    let tail = dummy;
+
+    let a = head1;
+    let b = head2;
+
+    while (a !== null && b !== null) {
+        if (a.data <= b.data) {
+            tail.next = a;
+            a = a.next;
+        } else {
+            tail.next = b;
+            b = b.next;
+        }
+        tail = tail.next;
+    }
+
+    // Attach the remaining nodes, if any
+    if (a !== null) {
+        tail.next = a;
+    } else if (b !== null) {
+        tail.next = b;
+    }
+
+    // Return the merged list, skipping the dummy node
+    return dummy.next;
+}
+// Node constructor
+function SinglyLinkedListNode02(data) {
+    this.data = data;
+    this.next = null;
+}
+// Build a linked list from an array
+function buildLinkedList02(arr) {
+    let head = null, tail = null;
+    for (let val of arr) {
+        let node = new SinglyLinkedListNode02(val);
+        if (!head) {
+            head = node;
+            tail = node;
+        } else {
+            tail.next = node;
+            tail = node;
+        }
+    }
+    return head;
+}
+// Print linked list to console
+function printLinkedList02(head) {
+    let res = [];
+    while (head) {
+        res.push(head.data);
+        head = head.next;
+    }
+    console.log(res.join(' -> '));
+}
+// Example usage
+(function() {
+    // Create two linked lists: 1 -> 3 -> 7 and 1 -> 2
+    let headA = buildLinkedList02([1, 3, 7]);
+    let headB = buildLinkedList02([1, 2]);
+    console.log("List A:");
+    printLinkedList02(headA);
+    console.log("List B:");
+    printLinkedList02(headB);
+
+    // Merge the lists
+    let mergedHead = mergeLists(headA, headB);
+    console.log("Merged list:");
+    printLinkedList02(mergedHead);
+})();
+// Additional test cases
+(function() {
+    // Create two linked lists: 4 -> 5 -> 6 and 1 -> 2 -> 3
+    let headA = buildLinkedList02([4, 5, 6]);
+    let headB = buildLinkedList02([1, 2, 3]);
+    console.log("List A:");
+    printLinkedList02(headA);
+    console.log("List B:");
+    printLinkedList02(headB);
+
+    // Merge the lists
+    let mergedHead = mergeLists(headA, headB);
+    console.log("Merged list:");
+    printLinkedList02(mergedHead);
+})();
+
+// Ice Cream Parlor
+// Two friends like to pool their money and go to the ice cream parlor. T
+// hey always choose two distinct flavors and they spend all of their money.
+// Given a list of prices for the flavors of ice cream, select the two that will cost all of the money they have.
+// Example: m = 6 cost=[1,3,4,5,6] 
+// The two flavors that cost 1 and 5 meet the criteria. Using 1-based indexing, they are at indices 1 and 4.
+// Function Description:
+// Complete the icecreamParlor function in the editor below.
+// icecreamParlor has the following parameter(s):
+// * int m: the amount of money they have to spend
+// * int cost[n]: the cost of each flavor of ice cream
+// Returns:
+// * int[2]: the indices of the prices of the two flavors they buy, sorted ascending
+// Input Format:
+// The first line contains an integer, t, the number of trips to the ice cream parlor. The next t sets of lines each describe a visit.
+// Each trip is described as follows:
+// 1. The integer m, the amount of money they have pooled.
+// 2. The integer n, the number of flavors offered at the time.
+// 3. n space-separated integers denoting the cost of each flavor: cost[cost[1],cost[2],...,cost[n]].
+// Note: The index within the cost array represents the flavor of the ice cream purchased.
+// Constraints:
+// 1 <= t <= 50
+// 2 <= m <= 10^4
+// 2 <= n <= 10^4
+// 1 <= cost[i] <= 10^4, for each i that belongs to [1,n]
+// There will always be a unique solution.
+
+function icecreamParlor(m, arr) {
+    const flavorMap = new Map();
+    for (let i = 0; i < arr.length; i++) {
+        const complement = m - arr[i];
+        if (flavorMap.has(complement)) {
+            return [flavorMap.get(complement), i + 1].sort((a, b) => a - b);
+        }
+        flavorMap.set(arr[i], i + 1);
+    }
+    return [];
+}
+// Example usage
+console.log(icecreamParlor(6, [1, 3, 4, 5, 6])); // Output: [1, 4]
+console.log(icecreamParlor(8, [2, 2, 4, 3])); // Output: [1, 2]
+// Additional test cases
+console.log(icecreamParlor(10, [1, 2, 3, 4, 5])); // Output: [1, 5]
+console.log(icecreamParlor(5, [1, 2, 3, 4])); // Output: [1, 4]
+console.log(icecreamParlor(7, [1, 2, 3, 4, 5])); // Output: [2, 3]
+
+
+
+
