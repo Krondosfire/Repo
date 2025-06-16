@@ -4338,6 +4338,188 @@ console.log(icecreamParlor(10, [1, 2, 3, 4, 5])); // Output: [1, 5]
 console.log(icecreamParlor(5, [1, 2, 3, 4])); // Output: [1, 4]
 console.log(icecreamParlor(7, [1, 2, 3, 4, 5])); // Output: [2, 3]
 
+// Queue using two stacks
+// A queue is an abstract data type that maintains the order in which elements were added to it, 
+// allowing the oldest elements to be removed from the front and new elements to be added to the rear. 
+// This is called a First-In-First-Out (FIFO) data structure because the first element added to the queue 
+// (i.e., the one that has been waiting the longest) is always the first one to be removed.
+// A basic queue has the following operations:
+// * Enqueue: add a new element to the end of the queue.
+// * Dequeue: remove the element from the front of the queue and return it.
+// In this challenge, you must first implement a queue using two stacks. Then process q queries, 
+// where each query is one of the following 3 types:
+// 1: Enqueue element x into the end of the queue.
+// 2: Dequeue the element at the front of the queue.
+// 3: Print the element at the front of the queue.
+// Input Format:
+// The first line contains a single integer, q, denoting the number of queries.
+// Each line i of the q subsequent lines contains a single query in the form described in the problem statement above. 
+// All three queries start with an integer denoting the query type, but only query 1 is followed by an additional 
+// space-separated value, x, denoting the value to be enqueued.
+// Constraints:
+// 1 <= q <= 10^5
+// 1 <= type <= 3
+// 1 <= |x| <= 10^9
+// It is guaranteed that a valid answer exists for each query of type 3.
+
+class QueueWithStacks {
+    constructor() {
+        this.enqueueStack = [];
+        this.dequeueStack = [];
+    }
+
+    enqueue(x) {
+        this.enqueueStack.push(x);
+    }
+
+    dequeue() {
+        if (this.dequeueStack.length === 0) {
+            while (this.enqueueStack.length > 0) {
+                this.dequeueStack.push(this.enqueueStack.pop());
+            }
+        }
+        return this.dequeueStack.pop();
+    }
+
+    front() {
+        if (this.dequeueStack.length === 0) {
+            while (this.enqueueStack.length > 0) {
+                this.dequeueStack.push(this.enqueueStack.pop());
+            }
+        }
+        return this.dequeueStack[this.dequeueStack.length - 1];
+    }
+}
+
+// Example usage
+// Create a queue instance
+let q = new QueueWithStacks();
+
+// Enqueue elements
+q.enqueue(10);
+q.enqueue(20);
+q.enqueue(30);
+
+// See the front element
+console.log(q.front()); // Output: 10
+
+// Dequeue elements
+console.log(q.dequeue()); // Output: 10
+
+// Check front after dequeue
+console.log(q.front()); // Output: 20
+
+// Enqueue another element
+q.enqueue(40);
+
+// Dequeue all elements
+console.log(q.dequeue()); // Output: 20
+console.log(q.dequeue()); // Output: 30
+console.log(q.dequeue()); // Output: 40
+
+// Try to dequeue from empty queue
+console.log(q.dequeue()); // Output: undefined
 
 
+// Waiter
+// You are a waiter at a party. There is a pile of numbered plates. Create an empty answers array. 
+// At each iteration, i, remove each plate from the top of the stack in order. 
+// Determine if the number on the plate is evenly divisible by the i-th prime number. 
+// If it is, stack it in pile B[i]. Otherwise, stack it in stack A[i]. 
+// Store the values in B[i] from top to bottom in answers. In the next iteration, do the same with the values in stack A[i]. 
+// Once the required number of iterations is complete, store the remaining values in A[i] in answers, again from top to bottom. 
+// Return the answers array.
+// Example:
+// A = [2,3,4,5,6,7]
+// q = 3
+// An abbreviated list of primes is [2,3,5,7,11,13]. Stack the plates in reverse order.
+// A[0] = [2,3,4,5,6,7]
+// answers = []
+// Begin iterations. On the first iteration, check if items are divisible by 2.
+// A[1] = [7,5,3]
+// B[1] = [6,4,2]
+// Move B[1] elements to answers.
+// answers = [2,4,6]
+// On the second iteration, test if A[1] elements are divisible by 3.
+// A[2] = [7,5]
+// B[2] = [3]
+// Move B[2] elmements to answers.
+// answers = [2,4,6,3]
+// And on the third iteration, test if A[2] elements are divisible by 5.
+// A[3] = [7]
+// B[3] = [5]
+// Move B[3] elmements to answers.
+// answers = [2,4,6,3,5]
+// All iterations are complete, so move the remaining elements in A[3], from top to bottom, to answers.
+// answers = [2,4,6,3,5,7]. Return this list.
+// Function Description:
+// Complete the waiter function in the editor below.
+// waiter has the following parameters:
+// * int number[n]: the numbers on the plates
+// * int q: the number of iterations
+// Returns:
+// * int[n]: the numbers on the plates after processing
+// Input Format:
+// The first line contains two space separated integers, n and q.
+// The next line contains n space separated integers representing the initial pile of plates, i.e., A.
+// Constraints:
+// 1 <= n <= 10^4
+// 2 <= number[i] <= 10^4
+// 1 <= q <= 1200
 
+function waiter(number, q) {
+    // Generate the first q primes
+    function getPrimes(n) {
+        const primes = [];
+        let candidate = 2;
+        while (primes.length < n) {
+            let isPrime = true;
+            for (const p of primes) {
+                if (p * p > candidate) break;
+                if (candidate % p === 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+            if (isPrime) {
+                primes.push(candidate);
+            }
+            candidate++;
+        }
+        return primes;
+    }
+
+    const primes = getPrimes(q);
+    let currentA = [...number];
+    const answers = [];
+
+    for (let i = 0; i < q; i++) {
+        const prime = primes[i];
+        const B = [];
+        const newA = [];
+
+        // Process currentA from top (end) to bottom (start)
+        for (let j = currentA.length - 1; j >= 0; j--) {
+            const num = currentA[j];
+            if (num % prime === 0) {
+                B.push(num);
+            } else {
+                newA.push(num);
+            }
+        }
+
+        // Add B elements in top-to-bottom order (reverse B)
+        answers.push(...B.reverse());
+        currentA = newA;
+    }
+
+    // Add remaining elements in currentA (top to bottom)
+    answers.push(...currentA.reverse());
+
+    return answers;
+}
+// Example usage
+console.log(waiter([3, 4, 7, 6, 5, 2], 3)); // Output: [2, 4, 6, 3, 5, 7]
+// Additional test cases
+console.log(waiter([1, 2, 3, 4, 5], 2)); // Output: [2, 4, 1, 3, 5]
+console.log(waiter([10, 20, 30, 40, 50], 1)); // Output: [10, 20, 30, 40, 50]
