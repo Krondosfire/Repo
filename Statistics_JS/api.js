@@ -4523,3 +4523,151 @@ console.log(waiter([3, 4, 7, 6, 5, 2], 3)); // Output: [2, 4, 6, 3, 5, 7]
 // Additional test cases
 console.log(waiter([1, 2, 3, 4, 5], 2)); // Output: [2, 4, 1, 3, 5]
 console.log(waiter([10, 20, 30, 40, 50], 1)); // Output: [10, 20, 30, 40, 50]
+
+
+// Balanced Brackets
+// A bracket is considered to be any one of the following characters: (, ), {, }, [, or ].
+// Two brackets are considered to be a matched pair if the an opening bracket (i.e., 
+// (, [, or {) occurs to the left of a closing bracket (i.e., ), ], or }) of the exact same type. 
+// There are three types of matched pairs of brackets: [], {}, and ().
+// A matching pair of brackets is not balanced if the set of brackets it encloses are not matched. 
+// For example, {[(])} is not balanced because the contents in between { and } are not balanced. 
+// The pair of square brackets encloses a single, unbalanced opening bracket, (, and 
+// the pair of parentheses encloses a single, unbalanced closing square bracket, ].
+// By this logic, we say a sequence of brackets is balanced if the following conditions are met:
+// * It contains no unmatched brackets.
+// * The subset of brackets enclosed within the confines of a matched pair of brackets is also a matched pair of brackets.
+// Given n strings of brackets, determine whether each sequence of brackets is balanced. 
+// If a string is balanced, return YES. Otherwise, return NO.
+// Function Description:
+// Complete the function isBalanced in the editor below.
+// isBalanced has the following parameter(s):
+// * string s: a string of brackets
+// Returns:
+// * string: either YES or NO
+// Input Format:
+// The first line contains a single integer n, the number of strings.
+// Each of the next n lines contains a single string s, a sequence of brackets.
+// Constraints:
+// 1 <= n <= 10^3
+// 1 <= |s| <= 10^3, where |s| is the length of the sequence.
+// All characters in the sequences belong to {{, }, (, ), [, ]}.
+
+function isBalanced(s) {
+    const stack = [];
+    const pairs = {
+        ')': '(',
+        '}': '{',
+        ']': '['
+    };
+
+    for (let i = 0; i < s.length; i++) {
+        const char = s[i];
+        if (char === '(' || char === '{' || char === '[') {
+            stack.push(char);
+        } else if (char === ')' || char === '}' || char === ']') {
+            if (stack.length === 0 || stack[stack.length - 1] !== pairs[char]) {
+                return "NO";
+            }
+            stack.pop();
+        }
+    }
+    return stack.length === 0 ? "YES" : "NO";
+}
+// Example usage
+console.log(isBalanced("{[()]}")); // Output: "YES"
+console.log(isBalanced("{[(])}")); // Output: "NO"
+console.log(isBalanced("{{[[(())]]}}")); // Output: "YES"
+console.log(isBalanced("{{[[(())]]}}}")); // Output: "NO"
+
+// Simple Text Editor
+// Implement a simple text editor. The editor initially contains an empty string, S. 
+// Perform Q operations of the following 4 types:
+// 1. append(W) - Append string W to the end of S.
+// 2. delete(k) - Delete the last k characters of S.
+// 3. print(k) - Print the k-th character of S.
+// 4. undo() - Undo the last (not previously undone) operation of type 1 or 2, 
+// reverting S to the state it was in prior to that operation.
+// Example:
+// S = 'abcde'
+// ops = ['1 fg', '3 6', '2 5', '4', '3 7', '4', '3 4']
+// operation
+// index   S       ops[index]  explanation
+// -----   ------  ----------  -----------
+// 0       abcde   1 fg        append fg
+// 1       abcdefg 3 6         print the 6th letter - f
+// 2       abcdefg 2 5         delete the last 5 letters
+// 3       ab      4           undo the last operation, index 2
+// 4       abcdefg 3 7         print the 7th characgter - g
+// 5       abcdefg 4           undo the last operation, index 0
+// 6       abcde   3 4         print the 4th character - d
+// The results should be printed as:
+// f
+// g
+// d
+// Input Format:
+// The first line contains an integer, Q, denoting the number of operations.
+// Each line i of the Q subsequent lines (where 0 <= i <= Q) defines an operation to be performed. 
+// Each operation starts with a single integer, t (where t belongs to {1,2,3,4}), denoting a type of 
+// operation as defined in the Problem Statement above. If the operation requires an argument, 
+// t is followed by its space-separated argument. For example, if t = 1 and W = 'abcd', line i will be 1 abcd.
+// Constraints:
+// 1 <= Q <= 10^6
+// 1 <= k <= |S|
+// The sum of the lengths of all W in the input <= 10^6.
+// The sum of k over all delete operations <= 2x10^6.
+// All input characters are lowercase English letters.
+// It is guaranteed that the sequence of operations given as input is possible to perform.
+
+class SimpleTextEditor {
+    constructor() {
+        this.S = [];
+        this.undoStack = [];
+    }
+
+    append(W) {
+        this.undoStack.push(['2', W.length]);
+        for (let ch of W) this.S.push(ch);
+    }
+
+    delete(k) {
+        const deleted = this.S.slice(-k).join('');
+        this.undoStack.push(['1', deleted]);
+        this.S.length -= k;
+    }
+
+    print(k) {
+        console.log(this.S[k - 1]);
+    }
+
+    undo() {
+        const last = this.undoStack.pop();
+        if (!last) return;
+        if (last[0] === '1') {
+            for (let ch of last[1]) this.S.push(ch);
+        } else if (last[0] === '2') {
+            this.S.length -= last[1];
+        }
+    }
+
+    // Helper to show current text (not required, but useful)
+    getText() {
+        return this.S.join('');
+    }
+}
+
+// Example usage
+let editor = new SimpleTextEditor();
+
+editor.append('krondosfire');
+editor.append('xy');
+editor.print(6);    // Output: f
+
+editor.delete(5);
+editor.undo();
+editor.print(7);    // Output: g
+
+editor.undo();
+editor.print(4);    // Output: d
+
+console.log(editor.getText()); // Output: abcde

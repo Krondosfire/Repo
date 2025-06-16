@@ -1020,7 +1020,187 @@ function main() {
 }
 ------------------------------------------------------------------------------------------
 
+Balanced Brackets
+A bracket is considered to be any one of the following characters: (, ), {, }, [, or ].
+Two brackets are considered to be a matched pair if the an opening bracket (i.e., 
+(, [, or {) occurs to the left of a closing bracket (i.e., ), ], or }) of the exact same type. 
+There are three types of matched pairs of brackets: [], {}, and ().
+A matching pair of brackets is not balanced if the set of brackets it encloses are not matched. 
+For example, {[(])} is not balanced because the contents in between { and } are not balanced. 
+The pair of square brackets encloses a single, unbalanced opening bracket, (, and 
+the pair of parentheses encloses a single, unbalanced closing square bracket, ].
+By this logic, we say a sequence of brackets is balanced if the following conditions are met:
+* It contains no unmatched brackets.
+* The subset of brackets enclosed within the confines of a matched pair of brackets is also a matched pair of brackets.
+Given n strings of brackets, determine whether each sequence of brackets is balanced. 
+If a string is balanced, return YES. Otherwise, return NO.
+Function Description:
+Complete the function isBalanced in the editor below.
+isBalanced has the following parameter(s):
+* string s: a string of brackets
+Returns:
+* string: either YES or NO
+Input Format:
+The first line contains a single integer n, the number of strings.
+Each of the next n lines contains a single string s, a sequence of brackets.
+Constraints:
+1 <= n <= 10^3
+1 <= |s| <= 10^3, where |s| is the length of the sequence.
+All characters in the sequences belong to {{, }, (, ), [, ]}.
 
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Complete the 'isBalanced' function below.
+ *
+ * The function is expected to return a STRING.
+ * The function accepts STRING s as parameter.
+ */
+
+function isBalanced(s) {
+    // Write your code here
+	const stack = [];
+	const pairs = {
+		')': '(',
+		'}': '{',
+		']': '['
+	};
+	for(let i = 0; i < s.length; i++) {
+		const char = s[i];
+		if(char === '(' || char === '{' || char === '[') {
+			stack.push(char);
+		} else if(char === ')' || char === '}' || char === ']') {
+			if(stack.length === 0 || stack[stack.length - 1] !==pairs[char]) {
+				return "NO";
+			}
+			stack.pop();
+		}
+	}
+	return stack.length === 0 ? "YES" : "NO";
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const t = parseInt(readLine().trim(), 10);
+
+    for (let tItr = 0; tItr < t; tItr++) {
+        const s = readLine();
+
+        const result = isBalanced(s);
+
+        ws.write(result + '\n');
+    }
+
+    ws.end();
+}
+--------------------------------------------------------------------------------------------------------
+Simple Text Editor
+Implement a simple text editor. The editor initially contains an empty string, S. 
+Perform Q operations of the following 4 types:
+1. append(W) - Append string W to the end of S.
+2. delete(k) - Delete the last k characters of S.
+3. print(k) - Print the k-th character of S.
+4. undo() - Undo the last (not previously undone) operation of type 1 or 2, 
+reverting S to the state it was in prior to that operation.
+Example:
+S = 'abcde'
+ops = ['1 fg', '3 6', '2 5', '4', '3 7', '4', '3 4']
+operation
+index   S       ops[index]  explanation
+-----   ------  ----------  -----------
+0       abcde   1 fg        append fg
+1       abcdefg 3 6         print the 6th letter - f
+2       abcdefg 2 5         delete the last 5 letters
+3       ab      4           undo the last operation, index 2
+4       abcdefg 3 7         print the 7th characgter - g
+5       abcdefg 4           undo the last operation, index 0
+6       abcde   3 4         print the 4th character - d
+The results should be printed as:
+f
+g
+d
+Input Format:
+The first line contains an integer, Q, denoting the number of operations.
+Each line i of the Q subsequent lines (where 0 <= i <= Q) defines an operation to be performed. 
+Each operation starts with a single integer, t (where t belongs to {1,2,3,4}), denoting a type of 
+operation as defined in the Problem Statement above. If the operation requires an argument, 
+t is followed by its space-separated argument. For example, if t = 1 and W = 'abcd', line i will be 1 abcd.
+Constraints:
+1 <= Q <= 10^6
+1 <= k <= |S|
+The sum of the lengths of all W in the input <= 10^6.
+The sum of k over all delete operations <= 2x10^6.
+All input characters are lowercase English letters.
+It is guaranteed that the sequence of operations given as input is possible to perform.
+
+function processData(input) {
+    //Enter your code here
+	const lines = input.trim().split('\n');
+	const Q = parseInt(lines[0]);
+	let S = [];
+	const undoStack = [];
+	let output = [];
+	for(let i = 1; i <= Q; i++) {
+		const parts = lines[i].split(' ');
+		const op = parts[0];
+		if(op === '1') { // append
+			const W = parts[1];
+			undoStack.push(['2', W.length]); // Save inverse: delete last W.length
+			for(let j = 0; j < W.length; j++) S.push(W[j]);
+		} else if(op === '2') { // delete
+			const k = parseInt(parts[1]);
+			const deleted = S.slice(S.length - k).join('');
+			undoStack.push(['1', deleted]); // Save inverse: append deleted
+			S.length -= k;
+		} else if(op === '3') { // print
+			const k = parseInt(parts[1]);
+			output.push(S[k - 1]);
+		} else if(op === '4') { // undo
+			const last = undoStack.pop();
+			if(last[0] === '1') { // undo delete: append last[1]
+				for(let j = 0; j < last[1].length; j++) S.push(last[1][j]);
+			} else if(last[0] === '2') { // undo append: delete last[1] chars
+				S.length -= last[1];
+			}
+		}
+	}
+	console.log(output.join('\n'));
+} 
+
+process.stdin.resume();
+process.stdin.setEncoding("ascii");
+_input = "";
+process.stdin.on("data", function (input) {
+    _input += input;
+});
+
+process.stdin.on("end", function () {
+   processData(_input);
+});
+------------------------------------------------------------------------------------------------------
 
 
 
