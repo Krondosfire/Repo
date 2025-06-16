@@ -956,7 +956,49 @@ function readLine() {
 
 function waiter(number, q) {
     // Write your code here
-
+	// Generate the first q primes
+	function getPrimes(n) {
+		const primes = [];
+		let candidate = 2;
+		while(primes.length < n) {
+			let isPrime = true;
+			for(const p of primes) {
+				if(p * p > candidate) break;
+				if(candidate % p === 0) {
+					isPrime = false;
+					break;
+				}
+			}
+			if(isPrime) {
+				primes.push(candidate);
+			}
+			candidate++;
+		}
+		return primes;
+	}
+	const primes = getPrimes(q);
+	let currentA = [...number];
+	const answers = [];
+	for(let i = 0; i < q; i++) {
+		const prime = primes[i];
+		const B = [];
+		const newA = [];
+		// Process currentA from top (end) to bottom (start)
+		for(let j = currentA.length - 1; j >= 0 ; j--) {
+			const num = currentA[j];
+			if(num % prime === 0) {
+				B.push(num);
+			} else {
+				newA.push(num);
+			}
+		}
+		// Add B elements in top-to-bottom order (reverse B)
+		answers.push(...B.reverse());
+		currentA = newA;
+	}
+	// Add remaining elements in currentA (topo-to-bottom)
+	answers.push(...currentA.reverse());
+	return answers;
 }
 
 function main() {
