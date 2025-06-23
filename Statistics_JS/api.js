@@ -4800,3 +4800,133 @@ console.log(bigSorting([
     "3",
     "1"
 ])); // Output: [ '1', '3', '150', '200', '1000' ]
+
+// Equal Stacks
+// You have three stacks of cylinders where each cylinder has the same diameter, but they may vary in height. 
+// You can change the height of a stack by removing and discarding its topmost cylinder any number of times.
+// Find the maximum possible height of the stacks such that all of the stacks are exactly the same height. 
+// This means you must remove zero or more cylinders from the top of zero or more of the three stacks until 
+// they are all the same height, then return the height.
+// Example:
+// h1 = [1,2,1,1]
+// h2 = [1,1,2]
+// h3 = [1,1]
+// There are 4, 3 and 2 cylinders in the three stacks, with their heights in the three arrays. 
+// Remove the top 2 cylinders from h1 (heights = [1, 2]) and from h2 (heights = [1, 1]) so that the three stacks 
+// all are 2 units tall. Return 2 as the answer.
+// Note: An empty stack is still a stack.
+// Function Description:
+// Complete the equalStacks function in the editor below.
+// equalStacks has the following parameters:
+// * int h1[n1]: the first array of heights
+// * int h2[n2]: the second array of heights
+// * int h3[n3]: the third array of heights
+// Returns:
+// * int: the height of the stacks when they are equalized
+// Input Format:
+// The first line contains three space-separated integers, n1, n2, and n3, the numbers of cylinders in stacks 1, 2, and 3. 
+// The subsequent lines describe the respective heights of each cylinder in a stack from top to bottom:
+// The second line contains n1 space-separated integers, the cylinder heights in stack 1. The first element is the top cylinder of the stack.
+// The third line contains n2 space-separated integers, the cylinder heights in stack 2. The first element is the top cylinder of the stack.
+// The fourth line contains n3 space-separated integers, the cylinder heights in stack 3. The first element is the top cylinder of the stack.
+// Constraints:
+// 0 <= n1, n2, n3 <= 10^5
+// 0 < height of any cylinder <= 100
+
+function equalStacks(h1, h2, h3) {
+    // Helper to compute cumulative heights from top to bottom
+    function cumulativeHeights(arr) {
+        let cum = [];
+        let sum = 0;
+        for (let i = arr.length - 1; i >= 0; i--) {
+            sum += arr[i];
+            cum.push(sum);
+        }
+        cum.reverse();
+        return cum;
+    }
+
+    let s1 = cumulativeHeights(h1);
+    let s2 = cumulativeHeights(h2);
+    let s3 = cumulativeHeights(h3);
+
+    let i = 0, j = 0, k = 0;
+    while (i < s1.length && j < s2.length && k < s3.length) {
+        let h1h = s1[i], h2h = s2[j], h3h = s3[k];
+        if (h1h === h2h && h2h === h3h) {
+            return h1h;
+        }
+        // Remove from the tallest stack
+        if (h1h >= h2h && h1h >= h3h) {
+            i++;
+        } else if (h2h >= h1h && h2h >= h3h) {
+            j++;
+        } else {
+            k++;
+        }
+    }
+    return 0;
+}
+// Example usage
+console.log(equalStacks([1, 2, 1, 1], [1, 1, 2], [1, 1])); // Output: 2
+// Additional test cases
+console.log(equalStacks([3, 2, 1], [4, 2], [1, 2, 3])); // Output: 2
+console.log(equalStacks([1, 2, 3], [3, 2, 1], [2, 1])); // Output: 2
+
+// The Maximum Subarray
+// We define subsequence as any subset of an array. We define a subarray as a contiguous subsequence in an array.
+// Given an array, find the maximum possible sum among:
+// 1. all nonempty subarrays.
+// 2. all nonempty subsequences.
+// Print the two values as space-separated integers on one line.
+// Note that empty subarrays/subsequences should not be considered.
+// Example:
+// arr = [-1,2,3,-4,5,10]
+// The maximum subarray sum is comprised of elements at inidices [1 - 5]. Their sum is 2 + 3 + (-4) + 5 + 10 = 16. 
+// The maximum subsequence sum is comprised of elements at indices [1,2,4,5] and their sum is 2 + 3 + 5 + 10 = 20.
+// Function Description:
+// Complete the maxSubarray function in the editor below.
+// maxSubarray has the following parameter(s):
+// * int arr[n]: an array of integers
+// Returns:
+// * int[2]: the maximum subarray and subsequence sums
+// Input Format:
+// The first line of input contains a single integer t, the number of test cases.
+// The first line of each test case contains a single integer n.
+// The second line contains n space-separated integers arr[i] where 0 <= i < n.
+// Constraints:
+// 1 <= t <= 10
+// 1 <= n <= 10^5
+// -10^4 <= arr[i] <= 10^4
+// The subarray and subsequences considered should have at least one element.
+
+function maxSubarray(arr) {
+    let max_ending_here = 0;
+    let max_so_far = -Infinity;
+    let non_contiguous = 0;
+    let max_element = -Infinity;
+
+    for (let num of arr) {
+        max_ending_here = Math.max(num, max_ending_here + num);
+        max_so_far = Math.max(max_so_far, max_ending_here);
+        
+        if (num > 0) {
+            non_contiguous += num;
+        }
+        if (num > max_element) {
+            max_element = num;
+        }
+    }
+
+    if (non_contiguous === 0) {
+        non_contiguous = max_element;
+    }
+
+    return [max_so_far, non_contiguous];
+}
+// Example usage
+console.log(maxSubarray([-1, 2, 3, -4, 5, 10])); // Output: [16, 20]
+// Additional test cases
+console.log(maxSubarray([1, -2, 3, 4, -5])); // Output: [7, 8]
+console.log(maxSubarray([-1, -2, -3, -4])); // Output: [-1, -1]
+// Edge case with all negative numbers
