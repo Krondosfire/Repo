@@ -4930,3 +4930,194 @@ console.log(maxSubarray([-1, 2, 3, -4, 5, 10])); // Output: [16, 20]
 console.log(maxSubarray([1, -2, 3, 4, -5])); // Output: [7, 8]
 console.log(maxSubarray([-1, -2, -3, -4])); // Output: [-1, -1]
 // Edge case with all negative numbers
+
+// Lego Blocks
+// You have an infinite number of 4 types of lego blocks of sizes given as (depth x height x width):
+
+// d	h	w
+// 1	1	1
+// 1	1	2
+// 1	1	3
+// 1	1	4
+// Using these blocks, you want to make a wall of height n and width m. Features of the wall are:
+// - The wall should not have any holes in it.
+// - The wall you build should be one solid structure, so there should not be a straight vertical break across all rows of bricks.
+// - The bricks must be laid horizontally.
+// How many ways can the wall be built?
+// Example:
+// n = 2
+// m = 3
+// The height is 2 and the width is 3.
+// There are 9 valid permutations in all.
+// Function Description:
+// Complete the legoBlocks function in the editor below.
+// legoBlocks has the following parameter(s):
+// * int n: the height of the wall
+// * int m: the width of the wall
+// Returns:
+// - int: the number of valid wall formations modulo 
+// Input Format:
+// The first line contains the number of test cases t.
+// Each of the next t lines contains two space-separated integers n and m.
+// Constraints:
+// 1 <= t <= 100
+// 1 <= n,m <= 1000
+
+const MOD = 1000000007;
+const maxM = 1000;
+// Precompute T_arr for widths 0 to maxM
+const T_arr = new Array(maxM + 1).fill(0);
+T_arr[0] = 1;
+for(let i = 1; i < maxM; i++) {
+	T_arr[i] = T_arr[i - 1];
+	if(i >= 2) T_arr[i] = (T_arr[i] + T_arr[i - 2]) % MOD;
+	if(i >= 3) T_arr[i] = (T_arr[i] + T_arr[i - 3]) % MOD;
+	if(i >= 4) T_arr[i] = (T_arr[i] + T_arr[i - 4]) % MOD;
+}
+
+function modPow(base, exp, mod) {
+	base = base % mod;
+	let result = 1;
+	while(exp > 0) {
+		if(exp & 1) {
+			result = (result * base) % mod;
+		}
+		base = (base * base) % mod;
+		exp = Math.floor(exp / 2);
+	}
+	return result;
+}
+
+function legoBlocks(n, m) {
+    // Write your code here
+	const U = new Array(m + 1);
+	for(let i = 1; i <= m; i++) {
+		U[i] = modPow(T_arr[i], n, MOD);
+	}
+	const G = new Array(m + 1);
+	G[0] = 1;
+	for(let i = 1; i <= m; i++) {
+		G[i] = U[i];
+		for(let j = 1; j < i; j++) {
+			const subtract = (G[j] * U[i - j]) % MOD;
+			G[i] = (G[i] - subtract + MOD) % MOD;
+		}
+	}
+	return G[m];
+	
+}
+// Example usage
+console.log(legoBlocks(2, 3)); // Output: 9
+// Additional test cases
+console.log(legoBlocks(1, 5)); // Output: 15 (1x1, 1x2, 1x3, 1x4, 1x5)
+// Edge case with height 1 and width 1
+console.log(legoBlocks(1, 1)); // Output: 1 (only one way to build a 1x1 wall)
+// Edge case with height 2 and width 1 
+
+// QHEAP1
+// This question is designed to help you get a better understanding of basic heap operations.
+// There are 3 types of query:
+// * "1 v " - Add an element v to the heap.
+// * "2 v " - Delete the element v from the heap.
+// * "3" - Print the minimum of all the elements in the heap.
+// NOTE: It is guaranteed that the element to be deleted will be there in the heap. 
+// Also, at any instant, only distinct elements will be in the heap.
+// Input Format:
+// The first line contains the number of queries, Q.
+// Each of the next Q lines contains one of the 3 types of query.
+// Constraints:
+// 1 <= Q <= 10^5
+// -10^9 <= v <= 10^9
+
+function processQHEAP(input) {
+    const lines = input.trim().split('\n');
+    const Q = parseInt(lines[0]);
+    const heap = [];
+    const valueToIndex = new Map(); // value -> index in heap
+
+    function swap(i, j) {
+        [heap[i], heap[j]] = [heap[j], heap[i]];
+        valueToIndex.set(heap[i], i);
+        valueToIndex.set(heap[j], j);
+    }
+
+    function heapifyUp(index) {
+        while (index > 0) {
+            let parent = Math.floor((index - 1) / 2);
+            if (heap[parent] > heap[index]) {
+                swap(parent, index);
+                index = parent;
+            } else break;
+        }
+    }
+
+    function heapifyDown(index) {
+        let left, right, smallest;
+        while (true) {
+            left = 2 * index + 1;
+            right = 2 * index + 2;
+            smallest = index;
+            if (left < heap.length && heap[left] < heap[smallest]) smallest = left;
+            if (right < heap.length && heap[right] < heap[smallest]) smallest = right;
+            if (smallest !== index) {
+                swap(index, smallest);
+                index = smallest;
+            } else break;
+        }
+    }
+
+    for (let i = 1; i <= Q; i++) {
+        const parts = lines[i].trim().split(' ');
+        const type = parts[0];
+        if (type === '1') {
+            // Insert
+            const v = parseInt(parts[1]);
+            heap.push(v);
+            valueToIndex.set(v, heap.length - 1);
+            heapifyUp(heap.length - 1);
+        } else if (type === '2') {
+            // Delete
+            const v = parseInt(parts[1]);
+            const idx = valueToIndex.get(v);
+            const last = heap.length - 1;
+            if (idx !== last) {
+                swap(idx, last);
+            }
+            heap.pop();
+            valueToIndex.delete(v);
+            if (idx < heap.length) {
+                heapifyUp(idx);
+                heapifyDown(idx);
+            }
+        } else if (type === '3') {
+            // Print min
+            console.log(heap[0]);
+        }
+    }
+}
+
+// Example usage
+processQHEAP(`8
+1 4
+1 9
+3
+1 2
+3
+2 4
+3
+2 2`);
+// Output:
+// 4
+// 2
+// 9
+// Additional test cases
+processQHEAP(`5
+1 10
+1 20
+1 5
+3
+1 15
+3`);
+// Output:
+// 5
+// 10
