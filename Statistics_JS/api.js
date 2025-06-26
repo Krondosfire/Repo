@@ -5121,3 +5121,211 @@ processQHEAP(`5
 // Output:
 // 5
 // 10
+
+
+//Jesse and Cookies
+// Jesse loves cookies and wants the sweetness of some cookies to be greater than value k. 
+// To do this, two cookies with the least sweetness are repeatedly mixed. 
+// This creates a special combined cookie with:
+// sweetness = (1 X Least sweet cookie + 2 X 2nd least sweet cookie).
+// This occurs until all the cookies have a sweetness >= k.
+// Given the sweetness of a number of cookies, determine the minimum number of operations required. 
+// If it is not possible, return -1.
+// Example:
+// k = 9
+// A = [2,7,3,6,4,6]
+// The smallest values are 2, 3.
+// Remove them then return 2 + 2 X 3 = 8 to the array. Now A = [8,7,6,4,6].
+// Remove 4,6 and return 4 + 6 X 2 = 16 to the array. Now A = [16,8,7,6].
+// Remove 6,7, return 6 + 2 X 7 = 20 and A = [20,16,8,7].
+// Finally, remove 8,7 and return 7 + 2 X 8 = 23 to A. Now A = [23,20,16].
+// All values are >= k=9 so the process stops after 4 iterations. Return 4.
+// Function Description:
+// Complete the cookies function in the editor below.
+// cookies has the following parameters:
+// * int k: the threshold value
+// * int A[n]: an array of sweetness values
+// Returns:
+// * int: the number of iterations required or 
+// Input Format:
+// The first line has two space-separated integers, n and k, the size of A[] and 
+// the minimum required sweetness respectively.
+// The next line contains n space-separated integers, A[i].
+// Constraints:
+// 1 <= n < 10^6
+// 0 <= k <= 10^9
+// 0 <= A[i] <= 10^6
+
+class MinHeap {
+    constructor(data = []) {
+        this.heap = data;
+        if (this.heap.length > 0) {
+            this.buildHeap();
+        }
+    }
+
+    buildHeap() {
+        for (let i = Math.floor(this.heap.length / 2) - 1; i >= 0; i--) {
+            this.heapifyDown(i);
+        }
+    }
+
+    size() {
+        return this.heap.length;
+    }
+
+    peek() {
+        return this.heap.length > 0 ? this.heap[0] : undefined;
+    }
+
+    insert(value) {
+        this.heap.push(value);
+        this.heapifyUp(this.heap.length - 1);
+    }
+
+    extractMin() {
+        if (this.heap.length === 0) return undefined;
+        const min = this.heap[0];
+        const last = this.heap.pop();
+        if (this.heap.length > 0) {
+            this.heap[0] = last;
+            this.heapifyDown(0);
+        }
+        return min;
+    }
+
+    heapifyUp(index) {
+        let current = index;
+        while (current > 0) {
+            const parent = Math.floor((current - 1) / 2);
+            if (this.heap[parent] > this.heap[current]) {
+                [this.heap[parent], this.heap[current]] = [this.heap[current], this.heap[parent]];
+                current = parent;
+            } else {
+                break;
+            }
+        }
+    }
+
+    heapifyDown(index) {
+        let current = index;
+        const n = this.heap.length;
+        while (true) {
+            const left = 2 * current + 1;
+            const right = 2 * current + 2;
+            let smallest = current;
+
+            if (left < n && this.heap[left] < this.heap[smallest]) {
+                smallest = left;
+            }
+            if (right < n && this.heap[right] < this.heap[smallest]) {
+                smallest = right;
+            }
+
+            if (smallest !== current) {
+                [this.heap[current], this.heap[smallest]] = [this.heap[smallest], this.heap[current]];
+                current = smallest;
+            } else {
+                break;
+            }
+        }
+    }
+}
+
+function cookies(k, A) {
+    const heap = new MinHeap(A);
+    let ops = 0;
+
+    while (heap.size() >= 2 && heap.peek() < k) {
+        const a = heap.extractMin();
+        const b = heap.extractMin();
+        const newCookie = a + 2 * b;
+        heap.insert(newCookie);
+        ops++;
+    }
+
+    if (heap.peek() < k) {
+        return -1;
+    } else {
+        return ops;
+    }
+}
+
+function processCookies(input) {
+    const lines = input.trim().split('\n');
+    const firstLine = lines[0].split(' ');
+    const n = parseInt(firstLine[0]);
+    const k = parseInt(firstLine[1]);
+    const A = lines[1].split(' ').map(Number);
+    console.log(cookies(k, A));
+}
+// Example usage
+processCookies(`6 9
+2 7 3 6 4 6`); // Output: 4
+// Additional test cases    
+processCookies(`3 10
+1 2 3`); // Output: -1 (not possible to reach sweetness 10)
+processCookies(`5 7 
+1 2 3 4 5`); // Output: 3 (1+2*2=5, 3+2*4=11, 5+2*5=15)
+
+// Hackerland Radio Transmitters
+// Hackerland is a one-dimensional city with houses aligned at integral locations along a road. 
+// The Mayor wants to install radio transmitters on the roofs of the city's houses. 
+// Each transmitter has a fixed range meaning it can transmit a signal to all houses within that number of units distance away.
+// Given a map of Hackerland and the transmission range, determine the minimum number of transmitters so that every 
+// house is within range of at least one transmitter. Each transmitter must be installed on top of an existing house.
+// Example:
+// x = [1,2,3,5,9]
+// k = 1
+// 3 antennae at houses 2 and 5 and 9 provide complete coverage. There is no house at location 7 to cover both 5 and 9. 
+// Ranges of coverage, are [1,2,3], [5], and [9].
+// Function Description:
+// Complete the hackerlandRadioTransmitters function in the editor below.
+// hackerlandRadioTransmitters has the following parameter(s):
+// * int x[n]: the locations of houses
+// * int k: the effective range of a transmitter
+// Returns:
+// * int: the minimum number of transmitters to install
+// Input Format:
+// The first line contains two space-separated integers n and k, the number of houses in Hackerland and the range of each transmitter.
+// The second line contains n space-separated integers describing the respective locations of each house x[i].
+// Constraints:
+// 1 <= n,k <= 10^5
+// 1 <= x[i] <= 10^5
+// There may be more than one house at the same location.
+
+function hackerlandRadioTransmitters(x, k) {
+    // Write your code here
+	if (x.length === 0) return 0;
+    
+    	const houses = [...new Set(x)].sort((a, b) => a - b);
+    	const n = houses.length;
+    	let count = 0;
+    	let i = 0;
+    
+    	while (i < n) {
+        	count++;
+        	let j = i;
+        	while (j < n && houses[j] <= houses[i] + k) {
+            		j++;
+        	}
+        	const transmitterLoc = houses[j - 1];
+        
+        	while (i < n && houses[i] <= transmitterLoc + k) {
+            		i++;
+        	}
+    	}
+    
+    	return count;
+}
+// Example usage
+console.log(hackerlandRadioTransmitters([1, 2, 3, 5, 9], 1)); // Output: 3
+// Additional test cases
+console.log(hackerlandRadioTransmitters([7, 2, 4, 6, 5], 1)); // Output: 2 (transmitters at 4 and 7)
+console.log(hackerlandRadioTransmitters([1, 2, 3, 4, 5], 2)); // Output: 2 (transmitters at 2 and 5)
+console.log(hackerlandRadioTransmitters([1, 2, 3, 4, 5], 1)); // Output: 3 (transmitters at 2, 4, and 5)
+console.log(hackerlandRadioTransmitters([1, 3, 6, 7, 9], 2)); // Output: 3 (transmitters at 3, 7, and 9)
+// Edge case with all houses at the same location
+console.log(hackerlandRadioTransmitters([5, 5, 5, 5], 1)); // Output: 1 (only one transmitter needed)
+// Edge case with large k covering all houses
+console.log(hackerlandRadioTransmitters([1, 2, 3, 4, 5], 10)); // Output: 1 (one transmitter covers all houses)
