@@ -5329,3 +5329,136 @@ console.log(hackerlandRadioTransmitters([1, 3, 6, 7, 9], 2)); // Output: 3 (tran
 console.log(hackerlandRadioTransmitters([5, 5, 5, 5], 1)); // Output: 1 (only one transmitter needed)
 // Edge case with large k covering all houses
 console.log(hackerlandRadioTransmitters([1, 2, 3, 4, 5], 10)); // Output: 1 (one transmitter covers all houses)
+
+// Queries with Fixed Length
+// Consider an n-integer sequence, A = {a(0), a(1), ...,a(n-1)}. We perform a query on A by using an integer, d, 
+// to calculate the result of the following expression:
+// min{max(a(j))} where min --> 0<= i <= n - d; max(a(j)) --> i <= j < i + d
+// In other words, if we let m(i) = max(a(i), a(i+1), a(i+2), ...,a(i+d-1)), then you need to calculate min(m(0), m(1), ...,m(n-d)).
+// Given arr and q queries, return a list of answers to each query.
+// Example:
+// arr = [2,3,4,5,6]
+// queries = [2,3]
+// The first query uses all of the subarrays of length 2: [2,3],[3,4],[4,5],[5,6]. 
+// The maxima of the subarrays are [3,4,5,6]. The minimum of these is 3.
+// The second query uses all of the subarrays of length 3: [2,3,4],[3,4,5],[4,5,6]. 
+// The maxima of the subarrays are [4,5,6]. The minimum of these is 4.
+// Return [3,4].
+// Function Description:
+// Complete the solve function below.
+// solve has the following parameter(s):
+// * int arr[n]: an array of integers
+// * int queries[q]: the lengths of subarrays to query
+// Returns:
+// * int[q]: the answers to each query
+// Input Format:
+// The first line consists of two space-separated integers, n and q.
+// The second line consists of n space-separated integers, the elements of arr.
+// Each of the q subsequent lines contains a single integer denoting the value of d for that query.
+// Constraints:
+// 1 <= n <= 10^5
+// 0 <= arr[i] < 10^6
+// 1 <= q <= 100
+// 1 <= d <= n
+
+function solve(arr, queries) {
+    const n = arr.length;
+    const results = [];
+    for (const d of queries) {
+        // Deque for sliding window max
+        const deque = [];
+        let minOfMax = Infinity;
+
+        for (let i = 0; i < n; i++) {
+            // Remove elements out of window
+            while (deque.length && deque[0] <= i - d) {
+                deque.shift();
+            }
+            // Remove smaller elements from the back
+            while (deque.length && arr[deque[deque.length - 1]] <= arr[i]) {
+                deque.pop();
+            }
+            deque.push(i);
+
+            // Window is ready
+            if (i >= d - 1) {
+                minOfMax = Math.min(minOfMax, arr[deque[0]]);
+            }
+        }
+        results.push(minOfMax);
+    }
+    return results;
+}
+// Example usage
+console.log(solve([2, 3, 4, 5, 6], [2, 3])); // Output: [3, 4]
+// Additional test cases
+console.log(solve([1, 3, 2, 5, 4], [1, 2, 3])); // Output: [1, 2, 3]
+console.log(solve([10, 20, 30, 40, 50], [2, 4])); // Output: [20, 40]
+console.log(solve([5, 4, 3, 2, 1], [1, 2, 3, 4, 5])); // Output: [1, 2, 3, 4, 5]
+
+//  Array Manipulation
+// Starting with a 1-indexed array of zeros and a list of operations, for each operation add a value to e
+// ach the array element between two given indices, inclusive. Once all operations have been performed, 
+// return the maximum value in the array.
+// Example:
+// n = 10
+// queries = [[1,5,3],[4,8,7],[6,9,1]]
+// Queries are interpreted as follows:
+
+//     a b k
+//     1 5 3
+//     4 8 7
+//     6 9 1
+// Add the values of k between the indices a and b inclusive:
+// index->	 1 2 3  4  5 6 7 8 9 10
+// 	[0,0,0, 0, 0,0,0,0,0, 0]
+// 	[3,3,3, 3, 3,0,0,0,0, 0]
+// 	[3,3,3,10,10,7,7,7,0, 0]
+// 	[3,3,3,10,10,8,8,8,1, 0]
+// The largest value is 10 after all operations are performed.
+// Function Description:
+// Complete the function arrayManipulation in the editor below.
+// arrayManipulation has the following parameters:
+// * int n - the number of elements in the array
+// * int queries[q][3] - a two dimensional array of queries where each queries[i] contains three integers, a, b, and k.
+// Returns:
+// * int - the maximum value in the resultant array
+// Input Format:
+// The first line contains two space-separated integers n and m, the size of the array and the number of operations.
+// Each of the next m lines contains three space-separated integers a, b and k, the left index, right index and summand.
+// Constraints:
+// 3 <= n <= 10^7
+// 1 <= m <= 2 x 10^5
+// 1 <= a <= b <= n
+// 0 <= k <= 10^9
+
+function arrayManipulation(n, queries) {
+    const diff = new Array(n + 2).fill(0);
+    
+    for (const [a, b, k] of queries) {
+        diff[a] += k;
+        if (b + 1 <= n) {
+            diff[b + 1] -= k;
+        }
+    }
+    
+    let max = 0;
+    let current = 0;
+    for (let i = 1; i <= n; i++) {
+        current += diff[i];
+        if (current > max) {
+            max = current;
+        }
+    }
+    
+    return max;
+}
+// Example usage
+console.log(arrayManipulation(10, [[1, 5, 3], [4, 8, 7], [6, 9, 1]])); // Output: 10
+// Additional test cases
+console.log(arrayManipulation(5, [[1, 2, 100], [2, 5, 100], [3, 4, 100]])); // Output: 200
+console.log(arrayManipulation(3, [[1, 2, 100], [2, 3, 100], [1, 3, 100]])); // Output: 300
+// Edge case with maximum constraints
+console.log(arrayManipulation(10000000, [[1, 10000000, 1000000000]])); // Output: 1000000000
+// Edge case with minimum constraints
+console.log(arrayManipulation(3, [[1, 1, 1], [2, 2, 1], [3, 3, 1]])); // Output: 1
