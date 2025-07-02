@@ -753,9 +753,242 @@ function main() {
 }
 -------------------------------------------------------------------------------------------------------
 
+Highest Value Palindrome
+Palindromes are strings that read the same from the left or right, for example madam or 0110.
+You will be given a string representation of a number and a maximum number of changes you can make. 
+Alter the string, one digit at a time, to create the string representation of the largest number possible given the limit to the number of changes. 
+The length of the string may not be altered, so you must consider 's left of all higher digits in your tests. For example 0110 is valid, 0011 is not.
+Given a string representing the starting number, and a maximum number of changes allowed, create the largest palindromic string of digits possible or 
+the string '-1' if it is not possible to create a palindrome under the contstraints.
+Example:
+s = '1231'
+k = 3
+Make 3 replacements to get '9339'.
+s = '12321'
+k = 1
+Make 1 replacement to get '12921'.
+Function Description:
+Complete the highestValuePalindrome function in the editor below.
+highestValuePalindrome has the following parameter(s):
+string s: a string representation of an integer
+* int n: the length of the integer string
+* int k: the maximum number of changes allowed
+Returns:
+* string: a string representation of the highest value achievable or -1
+Input Format:
+The first line contains two space-separated integers, n and k, the number of digits in the number and the maximum number of changes allowed.
+The second line contains an n-digit string of numbers.
+Constraints:
+0 <= n <= 10^5
+0 <= k <= 10^5
+Each character i in the number is an integer where 0 <= i <= 9
+
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Complete the 'highestValuePalindrome' function below.
+ *
+ * The function is expected to return a STRING.
+ * The function accepts following parameters:
+ *  1. STRING s
+ *  2. INTEGER n
+ *  3. INTEGER k
+ */
+
+function highestValuePalindrome(s, n, k) {
+    // Write your code here
+	let arr = s.split('');
+    let changed = new Array(n).fill(false);
+    let l = 0, r = n - 1;
+    let changes = 0;
+
+    // First pass: make it a palindrome with minimal changes
+    while (l < r) {
+        if (arr[l] !== arr[r]) {
+            let maxDigit = arr[l] > arr[r] ? arr[l] : arr[r];
+            arr[l] = arr[r] = maxDigit;
+            changed[l] = changed[r] = true;
+            changes++;
+        }
+        l++; r--;
+    }
+
+    if (changes > k) return '-1';
+
+    // Second pass: maximize palindrome value
+    l = 0; r = n - 1;
+    let remaining = k - changes;
+    while (l <= r) {
+        if (l === r) {
+            // Middle digit in odd-length string
+            if (remaining > 0 && arr[l] !== '9') {
+                arr[l] = '9';
+            }
+        } else {
+            if (arr[l] !== '9') {
+                // If already changed, only 1 more change needed
+                if (changed[l] || changed[r]) {
+                    if (remaining > 0) {
+                        arr[l] = arr[r] = '9';
+                        remaining--;
+                    }
+                } else {
+                    // If not changed, need 2 changes
+                    if (remaining > 1) {
+                        arr[l] = arr[r] = '9';
+                        remaining -= 2;
+                    }
+                }
+            }
+        }
+        l++; r--;
+    }
+
+    return arr.join('');
+
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const firstMultipleInput = readLine().replace(/\s+$/g, '').split(' ');
+
+    const n = parseInt(firstMultipleInput[0], 10);
+
+    const k = parseInt(firstMultipleInput[1], 10);
+
+    const s = readLine();
+
+    const result = highestValuePalindrome(s, n, k);
+
+    ws.write(result + '\n');
+
+    ws.end();
+}
+--------------------------------------------------------------------------------------------------------------------------
+
+Lili's Homework
+Whenever George asks Lily to hang out, she's busy doing homework. George wants to help her finish it faster, 
+but he's in over his head! Can you help George understand Lily's homework so she can hang out with him?
+Consider an array of n distinct integers, arr = [a[0],a[1],...,a[n-1]]. George can swap any two elements of 
+the array any number of times. An array is beautiful if the sum of |arr[i] - arr[i-1]| among 0 < i < n is minimal.
+Given the array arr, determine and return the minimum number of swaps that should be performed in order to make the array beautiful.
+Example:
+arr = [7,15,12,3]
+One minimal array is [3,7,12,15]. To get there, George performed the following swaps:
+
+    Swap      Result
+          [7, 15, 12, 3]
+    3 7   [3, 15, 12, 7]
+    7 15  [3, 7, 12, 15]
+   
+It took 2 swaps to make the array beautiful. This is minimal among the choices of beautiful arrays possible.
+Function Description:
+Complete the lilysHomework function in the editor below.
+lilysHomework has the following parameter(s):
+* int arr[n]: an integer array
+Returns:
+* int: the minimum number of swaps required
+Input Format:
+The first line contains a single integer, n, the number of elements in arr. The second line contains n space-separated integers, arr[i].
+Constraints:
+1 <= n <= 10^5
+1 <= arr[i] <= 2x10^9
+
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Complete the 'lilysHomework' function below.
+ *
+ * The function is expected to return an INTEGER.
+ * The function accepts INTEGER_ARRAY arr as parameter.
+ */
+
+function lilysHomework(arr) {
+    function minSwaps(targetArr) {
+        const n = arr.length;
+        const arrCopy = arr.slice();
+        const valueToIndex = new Map();
+        for (let i = 0; i < n; i++) valueToIndex.set(arrCopy[i], i);
+        let swaps = 0;
+        for (let i = 0; i < n; i++) {
+            if (arrCopy[i] !== targetArr[i]) {
+                swaps++;
+                // Swap arrCopy[i] with the correct value's position
+                const toSwapIdx = valueToIndex.get(targetArr[i]);
+                // Update map before swap
+                valueToIndex.set(arrCopy[i], toSwapIdx);
+                valueToIndex.set(arrCopy[toSwapIdx], i);
+                // Swap
+                [arrCopy[i], arrCopy[toSwapIdx]] = [arrCopy[toSwapIdx], arrCopy[i]];
+            }
+        }
+        return swaps;
+    }
+    const sortedAsc = [...arr].sort((a, b) => a - b);
+    const sortedDesc = [...arr].sort((a, b) => b - a);
+    return Math.min(minSwaps(sortedAsc), minSwaps(sortedDesc));
+}
 
 
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
 
+    const n = parseInt(readLine().trim(), 10);
+
+    const arr = readLine().replace(/\s+$/g, '').split(' ').map(arrTemp => parseInt(arrTemp, 10));
+
+    const result = lilysHomework(arr);
+
+    ws.write(result + '\n');
+
+    ws.end();
+}
+-----------------------------------------------------------------------------------------------------------
 
 
 
