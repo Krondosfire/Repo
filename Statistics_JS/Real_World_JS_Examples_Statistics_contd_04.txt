@@ -989,6 +989,289 @@ function main() {
     ws.end();
 }
 -----------------------------------------------------------------------------------------------------------
+Tree: Preorder Traversal
+Complete the preOrder function in the editor below, which has 1 parameter: a pointer to the root of a binary tree. 
+It must print the values in the tree's preorder traversal as a single line of space-separated values.
+Input Format:
+Our test code passes the root node of a binary tree to the preOrder function.
+Constraints:
+1 <= Nodes in the tree <= 500
+Output Format:
+Print the tree's preorder traversal as a single line of space-separated values.
+Sample Input:
+
+     1
+      \
+       2
+        \
+         5
+        /  \
+       3    6
+        \
+         4  
+Sample Output:
+1 2 5 3 4 6 
+Explanation:
+The preorder traversal of the binary tree is printed.
+
+var Tree = function() {
+    this.root = null;
+}
+
+Tree.prototype.insert = function(node, data) {
+    if (node == null){
+    	node = new Node(data);
+    }
+ 	else if (data < node.data){
+        node.left  = this.insert(node.left, data);
+    }
+    else{
+        node.right = this.insert(node.right, data);   
+    }
+
+    return node;
+}
+
+var Node = function(data) {
+    this.data = data;
+    this.left = null;
+    this.right = null;
+}
+
+/* head ends */
+
+/*
+    Node is defined as
+    var Node = function(data) {
+        this.data = data;
+        this.left = null;
+        this.right = null;
+    }
+*/
+
+// This is a "method-only" submission.
+// You only need to complete this method.
+
+function preOrder(root) {
+	if(root == null) return;
+	process.stdout.write(root.data + " ");
+	preOrder(root.left);
+	preOrder(root.right);
+}
+
+/* tail begins */
+
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var _stdin = "";
+var _stdin_array = "";
+var _currentline = 0;
+
+process.stdin.on('data', function(data) {
+    _stdin += data;
+});
+
+process.stdin.on('end', function() {
+    _stdin_array = _stdin.split("\n");
+    solution();
+});
+
+function readLine() {
+    return _stdin_array[_currentline++];
+}
+
+function solution() {
+
+    var tree = new Tree();
+    var n = parseInt(readLine());
+    var m = readLine().split(" ").map(Number);
+    for (var i=0; i<n; i++) {
+        tree.root = tree.insert(tree.root, m[i]);
+    }
+
+    preOrder(tree.root);
+}
+-----------------------------------------------------------------------------------
+Tree: Huffman Decoding
+Huffman coding assigns variable length codewords to fixed length input characters based on their frequencies. 
+More frequent characters are assigned shorter codewords and less frequent characters are assigned longer codewords. 
+All edges along the path to a character contain a code digit. If they are on the left side of the tree, they will be a 0 (zero). 
+If on the right, they'll be a 1 (one). Only the leaves will contain a letter and its frequency count. 
+All other nodes will contain a null instead of a character, and the count of the frequency of all of it and its descendant characters.
+For instance, consider the string ABRACADABRA. There are a total of 11 characters in the string. 
+This number should match the count in the ultimately determined root of the tree. Our frequencies are A=5, B=2, R=2, C=1 and D=1. 
+The two smallest frequencies are for C and D, both equal to 1, so we'll create a tree with them. 
+The root node will contain the sum of the counts of its descendants, in this case 1+1=2. 
+The left node will be the first character encountered, C, and the right will contain D. Next we have 3 items with a character count of 2: 
+the tree we just created, the character B and the character R. The tree came first, so it will go on the left of our new root node.  
+B will go on the right. Repeat until the tree is complete, then fill in the 1's and 0's for the edges. The finished graph looks like:
+     phi
+    0/\1
+  A,5  phi,6
+      0/\1
+    R,2  phi,4
+       0/\1
+     phi2 B,2
+     0/\1
+    C,1 D,1
+Input characters are only present in the leaves. Internal nodes have a character value of ϕ (NULL). We can determine that our values for characters are:
+
+A - 0
+B - 111
+C - 1100
+D - 1101
+R - 10
+Our Huffman encoded string is:
+
+A B    R  A C     A D     A B    R  A
+0 111 10 0 1100 0 1101 0 111 10 0
+or
+01111001100011010111100
+To avoid ambiguity, Huffman encoding is a prefix free encoding technique. No codeword appears as a prefix of any other codeword.
+To decode the encoded string, follow the zeros and ones to a leaf and return the character there.
+You are given pointer to the root of the Huffman tree and a binary coded string to decode. You need to print the decoded string.
+Function Description:
+Complete the function decode_huff in the editor below. It must return the decoded string.
+decode_huff has the following parameters:
+* root: a reference to the root node of the Huffman tree
+* s: a Huffman encoded string
+Input Format:
+There is one line of input containing the plain string, s. Background code creates the Huffman tree then 
+passes the head node and the encoded string to the function.
+Constraints:
+1 <= |s| <= 25
+
+function decodeHuff(root, s) {
+    let result = '';
+    let node = root;
+    for (let i = 0; i < s.length; i++) {
+        node = (s[i] === '0') ? node.left : node.right;
+        if (node.left === null && node.right === null) {
+            result += node.data;
+            node = root;
+        }
+    }
+    console.log(result);
+}
+function processData(input) {
+    //Enter your code here
+	//decodeHuff(root, s);
+	
+} 
+
+process.stdin.resume();
+process.stdin.setEncoding("ascii");
+_input = "";
+process.stdin.on("data", function (input) {
+    _input += input;
+});
+
+process.stdin.on("end", function () {
+   processData(_input);
+});
+
+Python 3 version:
+import queue as Queue
+
+cntr = 0
+
+class Node:
+    def __init__(self, freq, data):
+        self.freq = freq
+        self.data = data
+        self.left = None
+        self.right = None
+        global cntr
+        self._count = cntr
+        cntr = cntr + 1
+        
+    def __lt__(self, other):
+        if self.freq != other.freq:
+            return self.freq < other.freq
+        return self._count < other._count
+
+def huffman_hidden():#builds the tree and returns root
+    q = Queue.PriorityQueue()
+
+    
+    for key in freq:
+        q.put((freq[key], key, Node(freq[key], key) ))
+    
+    while q.qsize() != 1:
+        a = q.get()
+        b = q.get()
+        obj = Node(a[0] + b[0], '\0' )
+        obj.left = a[2]
+        obj.right = b[2]
+        q.put((obj.freq, obj.data, obj ))
+        
+    root = q.get()
+    root = root[2]#contains root object
+    return root
+
+def dfs_hidden(obj, already):
+    if(obj == None):
+        return
+    elif(obj.data != '\0'):
+        code_hidden[obj.data] = already
+        
+    dfs_hidden(obj.right, already + "1")
+    dfs_hidden(obj.left, already + "0")
+
+"""class Node:
+    def __init__(self, freq,data):
+        self.freq= freq
+        self.data=data
+        self.left = None
+        self.right = None
+"""        
+
+# Enter your code here. Read input from STDIN. Print output to STDOUT
+def decodeHuff(root, s):
+    result = []
+    node = root
+    for bit in s:
+        if bit == '0':
+            node = node.left
+        else:
+            node = node.right
+        # If it's a leaf node
+        if node.left is None and node.right is None:
+            result.append(node.data)
+            node = root
+    print(''.join(result))
+
+
+ip = input()
+freq = {}#maps each character to its frequency
+
+cntr = 0
+
+for ch in ip:
+    if(freq.get(ch) == None):
+        freq[ch] = 1
+    else:
+        freq[ch]+=1
+
+root = huffman_hidden()#contains root of huffman tree
+
+code_hidden = {}#contains code for each object
+
+dfs_hidden(root, "")
+
+if len(code_hidden) == 1:#if there is only one character in the i/p
+    for key in code_hidden:
+        code_hidden[key] = "0"
+
+toBeDecoded = ""
+
+for ch in ip:
+   toBeDecoded += code_hidden[ch]
+
+decodeHuff(root, toBeDecoded)
+
+---------------------------------------------------------------------------------------
 
 
 
