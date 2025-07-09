@@ -5765,4 +5765,187 @@ const huffRoot = {
 };
 decodeHuff(huffRoot, '01111001100011010111100'); // Output: ABRACADABRA
 
+//   Binary Search Tree: Lowest Common Ancestor
+// You are given pointer to the root of the binary search tree and two values v1 and v2. 
+// You need to return the lowest common ancestor (LCA) of v1 and v2 in the binary search tree.
+// 	2
+//        / \
+//       1   3
+//          / \
+//         4   5
+// 	    |
+//             6
+// In the diagram above, the lowest common ancestor of the nodes 4 and 6 is the node 3. 
+// Node 3 is the lowest node which has nodes 4 and 6 as descendants.
+// Function Description:
+// Complete the function lca in the editor below. 
+// It should return a pointer to the lowest common ancestor node of the two values given.
+// lca has the following parameters:
+// - root: a pointer to the root node of a binary search tree
+// - v1: a node.data value
+// - v2: a node.data value
+// Input Format:
+// The first line contains an integer, n, the number of nodes in the tree.
+// The second line contains n space-separated integers representing node.data values.
+// The third line contains two space-separated integers, v1 and v2.
+// To use the test data, you will have to create the binary search tree yourself. 
+// Here on the platform, the tree will be created for you.
+// Constraints:
+// 1 <= n,node.data <= 25
+// 1 <= v1,v2 <= 25
+// v1 !== v2
+// The tree will contain nodes with data equal to v1 and v2.
 
+function Node01(data) {
+    this.data = data;
+    this.left = null;
+    this.right = null;
+}
+
+function insert(root, data) {
+    if (!root) return new Node01(data);
+    if (data < root.data) root.left = insert(root.left, data);
+    else if (data > root.data) root.right = insert(root.right, data);
+    return root;
+}
+
+function lca(root, v1, v2) {
+    while (root) {
+        if (root.data > v1 && root.data > v2) {
+            root = root.left;
+        } else if (root.data < v1 && root.data < v2) {
+            root = root.right;
+        } else {
+            return root;
+        }
+    }
+}
+
+
+// Example usage
+// Example tree: 4 2 3 1 7 6
+let values04 = [4, 2, 3, 1, 7, 6];
+let root03 = null;
+for (let val of values04) {
+    root03 = insert(root03, val);
+}
+
+// Define v1 and v2
+let v1 = 1;
+let v2 = 7;
+
+let ancestor = lca(root, v1, v2);
+console.log(ancestor.data);
+// Output will depend on the tree structure and values of v1 and v2
+// Additional test cases
+// Test case 1
+const bstRoot1 = {
+    data: 6, 
+    left: {
+        data: 2,
+        left: {
+            data: 1,
+            left: null,
+            right: null
+        },
+        right: {
+            data: 4,
+            left: {
+                data: 3,
+                left: null,
+                right: null
+            },
+            right: {
+                data: 5,
+                left: null,
+                right: null
+            }
+        }
+    },
+    right: {
+        data: 8,
+        left: null,
+        right: null
+    }
+};
+ancestor = lca(bstRoot1, 2, 8);
+console.log(ancestor.data); // Output: 6
+// Test case 2
+ancestor = lca(bstRoot1, 2, 4);
+console.log(ancestor.data); // Output: 2
+
+//  No Prefix Set
+// There is a given list of strings where each string contains only lowercase letters from a - j, inclusive. 
+// The set of strings is said to be a GOOD SET if no string is a prefix of another string. 
+// In this case, print GOOD SET. Otherwise, print BAD SET on the first line followed by the string being checked.
+// Note If two strings are identical, they are prefixes of each other.
+// Example:
+// words = ['abcd','bcd','abcde','bcde']
+// Here 'abcd' is a prefix of 'abcde' and 'bcd' is a prefix of 'bcde'. Since 'abcde' is tested first, print
+// BAD SET  
+// abcde
+// words = ['ab','bc','cd'].
+// No string is a prefix of another so print
+// GOOD SET 
+// Function Description:
+// Complete the noPrefix function in the editor below.
+// noPrefix has the following parameter(s):
+// - string words[n]: an array of strings
+// Prints:
+// - string(s): either GOOD SET or BAD SET on one line followed by the word on the next line. No return value is expected.
+// Input Format:
+// First line contains n, the size of words[].
+// Then next n lines each contain a string, words[i].
+// Constraints:
+// 1 <= n <= 10^5
+// 1 <= the length of words[i] <= 60
+
+function noPrefix(words) {
+    class TrieNode {
+        constructor() {
+            this.children = new Map();
+            this.isEnd = false;
+        }
+    }
+
+    const root = new TrieNode();
+
+    for (const word of words) {
+        let node = root;
+        for (let i = 0; i < word.length; i++) {
+            const ch = word[i];
+
+            // If current node is end of another word, current word has prefix in set
+            if (node.isEnd) {
+                console.log("BAD SET");
+                console.log(word);
+                return;
+            }
+
+            if (!node.children.has(ch)) {
+                node.children.set(ch, new TrieNode());
+            }
+            node = node.children.get(ch);
+        }
+
+        // If current word is prefix of previously inserted word(s)
+        if (node.children.size > 0 || node.isEnd) {
+            console.log("BAD SET");
+            console.log(word);
+            return;
+        }
+
+        node.isEnd = true; // Mark end of current word
+    }
+
+    console.log("GOOD SET");
+}
+// Example usage
+noPrefix(['abcd', 'bcd', 'abcde', 'bcde']); // Output: BAD SET \n abcde
+noPrefix(['ab', 'bc', 'cd']); // Output: GOOD SET
+// Additional test cases
+noPrefix(['a', 'ab', 'abc']); // Output: BAD SET \n abc
+noPrefix(['hello', 'hell', 'heaven', 'heavy']); // Output: BAD SET \n hell
+noPrefix(['x', 'y', 'z']); // Output: GOOD SET
+noPrefix(['prefix', 'pre', 'suffix']); // Output: BAD SET \n pre
+noPrefix(['one', 'two', 'three', 'four']); // Output: GOOD SET
