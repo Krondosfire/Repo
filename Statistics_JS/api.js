@@ -5949,3 +5949,194 @@ noPrefix(['hello', 'hell', 'heaven', 'heavy']); // Output: BAD SET \n hell
 noPrefix(['x', 'y', 'z']); // Output: GOOD SET
 noPrefix(['prefix', 'pre', 'suffix']); // Output: BAD SET \n pre
 noPrefix(['one', 'two', 'three', 'four']); // Output: GOOD SET
+
+// Castle on the Grid
+// You are given a square grid with some cells open (.) and some blocked (X). 
+// Your playing piece can move along any row or column until it reaches the edge of the grid or a blocked cell. 
+// Given a grid, a start and a goal, determine the minmum number of moves to get to the goal.
+// Example.
+// grid = ['...','.X.','...']
+// startX = 0
+// startY = 0
+// goalX = 1
+// goalY = 2
+// The grid is shown below:
+// ...
+// .X.
+// ...
+// The starting position (startX,startY) = (0, 0) so start in the top left corner. 
+// The goal is (goalX, goalY) = (1,2). The path is (0,0) --> (0,2) --> (1,2). It takes 2 moves to reach the goal.
+// Function Description:
+// Complete the minimumMoves function in the editor.
+// minimumMoves has the following parameter(s):
+// * string grid[n]: an array of strings that represent the rows of the grid
+// * int startX: starting X coordinate
+// * int startY: starting Y coordinate
+// * int goalX: ending X coordinate
+// * int goalY: ending Y coordinate
+// Returns:
+// * int: the minimum moves to reach the goal
+// Input Format:
+// The first line contains an integer n, the size of the array grid.
+// Each of the next n lines contains a string of length n.
+// The last line contains four space-separated integers, startX, startY, goalX, goalY
+// Constraints:
+// 1 <= n <= 100
+// 0 <= startX, startY, goalX, goalY < n
+
+function minimumMoves(grid, startX, startY, goalX, goalY) {
+    const n = grid.length;
+    const visited = Array.from({ length: n }, () => Array(n).fill(false));
+    const queue = [];
+    queue.push([startX, startY, 0]);
+    visited[startX][startY] = true;
+
+    const directions = [
+        [0, 1],   // right
+        [0, -1],  // left
+        [1, 0],   // down
+        [-1, 0]   // up
+    ];
+
+    while (queue.length > 0) {
+        const [x, y, moves] = queue.shift();
+
+        if (x === goalX && y === goalY) {
+            return moves;
+        }
+
+        for (const [dx, dy] of directions) {
+            let nx = x + dx;
+            let ny = y + dy;
+            // Move in one direction as far as possible
+            while (
+                nx >= 0 && nx < n &&
+                ny >= 0 && ny < n &&
+                grid[nx][ny] !== 'X'
+            ) {
+                if (!visited[nx][ny]) {
+                    visited[nx][ny] = true;
+                    queue.push([nx, ny, moves + 1]);
+                }
+                nx += dx;
+                ny += dy;
+            }
+        }
+    }
+    return -1; // If unreachable
+}
+// Example usage
+console.log(minimumMoves(['...', '.X.', '...'], 0, 0, 1, 2)); // Output: 2
+// Additional test cases
+console.log(minimumMoves(['..X', 'X..', '...'], 0, 0, 2, 2)); // Output: 3
+console.log(minimumMoves(['X..', '...', '..X'], 1, 0, 2, 2)); // Output: -1 (unreachable)
+console.log(minimumMoves(['...', 'X..', '...'], 0, 0, 2, 2)); // Output: 4
+console.log(minimumMoves(['X..', '.X.', '..X'], 0, 0, 2, 2)); // Output: -1 (unreachable)
+
+//  Roads and Libraries
+// Determine the minimum cost to provide library access to all citizens of HackerLand. 
+// There are n cities numbered from 1 to n. Currently there are no libraries and the cities are not connected. 
+// Bidirectional roads may be built between any city pair listed in cities. A citizen has access to a library if:
+// * Their city contains a library.
+// * They can travel by road from their city to a city containing a library.
+// Example:
+// The following figure is a sample map of HackerLand where the dotted lines denote possible roads:
+// c_road = 2
+// c_lib = 3
+// cities = [[1,7],[1,3],[1,2],[2,3],[5,6],[6,8]]
+// The cost of building any road is cc+road = 2, and the cost to build a library in any city is c_lib = 3. 
+// Build 5 roads at a cost of 5 X 2 = 10 and 2 libraries for a cost of 6. 
+// One of the available roads in the cycle 1 --> 2 --> 3 --> 1 is not necessary.
+// There are q queries, where each query consists of a map of HackerLand and value of c_lib and c_road. 
+// For each query, find the minimum cost to make libraries accessible to all the citizens.
+// Function Description:
+// Complete the function roadsAndLibraries in the editor below.
+// roadsAndLibraries has the following parameters:
+// * int n: integer, the number of cities
+// * int c_lib: integer, the cost to build a library
+// * int c_road: integer, the cost to repair a road
+// * int cities[m][2]: each cities[i] contains two integers that represent cities that can be connected by a new road
+// Returns:
+// - int: the minimal cost
+// Input Format:
+// The first line contains a single integer q, that denotes the number of queries.
+// The subsequent lines describe each query in the following format:
+// - The first line contains four space-separated integers that describe the respective values of n, m, c_lib and c_road, 
+// the number of cities, number of roads, cost of a library and cost of a road.
+// - Each of the next m lines contains two space-separated integers, u[i] and v[i], 
+// that describe a bidirectional road that can be built to connect cities u[i] and v[i].
+// Constraints:
+// 1 <= q <= 10
+// 1 <= n <= 10^5
+// 0 <= m <= min(10^5, (n*(n-1))/2)
+// 1 <= c_road, c_lib <= 10^5
+// 1 <= u[i], v[i] <= n
+// Each road connects two distinvt cities.
+
+function roadsAndLibraries(n, c_lib, c_road, cities) {
+    if (c_lib <= c_road) {
+        return n * c_lib;
+    }
+
+    // Build adjacency list
+    const graph = Array.from({ length: n + 1 }, () => []);
+    for (const [u, v] of cities) {
+        graph[u].push(v);
+        graph[v].push(u);
+    }
+
+    const visited = new Array(n + 1).fill(false);
+    let totalCost = 0;
+
+    function bfs(start) {
+        const queue = [start];
+        visited[start] = true;
+        let size = 1;
+        while (queue.length) {
+            const node = queue.shift();
+            for (const neighbor of graph[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.push(neighbor);
+                    size++;
+                }
+            }
+        }
+        return size;
+    }
+
+    for (let city = 1; city <= n; city++) {
+        if (!visited[city]) {
+            const componentSize = bfs(city);
+            totalCost += c_lib + (componentSize - 1) * c_road;
+        }
+    }
+    return totalCost;
+}
+// Example usage
+const n7 = 8;
+const c_lib = 3;
+const c_road = 2;
+const cities = [
+    [1, 7],
+    [1, 3],
+    [1, 2],
+    [2, 3],
+    [5, 6],
+    [6, 8]
+];
+
+const cost = roadsAndLibraries(n7, c_lib, c_road, cities);
+console.log(cost); // Should print 12
+
+const n8 = 3;
+const c_lib2 = 2;
+const c_road2 = 3;
+const cities2 = [
+    [1, 2],
+    [3, 1],
+    [2, 3]
+];
+
+console.log(roadsAndLibraries(n8, c_lib2, c_road2, cities2)); // Should print 6
+
