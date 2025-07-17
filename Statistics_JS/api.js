@@ -6140,3 +6140,298 @@ const cities2 = [
 
 console.log(roadsAndLibraries(n8, c_lib2, c_road2, cities2)); // Should print 6
 
+// Breadth First Search: Shortest Reach
+// Consider an undirected graph where each edge weighs 6 units. Each of the nodes is labeled consecutively from 1 to n.
+// You will be given a number of queries. For each query, you will be given a list of edges describing an undirected graph. 
+// After you create a represantation of the graph, you must determine and report the shortest distance to each of the other nodes
+// from a given starting position using the breadth-first search algorithm (BFS). Return an array of distances from the start node in node number order.
+// If a node is unreachable, return -1 for that node.
+// Example:
+// The following graph is based on the listed inputs:
+// 	1/Start		5
+// 	/ \ 
+//        2   3
+// 	   |
+// 	   4
+// n = 5; number of nodes
+// m = 3; number of edges
+// edges = [1,2],[1,3],[3,4]
+// s = 1; starting node
+// All distances are from the start node 1. Output are calculated for distances to nodes 2 through 5: [6,6,12,-1]. Each edge is 6 units,
+// and the unreachable node 5 has the required return distance of -1.
+// Function Description:
+// Complete the bfs function in the editor below. If a node is unreachable, its distance is -1.
+// bfs has the following parameters:
+// * int n: the number of nodes
+// * int m: the number of edges
+// * int edges[m][2]: start and end nodes for edges
+// * int s: the node to start traversals from
+// Returns:
+// * int[n-1]: the distances to nodes in increasing node number order, not including the start node(-1 if a node is unreachable)
+// Input Format:
+// The first line contains an integer q, the number of queries. Each of the following q sets of lines has the following format:
+// * The first line contains two space-separated integers n and m, the number of nodes and edges in the graph.
+// * Each line i of the m subsequent lines contains two space-separated integers, u and v, that describe an edge between nodes u and v.
+// * The last line contains a single integer, s, the node number to start from.
+// Constraints:
+// 1 <= q <= 10
+// 2 <= n <= 1000
+// 1 <= m <= (n*(n-1))/2
+// 1 <= u, v, s <= n
+
+function bfs(n, m, edges, s) {
+    // Build adjacency list (1-based indexing)
+    const graph = Array.from({ length: n + 1 }, () => []);
+    for (const [u, v] of edges) {
+        graph[u].push(v);
+        graph[v].push(u);
+    }
+
+    // Initialize distances with -1 (unreachable)
+    const distances = new Array(n + 1).fill(-1);
+    distances[s] = 0;
+
+    // BFS Queue
+    const queue = [];
+    queue.push(s);
+
+    while (queue.length) {
+        const node = queue.shift();
+
+        for (const neighbor of graph[node]) {
+            if (distances[neighbor] === -1) {  // Not visited
+                distances[neighbor] = distances[node] + 6; // Edge weight = 6
+                queue.push(neighbor);
+            }
+        }
+    }
+
+    // Prepare result array excluding the start node
+    const result = [];
+    for (let node = 1; node <= n; node++) {
+        if (node !== s) {
+            result.push(distances[node]);
+        }
+    }
+
+    return result;
+}
+// Example usage
+
+const n9 = 5;
+const m9 = 3;
+const edges1 = [
+    [1, 2],
+    [1, 3],
+    [3, 4]
+];
+const s9 = 1;
+
+console.log(bfs(n9, m9, edges1, s9)); // Output should be [6, 6, 12, -1]
+
+//  Components in a graph
+// There are 2 X N nodes in an undirected graph, and a number of edges connecting some nodes. In each edge, the first value
+// will be between 1 and N, inclusive. The second node will be between N + 1 and 2 X N, inclusive. Given a list of edges,
+// determine the size of the smallest and largest connected components that have 2 or more nodes. A node can have any
+// number of connections. The highest node value will always be connected to at least 1 other node.
+// Note: Single nodes should not be considered in the answer.
+// Example:
+// bg = [[1,5],[1,6],[2,4]]
+// 	3
+
+// 	2 -- 4
+
+// 	  5
+//          / 
+// 	1 -- 6
+// The smaller componet contains 2 nodes and the larger contains 3. Return the array [2,3].
+// Function Description:
+// Complete the connectedComponents function in the editor below. connectedComponents has the following parameters:
+// * int bg[n][2]: a 2-d array of integers that represent node ends of graph edges.
+// Returns:
+// * int[2]: an array with 2 integers, the smallest and largest component sizes.
+// Input Format:
+// The first line contains an integer n, the size of bg.
+// Each of the next n lines contain two space-separated integers, bg[i][0] and bg[i][1].
+// Constraints:
+// 1 <= numberofnodesN <= 15000
+// 1 <= bg[i][0] <= N
+// N+1 <= bg[i][1] <= 2N
+
+function componentsInGraph(gb) {
+    class DisjointSet {
+        constructor(n) {
+            this.parent = new Array(n + 1);
+            this.size = new Array(n + 1);
+            for (let i = 1; i <= n; i++) {
+                this.parent[i] = i;
+                this.size[i] = 1;
+            }
+        }
+
+        find(x) {
+            if (this.parent[x] !== x) {
+                this.parent[x] = this.find(this.parent[x]);
+            }
+            return this.parent[x];
+        }
+
+        union(a, b) {
+            let rootA = this.find(a);
+            let rootB = this.find(b);
+            if (rootA !== rootB) {
+                if (this.size[rootA] < this.size[rootB]) {
+                    [rootA, rootB] = [rootB, rootA];
+                }
+                this.parent[rootB] = rootA;
+                this.size[rootA] += this.size[rootB];
+                this.size[rootB] = 0;
+            }
+        }
+    }
+
+    let maxNode = 0;
+    for (const [u, v] of gb) {
+        maxNode = Math.max(maxNode, u, v);
+    }
+
+    const dsu = new DisjointSet(maxNode);
+
+    for (const [u, v] of gb) {
+        dsu.union(u, v);
+    }
+
+    let minSize = Number.MAX_SAFE_INTEGER;
+    let maxSize = 0;
+
+    for (let i = 1; i <= maxNode; i++) {
+        if (dsu.parent[i] === i && dsu.size[i] > 1) {
+            if (dsu.size[i] < minSize) minSize = dsu.size[i];
+            if (dsu.size[i] > maxSize) maxSize = dsu.size[i];
+        }
+    }
+
+    return [minSize, maxSize];
+}
+// Example usage
+const input2 = `4
+1 5
+1 6
+2 4
+6 3`.split('\n');
+
+let currentLine1 = 0;
+function readLine4() {
+    return input2[currentLine1++];
+}
+
+function main6() {
+    const n = parseInt(readLine4(), 10);
+    const gb = [];
+    for (let i = 0; i < n; i++) {
+        gb.push(readLine4().split(' ').map(Number));
+    }
+    const result = componentsInGraph(gb);
+    console.log(result.join(' '));
+}
+
+main6();
+
+
+// Cut the tree
+// There is an undirected tree where each vertex is numbered from 1 to n, and each contains a data value.
+// The sum of a tree is the sum of all its nodes' data values. If an edge is cut, two smaller trees are formed.
+// The difference between two trees is the absolute value of the difference in their sums.
+// Given a tree, determine which edge to cut so that the resulting trees have a minimal difference.
+// Example:
+// data = [1,2,3,4,5,6]
+// edges = [(1,2),(1,3),(2,6),(3,4),(3,5)]
+// In this case, node numbers match their weights for convenience. The is shown below:
+// 			3
+// 		2---------------6
+// 	       /
+//             1 /
+// 	     /
+// 	    /
+//            1
+//             \
+//              \ 2
+//               \
+//                \        4
+// 		3---------------4
+//                  \
+//                   \
+//                    \ 5
+//                     \
+//                      \
+//                       5
+// The values are calculated as follows:
+// edge cut	Tree1 sum	Tree2 sum	Absolute difference
+//    1		   8               13                 5
+//    2               9               12                 3
+//    3               6               15                 9
+//    4               4               17                 13
+//    5               5               16                 11
+// The minimum absolute difference is 3.
+// Note: The given tree is always rooted at vertex 1.
+// Function Description:
+// Complete the cutTheTree function.
+// cutTheTree function has the following parameters:
+// * int data[n]: an array of integers that represent node values.
+// * int edgee[n-1][2]: an 2-d array of integer pairs where each pair represents nodes connected by the edge.
+// Returns:
+// * int:the minimum achievable absolute difference of tree sums.
+// Input Format:
+// The first line contains an integer n, the number of vertices in the tree.
+// The second line contains n space-separated integers, where each integer u denotes the node[u] data value, data[u].
+// Each of the n-1 subsequent lines contains two space-separated integers u and v that describe edge u<->v in a tree t.
+// Constraints:
+// 3 <= n <= 10^5
+// 1 <= data[u] <= 1001, where 1 <= u <= n.
+
+function cutTheTree(data, edges) {
+    const n = data.length;
+    const adj = Array.from({ length: n + 1 }, () => []);
+
+    for (const [u, v] of edges) {
+        adj[u].push(v);
+        adj[v].push(u);
+    }
+
+    const totalSum = data.reduce((acc, val) => acc + val, 0);
+    let minDiff = Number.MAX_SAFE_INTEGER;
+
+    const visited = new Array(n + 1).fill(false);
+
+    function dfs(node) {
+        visited[node] = true;
+        let currSum = data[node - 1];
+        for (const neighbor of adj[node]) {
+            if (!visited[neighbor]) {
+                currSum += dfs(neighbor);
+            }
+        }
+        if (node !== 1) {
+            // Cutting edge between node and its parent splits the tree
+            const diff = Math.abs(totalSum - 2 * currSum);
+            if (diff < minDiff) minDiff = diff;
+        }
+        return currSum;
+    }
+
+    dfs(1);
+
+    return minDiff;
+}
+// Example usage
+const data1 = [1, 2, 3, 4, 5, 6];
+const edges12 = [
+    [1, 2],
+    [1, 3],
+    [2, 6],
+    [3, 4],
+    [3, 5]  
+];
+console.log(cutTheTree(data1, edges12)); // Output: 3
+
+
